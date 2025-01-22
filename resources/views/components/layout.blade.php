@@ -1,3 +1,9 @@
+<?php
+
+    use Illuminate\Http\Request;
+    $request = New Request();
+    ?>
+
 <!DOCTYPE html>
 <html class="h-full bg-gray-100" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -19,6 +25,10 @@
         </style>
     @endif
 
+    @if($request->path() == "/")
+        @vite(['resources/js/dashboard.js'])
+    @endif
+
 </head>
 <body class="h-full">
 
@@ -26,7 +36,7 @@
 
     <x-nav></x-nav>
 
-    <x-header>Dashboard</x-header>
+    {{ $header }}
 
     <main>
 

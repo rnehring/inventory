@@ -29,10 +29,8 @@ class DashboardController extends Controller
             'companyPreCounts' => $this->companyPreCounts()
         ];
 
-//        $data = json_decode(json_encode($data), true);
         return json_encode($data);
     }
-
 
 
     // GET LAST WORKING DAY COUNTS OCCURRED FROM DATABASE
@@ -48,9 +46,9 @@ class DashboardController extends Controller
                 WHERE date_counted < ?)
                 ',
             [$todayCount]);
+
         return $getLastDay[0]->date_counted;
     }
-
 
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
@@ -66,9 +64,9 @@ class DashboardController extends Controller
             FROM pre_count AS yesterday
             WHERE verified_date < ?)',
             [$today]);
+
         return $getLastDay[0]->verified_date;
     }
-
 
 
     // GET USER COUNTS FROM LAST WORKING DAY
@@ -84,7 +82,6 @@ class DashboardController extends Controller
             GROUP BY user ORDER BY counts DESC',
             [$yesterday]);
 
-//        $yesterdayUserCounts = json_encode($yesterdayUserCounts);
         return $yesterdayUserCounts;
     }
 
@@ -101,7 +98,6 @@ class DashboardController extends Controller
             ORDER BY counts DESC',
             ['']);
 
-//        $allTimeCounts = json_encode($allTimeCounts);
         return $allTimeCounts;
     }
 
@@ -123,10 +119,8 @@ class DashboardController extends Controller
             $countsByCompany[$i]['company'] = $this->epicorCodeToCompanyName($countsByCompany[$i]['company']);
         }
 
-//        $countsByCompany = json_encode($countsByCompany);
         return $countsByCompany;
     }
-
 
 
     //  GET PERCENTAGE OF INVENTORY COUNTED BY COMPANY
@@ -144,7 +138,6 @@ class DashboardController extends Controller
             $percentageByCompany[$i]['company'] = $this->epicorCodeToCompanyName($percentageByCompany[$i]['company']);
         }
 
-//        $percentageByCompany = json_encode($percentageByCompany);
         return $percentageByCompany;
     }
 
@@ -161,7 +154,6 @@ class DashboardController extends Controller
             ORDER BY counts DESC',
             ['']);
 
-//        $preCountAllTime = json_encode($preCountAllTime);
         return $preCountAllTime;
     }
 
@@ -186,7 +178,6 @@ class DashboardController extends Controller
             ',
             [$yesterdayStart, $yesterdayEnd]);
 
-//        $yesterdayUserPreCounts = json_encode($yesterdayUserPreCounts);
         return $yesterdayUserPreCounts;
     }
 
@@ -233,8 +224,5 @@ class DashboardController extends Controller
                 return "PolyValve";
         }
     }
-
-
-
 
 }
