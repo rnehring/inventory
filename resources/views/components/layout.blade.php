@@ -25,7 +25,7 @@
         </style>
     @endif
 
-    @if($request->path() == "/")
+    @if(request()->is('/'))
         @vite(['resources/js/dashboard.js'])
     @endif
 
