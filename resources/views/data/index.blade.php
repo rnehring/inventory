@@ -1,3 +1,11 @@
+<?php
+
+   use App\Http\Controllers\Controller;
+
+?>
+
+
+
 <x-layout>
 
     <x-slot:header>
@@ -6,8 +14,11 @@
 
     <x-layout-container>
 
-        <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 px-2 py-4  my-2">
-            <h2 class="text-md font-semibold text-left text-white"> Totals {{ $total }}</h2>
+        <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 px-2 py-4  my-2 flex items-center justify-between">
+            <h2 class="text-md font-semibold text-left text-white"> Totals </h2>
+            <div class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">{{ Controller::formatCurrency($total) }}</div>
+
+            <div class="ftext-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ Controller::formatCurrency($noTagTotal) }}</div>
         </div>
 
 
