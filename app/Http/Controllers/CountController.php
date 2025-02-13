@@ -60,7 +60,7 @@ class CountController extends Controller
                     ROUND(standard_cost * count, 2) AS cost_counted
                 FROM inventory) AS INV
             WHERE part = ? AND bin = ?',
-            [$request->data['part'], $request->data['bin']]);
+            [$request->part, $request->bin]);
 
         return json_encode($partData);
     }

@@ -1,6 +1,13 @@
 const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getPart);
 
+
+function makeCell(value){
+    let cell = document.createElement('td');
+    cell.innerHTML = value;
+    return cell;
+}
+
 function getPart(event) {
     event.preventDefault();
 
@@ -10,6 +17,7 @@ function getPart(event) {
     })
         .then(function (response) {
             console.log(response);
+            const table = document.getElementById('partData');
             let parts = response.data;
             parts.forEach((part) => {
                 if(part['date_counted'] != '0000-00-00'){
@@ -18,17 +26,41 @@ function getPart(event) {
                 else{
                     let classes = '';
                 }
-                let thisRow = `<tr id='row${part['id']}'
-                                        class='${part['date_counted'] != '0000-00-00' ? 'bg-green-300' : null }'
-                                        data-lot_number='${part['lot_number']}'
-                                        data-serial_number='${part['serial_number']}'>
-                                        <td>${part['tag']}</td>
-                                        <td>${part['part']}</td>
-                                        <td>${part['bin']}</td>
+                let thisRow = document.createElement('tr');
+                thisRow.id = `row${part['id']}`;
+                thisRow.classList = `${part['date_counted'] != '0000-00-00' ? 'bg-green-300' : null }`;
+                thisRow.dataset.lot_number = `${part['lot_number']}`;
+                thisRow.dataset.serial_number = `${part['serial_number']}`;
 
+                let tag = makeCell(`${part['tag']}`);
+                thisRow.appendChild(tag);
+                let part_number = makeCell(`${part['part']}`);
+                thisRow.appendChild(part_number);
+                let uom = makeCell(`${part['uom']}`);
+                thisRow.appendChild(uom);
+                let count = makeCell(`<input type='text' name='count' id='count' value='${part['count']}' />`);
+                thisRow.appendChild(count);
+                let by_weight = makeCell(`<input type='checkbox' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
+                thisRow.appendChild(by_weight);
+                let lot_number = makeCell(`${part['lot_number']}`);
+                thisRow.appendChild(lot_number);
+                let serial_number = makeCell(`${part['serial_number']}`);
+                thisRow.appendChild(serial_number);
+                let expected_qty = makeCell(`${part['expected_qty']}`);
+                thisRow.appendChild(expected_qty);
+                let standard_cost = makeCell(`${part['standard_cost']}`);
+                thisRow.appendChild(standard_cost);
+                let cost_counted = makeCell(`${part['cost_counted']}`);
+                thisRow.appendChild(cost_counted);
+                let cost_expected = makeCell(`${part['cost_expected']}`);
+                thisRow.appendChild(cost_expected);
+                let plus_minus = makeCell(`${part['plus_minus']}`);
+                thisRow.appendChild(plus_minus);
+                let save_button = makeCell(`<button data-partid = '${part['id']}' id='saveCount' name='saveCount'>Save</button>`);
+                thisRow.appendChild(save_button);
 
-                `;
-                console.log(thisRow);
+                table.appendChild(thisRow);
+                // console.log(thisRow);
             });
 
 
