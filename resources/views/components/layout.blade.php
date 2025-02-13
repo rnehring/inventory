@@ -29,6 +29,14 @@
         @vite(['resources/js/dashboard.js'])
     @endif
 
+    @if(request()->is('data'))
+        @vite(['resources/js/admin-data.js'])
+    @endif
+
+    @if(request()->is('count'))
+        @vite(['resources/js/inventory-count.js'])
+    @endif
+
 </head>
 <body class="h-full">
 

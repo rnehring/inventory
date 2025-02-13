@@ -1,12 +1,15 @@
 <header class="bg-white shadow mx-auto px-4 py-6 sm:px-6 lg:px-8">
-
+@if(request()->is('data'))
+ <div class="flex justify-between max-w-10xl mx-auto">
+     @else
  <div class="flex justify-between max-w-9xl mx-auto">
+     @endif
+
     <div class="">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $slot }}</h1>
     </div>
 
     @if(request()->is('data'))
-
 
             <button type="button" class="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg fill="#ffffff" height="24" width="24" class="mx-4" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -11,3 +11,4 @@ Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
 
 Route::get('/data', [DataController::class, 'index']);
 Route::get('/count', [CountController::class, 'index']);
+Route::post('/inventory-search', [CountController::class, 'getPart'] );
