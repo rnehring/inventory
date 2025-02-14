@@ -1,99 +1,81 @@
 const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getPart);
 
+let cells = [];
 
-function makeCell(value){
+function makeCell(value, classes){
     let cell = document.createElement('td');
     cell.innerHTML = value;
+    cell.classList = 'text-gray-900 px-2 border-b ' + classes;
+    cells.push(cell);
     return cell;
+}
+
+
+function makeRow(part){
+    let row = document.createElement('tr');
+        row.id = `row${part['id']}`;
+        row.classList = `${part['date_counted'] != '0000-00-00' ? 'bg-green-300' : null}`;
+        row.dataset.lot_number = `${part['lot_number']}`;
+        row.dataset.serial_number = `${part['serial_number']}`;
+    cells.forEach((cell) => {
+        row.appendChild(cell);
+    });
+
+    return row;
+}
+
+
+function saveCount(event, partid){
+    let count = document.getElementById('count'+partid).value;
+    console.log(count);
 }
 
 function getPart(event) {
     event.preventDefault();
+
+    let allRows = document.querySelectorAll('tr');
+    console.log(allRows);
 
     axios.post('/inventory-search', {
         part: document.getElementById('part').value,
         bin: document.getElementById('bin').value
     })
         .then(function (response) {
-            console.log(response);
-            const table = document.getElementById('partData');
+            let tableBody = document.getElementById('partData').getElementsByTagName('tbody')[0];
+            let newTbody = document.createElement('tbody');
+            tableBody.parentNode.replaceChild(newTbody, tableBody);
+
             let parts = response.data;
+
             parts.forEach((part) => {
-                if(part['date_counted'] != '0000-00-00'){
-                    let classes = "bg-green-300";
-                }
-                else{
-                    let classes = '';
-                }
-                let thisRow = document.createElement('tr');
-                thisRow.id = `row${part['id']}`;
-                thisRow.classList = `${part['date_counted'] != '0000-00-00' ? 'bg-green-300' : null }`;
-                thisRow.dataset.lot_number = `${part['lot_number']}`;
-                thisRow.dataset.serial_number = `${part['serial_number']}`;
-
                 let tag = makeCell(`${part['tag']}`);
-                thisRow.appendChild(tag);
                 let part_number = makeCell(`${part['part']}`);
-                thisRow.appendChild(part_number);
-                let uom = makeCell(`${part['uom']}`);
-                thisRow.appendChild(uom);
-                let count = makeCell(`<input type='text' name='count' id='count' value='${part['count']}' />`);
-                thisRow.appendChild(count);
-                let by_weight = makeCell(`<input type='checkbox' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
-                thisRow.appendChild(by_weight);
+                let uom = makeCell(`${part['uom']}`, 'text-center');
+                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 mx-auto block' value='${part['count']}' />`);
+                let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
                 let lot_number = makeCell(`${part['lot_number']}`);
-                thisRow.appendChild(lot_number);
                 let serial_number = makeCell(`${part['serial_number']}`);
-                thisRow.appendChild(serial_number);
-                let expected_qty = makeCell(`${part['expected_qty']}`);
-                thisRow.appendChild(expected_qty);
-                let standard_cost = makeCell(`${part['standard_cost']}`);
-                thisRow.appendChild(standard_cost);
-                let cost_counted = makeCell(`${part['cost_counted']}`);
-                thisRow.appendChild(cost_counted);
-                let cost_expected = makeCell(`${part['cost_expected']}`);
-                thisRow.appendChild(cost_expected);
-                let plus_minus = makeCell(`${part['plus_minus']}`);
-                thisRow.appendChild(plus_minus);
-                let save_button = makeCell(`<button data-partid = '${part['id']}' id='saveCount' name='saveCount'>Save</button>`);
-                thisRow.appendChild(save_button);
+                let expected_qty = makeCell(`${part['expected_qty']}`, 'text-right');
+                let standard_cost = makeCell(`${part['standard_cost']}`, 'text-right');
+                let cost_counted = makeCell(`${part['cost_counted']}`, 'text-right');
+                let cost_expected = makeCell(`${part['cost_expected']}`, 'text-right');
+                let plus_minus = makeCell(`${part['plus_minus']}`, 'text-right');
+                let save_button = makeCell(`<button type="button" data-part_id = '${part['id']}' name='saveCount' class="justify-center px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><svg id='Layer_1' class='w-3 h-3 text-white me-2' fill='currentColor' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path d='M22,4h-2v6c0,0.552-0.448,1-1,1h-9c-0.552,0-1-0.448-1-1V4H6C4.895,4,4,4.895,4,6v18c0,1.105,0.895,2,2,2h18  c1.105,0,2-0.895,2-2V8L22,4z M22,24H8v-6c0-1.105,0.895-2,2-2h10c1.105,0,2,0.895,2,2V24z'/><rect height="5" width="2" x="16" y="4"/></svg>Save</button>`, 'text-center');
+                save_button.addEventListener('click', function(event){
+                    axios.post('/update-count', {
+                        count: document.getElementById('count'+part['id']).value,
+                        part: part['id']
+                    })
+                    .then(function (response) {
+                        alert("Updated!");
+                    });
+                });
 
-                table.appendChild(thisRow);
-                // console.log(thisRow);
+                let thisRow = makeRow(part);
+                newTbody.appendChild(thisRow);
+                cells = [];
             });
-
-
-
-
-
-
-            // if(value['date_counted'] != '0000-00-00'){
-            //     var classes = "countedrow";
-            // }
-            // let thisRow = "<tr id='row" + value['id'] + "' class='" + classes + "' data-lot_number='" + value['lot_number'] + "' data-serial_number='" + value['serial_number'] + "'><td>" + value['tag'] + "</td><td>" + value['part'] + "</td><td style='text-align:center;'>" + value['bin'] + "</td><td style='text-align:center;'>" + value['uom'] + "</td><td style='text-align:center;'><input type='text' class='counted' name='counted' id='counted" + value['id'] + "' value='" + value['count'] + "'/></td>";
-            //
-            // thisRow += "<td><input type='checkbox' id='byweight" + value['id'] + "' /></td>";
-            //
-            // if(value['lot_number'] == ''){
-            //     thisRow += "<td>"+ value['lot_number'] + "</td>";
-            // }
-            // else if(value['lot_number'] !== '' && value['date_counted'] !== '0000-00-00'){
-            //     thisRow += "<td style='text-align:center;'><input type='text' class='counted' name='lot_number" + value['id'] + "' id='lot_number" + value['id'] + "' value='" + value['lot_number'] + "'></td>";
-            // }
-            // else{
-            //     thisRow += "<td style='text-align:center;'><input type='text' class='counted' name='lot_number" + value['id'] + "' id='lot_number" + value['id'] + "' value='" + value['lot_number'] + "'></td>";
-            // }
-            //
-            // if(value['serial_number'] == ''){
-            //     thisRow += "<td>"+ value['serial_number'] + "</td>";
-            // }
-            // else{
-            //     thisRow += "<td style='text-align:center;'><input type='text' class='counted' name='serial_number" + value['id'] + "'' id='serial_number" + value['id'] + "' value='" + value['serial_number'] + "'></td>";
-            // }
-            //
-            //
-            // thisRow += "<td><button data-prodid='" + value['id'] + "' class='saveCount' id='saveCount" + value['id'] + "' name='saveCount'>Save</td></tr>";
 
 
 

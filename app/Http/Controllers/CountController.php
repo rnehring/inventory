@@ -64,4 +64,15 @@ class CountController extends Controller
 
         return json_encode($partData);
     }
+
+
+    public function updateCount(Request $request){
+        $updatePart = DB::update('
+            UPDATE inventory
+            SET count = ?
+            WHERE id = ?',
+            [$request->count, $request->part]);
+
+        return true;
+    }
 }

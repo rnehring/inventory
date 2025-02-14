@@ -21,20 +21,20 @@
 
         </x-search-form>
 
-        <table id="partData" class="mt-6 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table id="partData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <th scope="col" class="px-2 py-3">Tag</th>
             <th scope="col" class="px-2 py-3">Part</th>
-            <th scope="col" class="px-2 py-3">UOM</th>
-            <th scope="col" class="px-2 py-3">Count</th>
-            <th scope="col" class="px-2 py-3">By Weight?</th>
+            <th scope="col" class="px-2 py-3 text-center">UOM</th>
+            <th scope="col" class="px-2 py-3 text-center">Count</th>
+            <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
-            <th scope="col" class="px-2 py-3">Expected Qty</th>
-            <th scope="col" class="px-2 py-3">Cost</th>
-            <th scope="col" class="px-2 py-3 text-center">Cost Counted</th>
-            <th scope="col" class="px-2 py-3">Cost Expected</th>
-            <th scope="col" class="px-2 py-3 text-center">+/-</th>
+            <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
+            <th scope="col" class="px-2 py-3 text-right">Cost</th>
+            <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
+            <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
+            <th scope="col" class="px-2 py-3 text-right">+/-</th>
             <th scope="col" class="px-2 py-3 text-center"></th>
             </thead>
             <tbody class="text-gray-900 px-2 border-b">
