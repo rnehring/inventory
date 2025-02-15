@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CountController extends Controller
+class LocationController extends Controller
 {
+
+
     public function index(){
-        return view('count.index');
+        return view('location.index');
     }
 
 
-    public function getPart(Request $request){
+    public function getPartsByLocation(Request $request){
 
+        $bin = $request->bin . "%";
         $partData = DB::select('
             SELECT
                 id,
@@ -34,6 +37,7 @@ class CountController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
+                warehouse,
                 ROUND(cost_counted - cost_expected, 2) AS plus_minus
             FROM(
                 SELECT
@@ -55,10 +59,11 @@ class CountController extends Controller
                     date_counted,
                     time_counted,
                     ROUND(standard_cost * expected_qty, 2) AS cost_expected,
-                    ROUND(standard_cost * count, 2) AS cost_counted
+                    ROUND(standard_cost * count, 2) AS cost_counted,
+                    warehouse
                 FROM inventory) AS INV
-            WHERE part = ? AND bin = ?',
-            [$request->part, $request->bin]);
+            WHERE bin LIKE ? AND warehouse = ?',
+            [$bin, $request->warehouse]);
 
         return json_encode($partData);
     }

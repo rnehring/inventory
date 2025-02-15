@@ -37,6 +37,13 @@
         @vite(['resources/js/inventory-count.js'])
     @endif
 
+    @if(request()->is('location'))
+        @vite(['resources/js/location-count.js'])
+    @endif
+
+    @if(request()->is('notag'))
+        @vite(['resources/js/no-tag.js'])
+    @endif
 </head>
 <body class="h-full">
 

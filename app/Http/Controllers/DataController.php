@@ -86,7 +86,7 @@ class DataController extends Controller
                 nt.by_weight,
                 nt.date_counted,
                 nt.company,
-                nt.plant,
+                nt.warehouse,
                 nt.lot_number,
                 nt.serial_number,
                 nt.user,

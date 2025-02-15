@@ -1,21 +1,26 @@
 <?php
-   use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 ?>
 
 <x-layout>
 
     <x-slot:header>
-        <x-header>Inventory Count</x-header>
+        <x-header>Location Count</x-header>
     </x-slot:header>
 
     <x-layout-container class="max-w-9xl">
 
-        <x-search-form formTitle="Search By Part/Bin" imageName="/images/bucket-expansion-joints.jpg" class="max-w-4xl">
+        <x-search-form formTitle="Search By Location" imageName="/images/ramparts-pumps-gallery.jpg" class="max-w-4xl">
 
             <form method="post" class="w-4/6 mx-auto">
                 @csrf
-                <x-form-field fieldName="part" labelText="Part" />
                 <x-form-field fieldName="bin" labelText="Bin" />
+                <select id="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                    <option selected>Choose a Plant</option>
+                    <option value="9000-P1">Plant 1</option>
+                    <option value="9000-P2">Plant 2</option>
+                    <option value="9000-P3">Plant 3</option>
+                </select>
                 <x-form-submit id="get-part">Search</x-form-submit>
             </form>
 
