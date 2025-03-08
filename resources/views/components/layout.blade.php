@@ -5,7 +5,7 @@
     ?>
 
 <!DOCTYPE html>
-<html class="h-full bg-gray-100" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="dark h-full bg-gray-100" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +25,7 @@
         </style>
     @endif
 
-    @if(request()->is('/'))
+    @if(request()->is('dashboard'))
         @vite(['resources/js/dashboard.js'])
     @endif
 

@@ -73,4 +73,7 @@ class CountController extends Controller
 
         return true;
     }
+
+
+
 }
