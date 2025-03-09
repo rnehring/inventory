@@ -4,11 +4,17 @@ use App\Http\Controllers\CountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NoTagController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home');
+
+Route::get('/employee-login', [LoginController::class, 'employeeLogin']);
+Route::post('/employee-login', [LoginController::class, 'loginEmployee']);
+Route::get('/manager-login', [LoginController::class, 'managerLogin']);
+Route::post('/manager-login', [LoginController::class, 'loginManager']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);

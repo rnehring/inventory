@@ -3,7 +3,7 @@
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center">
                 <div class="shrink-0">
-                    <img class="size-8" src="{{URL::asset('/images/andronaco_industries_logo.png')}}" alt="Andronaco Industries">
+                    <a href="/"><img class="size-8" src="{{URL::asset('/images/andronaco_industries_logo.png')}}" alt="Andronaco Industries"></a>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
@@ -38,13 +38,10 @@
                         </form>
                     @endauth
 
-
-
                 </div>
             </div>
 
         </div>
     </div>
-
 
 </nav>

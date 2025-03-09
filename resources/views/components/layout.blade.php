@@ -44,6 +44,14 @@
     @if(request()->is('notag'))
         @vite(['resources/js/no-tag.js'])
     @endif
+
+    @if(request()->is('employee-login'))
+        @vite(['resources/js/employee-login.js'])
+    @endif
+
+    @if(request()->is('manager-login'))
+        @vite(['resources/js/manager-login.js'])
+    @endif
 </head>
 <body class="h-full">
 
