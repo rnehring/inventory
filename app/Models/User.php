@@ -1,21 +1,22 @@
- <?php
-
-/**
- * Created by Reliese Model.
- */
+<?php
 
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class User
  *
  * @property int $id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
- * @property Carbon|null $email_verified_at
+ * @property string $initials
+ * @property string $company
+ * @property string $location
+ * @property int $user_type
  * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
@@ -23,13 +24,11 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class User extends Model
+class User extends Authenticatable
 {
 	protected $table = 'users';
 
-	protected $casts = [
-		'email_verified_at' => 'datetime'
-	];
+	protected $casts = [];
 
 	protected $hidden = [
 		'password',
@@ -37,10 +36,16 @@ class User extends Model
 	];
 
 	protected $fillable = [
-		'name',
+		'first_name',
+        'last_name',
+        'initials',
+        'company',
+        'location',
+        'user_type',
 		'email',
-		'email_verified_at',
 		'password',
 		'remember_token'
 	];
+
+
 }

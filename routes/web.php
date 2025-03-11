@@ -9,12 +9,16 @@ use App\Http\Controllers\NoTagController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home');
+Route::view('/', 'auth.login');
 
 Route::get('/employee-login', [LoginController::class, 'employeeLogin']);
 Route::post('/employee-login', [LoginController::class, 'loginEmployee']);
 Route::get('/manager-login', [LoginController::class, 'managerLogin']);
 Route::post('/manager-login', [LoginController::class, 'loginManager']);
+
+Route::get('/login', [SessionController::class, 'create']);
+Route::post('/login', [SessionController::class, 'store']);
+Route::post('/logout', [SessionController::class, 'destroy']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
@@ -31,6 +35,5 @@ Route::post('/location-search', [LocationController::class, 'getPartsByLocation'
 Route::get('/notag', [NoTagController::class, 'index']);
 Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
 
-Route::get('/login', [SessionController::class, 'create']);
-Route::post('/login', [SessionController::class, 'store']);
-Route::post('/logout', [SessionController::class, 'destroy']);
+
+

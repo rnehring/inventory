@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
     //
     public function employeeLogin()
     {
-        return view('employee-login');
+        return view('auth.employee-login');
     }
 
     public function managerLogin()
     {
-        return view('manager-login');
+        return view('auth.manager-login');
 
     }
 
@@ -22,9 +24,25 @@ class LoginController extends Controller
     public function loginEmployee(Request $request)
     {
         $userAttributes = $request->validate([
-            'initials' => ['required'],
+            'initials' => ['required', 'min:3'],
             'companyCode' => ['required']
         ]);
+
+        $userAttributes['user_type'] = 1;
+        $userAttributes['company'] = $request->companyCode;
+
+        if(in_array($request->companyCode, self::KENTWOOD_COMPANIES )){
+            $userAttributes['location'] = "Kentwood";
+        }
+        else{
+            $userAttributes['location'] = "Houston";
+        }
+
+        $user = User::create($userAttributes);
+
+        Auth::login($user);
+
+        return redirect('/count');
     }
 
 
@@ -34,5 +52,16 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required', 'password']
         ]);
+
+        $userAttributes['user_type'] = 2;
+        $userAttributes['company'] = "00";
+        $userAttributes['location'] = "Kentwood";
+
+        $user = User::create($userAttributes);
+
+        Auth::login($user);
+
+        return redirect('/dashboard');
+
     }
 }

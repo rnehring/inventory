@@ -2,6 +2,8 @@
 
     use Illuminate\Http\Request;
     $request = New Request();
+
+
     ?>
 
 <!DOCTYPE html>
