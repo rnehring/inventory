@@ -21,7 +21,7 @@
                 <div class="ml-4 flex items-center md:ml-6">
 
                     @guest
-                    <x-nav-link href="/login">Login</x-nav-link>
+                    <x-nav-link href="/">Login</x-nav-link>
 
                     <div>
                         <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -34,8 +34,9 @@
                     @auth
                         <form method="POST" action="/logout">
                             @csrf
-                            <x-form-submit>Logout</x-form-submit>
+                            <x-form-submit class="mt-4">Logout</x-form-submit>
                         </form>
+                        <x-avatar>{{ Auth::user()->initials }}</x-avatar>
                     @endauth
 
                 </div>

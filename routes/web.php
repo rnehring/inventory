@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'auth.login');
 
+Route::view('/admin', 'admin');
+Route::post('/create-manager', [LoginController::class, 'createManager']);
+
 Route::get('/employee-login', [LoginController::class, 'employeeLogin']);
 Route::post('/employee-login', [LoginController::class, 'loginEmployee']);
 Route::get('/manager-login', [LoginController::class, 'managerLogin']);

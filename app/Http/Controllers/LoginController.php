@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 
 class LoginController extends Controller
 {
@@ -38,7 +39,9 @@ class LoginController extends Controller
             $userAttributes['location'] = "Houston";
         }
 
-        $user = User::create($userAttributes);
+        unset($userAttributes['companyCode']);
+
+        $user = User::firstOrCreate($userAttributes);
 
         Auth::login($user);
 
@@ -57,11 +60,26 @@ class LoginController extends Controller
         $userAttributes['company'] = "00";
         $userAttributes['location'] = "Kentwood";
 
-        $user = User::create($userAttributes);
+        $user = User::firstOrCreate($userAttributes);
 
         Auth::login($user);
 
         return redirect('/dashboard');
 
+    }
+
+
+    public function createManager(Request $request){
+        $userAttributes = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', Password::min(6)]
+        ]);
+
+        $userAttributes['user_type'] = 2;
+        $userAttributes['company'] = "00";
+        $userAttributes['location'] = "Kentwood";
+
+        $user = User::create($userAttributes);
+        return redirect('/admin');
     }
 }
