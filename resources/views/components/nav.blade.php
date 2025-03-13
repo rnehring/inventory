@@ -8,12 +8,20 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                        @auth
+                        @if( Auth::user()->user_type == 2 )
                         <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav-link>
+                        @endif
+                        @if(Auth::user()->user_type == 2 )
                         <x-nav-link href="/data" :active="request()->is('data')">Data</x-nav-link>
+                        @endif
                         <x-nav-link href="/count" :active="request()->is('count')">Count</x-nav-link>
                         <x-nav-link href="/location" :active="request()->is('location')">Location</x-nav-link>
                         <x-nav-link href="/notag" :active="request()->is('notag')">No Tag</x-nav-link>
+                        @if( Auth::user()->user_type == 2 )
                         <x-nav-link href="/import" :active="request()->is('import')">Upload</x-nav-link>
+                        @endif
+                        @endauth
                     </div>
                 </div>
             </div>
@@ -36,7 +44,12 @@
                             @csrf
                             <x-form-submit class="mt-4">Logout</x-form-submit>
                         </form>
-                        <x-avatar>{{ Auth::user()->initials }}</x-avatar>
+                        @if( Auth::user()->user_type == 1 )
+                            <x-avatar>{{ Auth::user()->initials }}</x-avatar>
+                        @elseif( Auth::user()->user_type == 2 )
+                            <x-avatar>{{ substr(Auth::user()->first_name, 0,1) }}X{{ substr(Auth::user()->last_name, 0,1) }}</x-avatar>
+                        @endif
+
                     @endauth
 
                 </div>
