@@ -22,7 +22,6 @@ class LoginController extends Controller
 
     }
 
-
     public function loginEmployee(Request $request)
     {
         $userAttributes = $request->validate([
@@ -49,7 +48,6 @@ class LoginController extends Controller
         return redirect('/count');
     }
 
-
     public function loginManager(Request $request)
     {
         $userAttributes = $request->validate([
@@ -72,9 +70,7 @@ class LoginController extends Controller
         request()->session()->regenerate();
 
         return redirect('/dashboard');
-
     }
-
 
     public function createManager(Request $request){
         $userAttributes = $request->validate([

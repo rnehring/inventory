@@ -7,36 +7,32 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                         @auth
-                        @if( Auth::user()->user_type == 2 )
-                        <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav-link>
-                        @endif
-                        @if(Auth::user()->user_type == 2 )
-                        <x-nav-link href="/data" :active="request()->is('data')">Data</x-nav-link>
-                        @endif
-                        <x-nav-link href="/count" :active="request()->is('count')">Count</x-nav-link>
-                        <x-nav-link href="/location" :active="request()->is('location')">Location</x-nav-link>
-                        <x-nav-link href="/notag" :active="request()->is('notag')">No Tag</x-nav-link>
-                        @if( Auth::user()->user_type == 2 )
-                        <x-nav-link href="/import" :active="request()->is('import')">Upload</x-nav-link>
-                        @endif
+                            @if( Auth::user()->user_type == 2 )
+                                <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav-link>
+                                <x-nav-link href="/data" :active="request()->is('data')">Data</x-nav-link>
+                            @endif
+                            <x-nav-link href="/pre-count" :active="request()->is('pre-count')">Pre-Count</x-nav-link>
+                            <x-nav-link href="/count" :active="request()->is('count')">Count</x-nav-link>
+                            <x-nav-link href="/location" :active="request()->is('location')">Location</x-nav-link>
+                            <x-nav-link href="/notag" :active="request()->is('notag')">No Tag</x-nav-link>
+                            @if( Auth::user()->user_type == 2 )
+                                <x-nav-link href="/import" :active="request()->is('import')">Upload</x-nav-link>
+                            @endif
                         @endauth
                     </div>
                 </div>
             </div>
             <div class="hidden md:block">
                 <div class="ml-4 flex items-center md:ml-6">
-
                     @guest
-                    <x-nav-link href="/">Login</x-nav-link>
-
-                    <div>
-                        <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                            <span class="absolute -inset-1.5"></span>
-                            <img class="size-8 rounded-full" src="{{URL::asset('/images/default-avatar.png')}}" alt="avatar">
-                        </button>
-                    </div>
+                        <x-nav-link href="/">Login</x-nav-link>
+                        <div>
+                            <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="absolute -inset-1.5"></span>
+                                <img class="size-8 rounded-full" src="{{URL::asset('/images/default-avatar.png')}}" alt="avatar">
+                            </button>
+                        </div>
                     @endguest
 
                     @auth
@@ -49,13 +45,9 @@
                         @elseif( Auth::user()->user_type == 2 )
                             <x-avatar>{{ substr(Auth::user()->first_name, 0,1) }}X{{ substr(Auth::user()->last_name, 0,1) }}</x-avatar>
                         @endif
-
                     @endauth
-
                 </div>
             </div>
-
         </div>
     </div>
-
 </nav>

@@ -12,12 +12,9 @@ class NoTagController extends Controller
         return view('notag.index');
     }
 
-
     public function getNoTagParts(){
 
     }
-
-
 
     public function saveNoTagPart(Request $request){
 
