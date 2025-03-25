@@ -4,9 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class NoTagController extends Controller
 {
+    public $tableName;
+
+    public function __construct()
+    {
+        if(Auth::user()->location == "Kentwood"){
+            $this->tableName = "no_tag_parts";
+        }
+        else{
+            $this->tableName = "no_tag_parts_houston";
+        }
+    }
 
     public function index(){
         return view('notag.index');
@@ -22,7 +34,7 @@ class NoTagController extends Controller
         $timeNow = date("H:i:s");
 
         $addNoTagPart = DB::insert('
-            INSERT INTO no_tag_parts(
+            INSERT INTO ' . $this->tableName . '(
                      part,
                      bin,
                      count,

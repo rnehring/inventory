@@ -3,19 +3,31 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
 
+    public $tableName;
+
+    public function __construct()
+    {
+        if(Auth::user()->location == "Kentwood"){
+            $this->tableName = "inventory";
+        }
+        else{
+            $this->tableName = "inventory_houston";
+        }
+    }
 
     public function index(){
         return view('location.index');
     }
 
-
     public function getPartsByLocation(Request $request){
 
         $bin = $request->bin . "%";
+
         $partData = DB::select('
             SELECT
                 id,
@@ -61,7 +73,7 @@ class LocationController extends Controller
                     ROUND(standard_cost * expected_qty, 2) AS cost_expected,
                     ROUND(standard_cost * count, 2) AS cost_counted,
                     warehouse
-                FROM inventory) AS INV
+                FROM ' . $this->tableName . ') AS INV
             WHERE bin LIKE ? AND warehouse = ?',
             [$bin, $request->warehouse]);
 
@@ -71,7 +83,7 @@ class LocationController extends Controller
 
     public function updateCount(Request $request){
         $updatePart = DB::update('
-            UPDATE inventory
+            UPDATE ' . $this->tableName . '
             SET count = ?
             WHERE id = ?',
             [$request->count, $request->part]);

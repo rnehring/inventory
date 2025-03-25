@@ -41,8 +41,8 @@ Route::post('/update-count', [CountController::class, 'updateCount'] );
 
 // PRECOUNT ROUTES
 Route::get('/pre-count', [PreCountController::class, 'index']);
-Route::post('/inventory-search', [PreCountController::class, 'getPart'] );
-Route::post('/update-count', [PreCountController::class, 'updateCount'] );
+// Route::post('/inventory-search', [PreCountController::class, 'getPart'] );
+// Route::post('/update-count', [PreCountController::class, 'updateCount'] );
 
 // LOCATION ROUTES
 Route::get('/location', [LocationController::class, 'index']);

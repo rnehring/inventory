@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PreCountController extends Controller
 {
+
+    public $tableName;
+    public function __construct()
+    {
+        if(Auth::user()->location == "Kentwood"){
+            $this->tableName = "inventory";
+        }
+        else{
+            $this->tableName = "inventory_houston";
+        }
+    }
+
     public function index(){
         return view('precount.index');
     }
-
 
     public function getPart(Request $request){
 
