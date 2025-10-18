@@ -25,6 +25,19 @@ class CountController extends Controller
 
     public function getPart(Request $request){
 
+        if(isset($request->part) && isset($request->bin)) {
+            $where = 'WHERE part = ? AND bin = ?';
+            $params = [$request->part, $request->bin];
+        }
+        if(isset($request->part) && !isset($request->bin)) {
+            $where = 'WHERE part = ?';
+            $params = [$request->part];
+        }
+        if(!isset($request->part) && isset($request->bin)) {
+            $where = 'WHERE bin = ?';
+            $params = [$request->bin];
+        }
+
         $partData = DB::select('
             SELECT
                 id,
@@ -68,9 +81,9 @@ class CountController extends Controller
                     time_counted,
                     ROUND(standard_cost * expected_qty, 2) AS cost_expected,
                     ROUND(standard_cost * count, 2) AS cost_counted
-                FROM ' . $this->tableName . ') AS INV
-            WHERE part = ? AND bin = ?',
-            [$request->part, $request->bin]);
+                FROM ' . $this->tableName . ') AS INV ' . $where,
+                $params
+            );
 
         return json_encode($partData);
     }

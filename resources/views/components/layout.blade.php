@@ -33,6 +33,10 @@
         @vite(['resources/js/inventory-count.js'])
     @endif
 
+    @if(request()->is('pre-count'))
+        @vite(['resources/js/inventory-count.js'])
+    @endif
+
     @if(request()->is('location'))
         @vite(['resources/js/location-count.js'])
     @endif

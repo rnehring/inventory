@@ -41,8 +41,8 @@ Route::post('/update-count', [CountController::class, 'updateCount'] );
 
 // PRECOUNT ROUTES
 Route::get('/pre-count', [PreCountController::class, 'index']);
-// Route::post('/inventory-search', [PreCountController::class, 'getPart'] );
-// Route::post('/update-count', [PreCountController::class, 'updateCount'] );
+//Route::post('/inventory-search', [PreCountController::class, 'getPart'] );
+//Route::post('/update-count', [PreCountController::class, 'updateCount'] );
 
 // LOCATION ROUTES
 Route::get('/location', [LocationController::class, 'index']);
@@ -52,5 +52,6 @@ Route::post('/location-search', [LocationController::class, 'getPartsByLocation'
 Route::get('/notag', [NoTagController::class, 'index']);
 Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
 
-
+// CSV ROUTES
+Route::post('/download-data', [DataController::class, 'downloadData']);
 
