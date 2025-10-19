@@ -7,6 +7,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -50,13 +52,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InventoryUpload extends Model
 {
+    use HasFactory;
+
     protected $table = 'inventory_upload';
 
     protected $casts = [
         'count' => 'float',
         'by_weight' => 'int',
         'date_counted' => 'date',
-        'time_counted' => 'time',
+        'time_counted' => 'date',
         'period_end_date' => 'datetime',
         'period_start_date' => 'datetime'
     ];
@@ -88,15 +92,22 @@ class InventoryUpload extends Model
         'company',
         'warehouse',
         'expected_qty',
-        'standard_cost'
+        'standard_cost',
+        'cost_counted',
+        'cost_expected',
+        'plus_minus'
     ];
 
 
-    public static function product(){
-
-
-
+    protected function date_counted(): Attribute {
+        return Attribute::make(
+            set: fn(string $date) => Carbon::createFromFormat('Y-m-d', $date),
+        );
     }
 
-
+    protected function time_counted(): Attribute {
+        return Attribute::make(
+            set: fn(string $time) => Carbon::createFromFormat('H:i:s', $time),
+        );
+    }
 }

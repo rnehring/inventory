@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NoTagController;
 use App\Http\Controllers\PreCountController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'auth.login');
@@ -54,4 +55,5 @@ Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
 
 // CSV ROUTES
 Route::post('/download-data', [DataController::class, 'downloadData']);
-
+Route::get('/upload', [UploadController::class, 'index']);
+Route::post('/upload', [UploadController::class, 'processUpload']);

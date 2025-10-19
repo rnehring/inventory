@@ -17,7 +17,7 @@
                             <x-nav-link href="/location" :active="request()->is('location')">Location</x-nav-link>
                             <x-nav-link href="/notag" :active="request()->is('notag')">No Tag</x-nav-link>
                             @if( Auth::user()->user_type == 2 )
-                                <x-nav-link href="/import" :active="request()->is('import')">Upload</x-nav-link>
+                                <x-nav-link href="/upload" :active="request()->is('upload')">Upload</x-nav-link>
                             @endif
                         @endauth
                     </div>
