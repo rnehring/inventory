@@ -200,7 +200,7 @@ class DataController extends Controller
             $filename = $companyString . "_inventory_" . $timestamp . ".csv";
         }
         else{
-            $filename = DashboardController::epicorCodeToCompanyName($request->companies[0]) . "_inventory_" . $timestamp . ".csv";
+            $filename = strtolower(DashboardController::epicorCodeToCompanyName($request->companies[0])) . "_inventory_" . $timestamp . ".csv";
         }
 
 
