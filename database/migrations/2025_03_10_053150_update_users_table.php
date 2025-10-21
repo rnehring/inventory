@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('name');
-            $table->dropColumn('email_verified_at');
+            $table->id();
             $table->integer('user_type');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('initials')->nullable();
             $table->string('company');
             $table->string('location');
+            $table->string('email')->unique()->nullable();
+            $table->string('password')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
@@ -29,14 +32,17 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('name');
-            $table->timestamp('email_verified_at');
-            $table->dropColumn('user_type');
-            $table->dropColumn('first_name')->nullable();
-            $table->dropColumn('last_name')->nullable();
-            $table->dropColumn('initials')->nullable();
-            $table->dropColumn('company');
-            $table->dropColumn('location');
+            $table->id();
+            $table->integer('user_type');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('initials')->nullable();
+            $table->string('company');
+            $table->string('location');
+            $table->string('email')->unique()->nullable();
+            $table->string('password')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 };
