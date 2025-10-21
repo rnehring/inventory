@@ -1,16 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
+use Illuminate\View\View;
 use League\Csv\Writer;
 use League\Csv\Reader;
 
 class DataController extends Controller
 {
-    public function index() {
+
+    public $tableName;
+    public function __construct()
+    {
+        if(Auth::user()->location == "Kentwood"){
+            $this->tableName = "inventory";
+        }
+        else{
+            $this->tableName = "inventory_houston";
+        }
+    }
+    public function index(Request $request) {
 
         $allData = DB::select('
             SELECT
@@ -33,29 +47,8 @@ class DataController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
-                ROUND(cost_counted - cost_expected, 2) AS plus_minus
-            FROM(
-                SELECT
-                    id,
-                    tag,
-                    part,
-                    part_description,
-                    bin,
-                    description,
-                    company,
-                    lot_number,
-                    serial_number,
-                    count,
-                    user,
-                    uom,
-                    by_weight,
-                    expected_qty,
-                    standard_cost,
-                    date_counted,
-                    time_counted,
-                    ROUND(standard_cost * expected_qty, 2) AS cost_expected,
-                    ROUND(standard_cost * count, 2) AS cost_counted
-                FROM inventory) AS INV');
+                plus_minus
+            FROM '. $this->tableName);
 
         $total = 0;
 
@@ -64,7 +57,7 @@ class DataController extends Controller
         }
 
         $allData = $this->paginate($allData, 30)->setPath('/data');
-        $noTagTotal = $this->noTagTotals();
+        $noTagTotal = $this->noTagTotals($request);
         return view('data.index', ['allData' => $allData, 'total' => $total, 'noTagTotal' => $noTagTotal]);
     }
 
@@ -77,7 +70,30 @@ class DataController extends Controller
     }
 
 
-    public function noTagTotals(){
+    public function noTagTotals(Request $request){
+
+        if( is_array($request->companies) ){
+            if( count($request->companies) == 1){
+                if($request->companies[0] == "all"){
+                    $where = "";
+                }
+                else{
+                    $where = "WHERE nt.company = '" . $request->companies[0] . "'";
+                }
+            }
+            else{
+                $where = "WHERE nt.company IN(";
+                foreach($request->companies AS $company){
+                    $where .= "'" . $company . "',";
+                }
+                $where = substr($where, 0, -1);
+                $where .= ")";
+            }
+        }
+        else{
+            $where = "";
+        }
+
         $noTagData = DB::select('
             SELECT DISTINCT
                 nt.id,
@@ -95,7 +111,7 @@ class DataController extends Controller
                 p.price,
                 ROUND(nt.count * p.price, 2) AS total
             FROM no_tag_parts nt
-            JOIN part_prices p ON (nt.part = p.part)');
+            JOIN part_prices p ON (nt.part = p.part) ' . $where);
 
         $noTagTotal = 0;
 
@@ -106,7 +122,10 @@ class DataController extends Controller
         return $noTagTotal;
     }
 
-    public function downloadData(){
+    public function downloadData(Request $request){
+
+        $where = $this->buildWhereClause($request);
+
         $allData = DB::select('
             SELECT
                 id,
@@ -128,34 +147,35 @@ class DataController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
-                ROUND(cost_counted - cost_expected, 2) AS plus_minus
-            FROM(
-                SELECT
-                    id,
-                    tag,
-                    part,
-                    part_description,
-                    bin,
-                    description,
-                    company,
-                    lot_number,
-                    serial_number,
-                    count,
-                    user,
-                    uom,
-                    by_weight,
-                    expected_qty,
-                    standard_cost,
-                    date_counted,
-                    time_counted,
-                    ROUND(standard_cost * expected_qty, 2) AS cost_expected,
-                    ROUND(standard_cost * count, 2) AS cost_counted
-                FROM inventory) AS INV');
+                plus_minus
+            FROM inventory ' . $where);
 
         foreach($allData as $data){
             $record = json_decode(json_encode($data), true);
             $allDataArray[] = $record;
         }
+
+        $headers = [
+            'id',
+            'tag',
+            'part',
+            'part_description',
+            'bin',
+            'description',
+            'company',
+            'lot_number',
+            'serial_number',
+            'count',
+            'user',
+            'uom',
+            'by_weight',
+            'expected_qty',
+            'standard_cost',
+            'date_counted',
+            'time_counted',
+            'cost_expected',
+            'cost_counted',
+            'plus_minus'];
 
         //dd($allDataArray[0]);
         $filename = "dataexport.csv";
@@ -163,16 +183,86 @@ class DataController extends Controller
         fclose($file_handle);
 
         $csv = Writer::from('dataexport.csv', 'w+');
+        $csv->insertOne($headers);
         $csv->insertAll($allDataArray);
+
+        $timestamp = date('YmdHis');
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="name-for-your-file.csv"');
+        header('Content-Disposition: attachment; filename="inventory_' . $timestamp . '.csv"');
 
         $reader = Reader::from('dataexport.csv', 'r');
         $reader->download();
         die;
     }
+
+    public function currentData(Request $request) {
+
+        $where = $this->buildWhereClause($request);
+
+        $allData = DB::select('
+            SELECT
+                id,
+                tag,
+                part,
+                part_description,
+                bin,
+                description,
+                company,
+                lot_number,
+                serial_number,
+                count,
+                user,
+                uom,
+                by_weight,
+                expected_qty,
+                standard_cost,
+                date_counted,
+                time_counted,
+                cost_expected,
+                cost_counted,
+                plus_minus
+            FROM '. $this->tableName . ' ' . $where);
+
+        $total = 0;
+
+        foreach($allData as $data){
+            $total += $data->plus_minus;
+        }
+
+        $allData = $this->paginate($allData, 30)->setPath('/company-data');
+        $noTagTotal = $this->noTagTotals($request);
+
+        return view('data.company-data', ['allData' => $allData, 'total' => $total, 'noTagTotal' => $noTagTotal, 'currentCompanies' => $request->companies]);
+    }
+
+
+    public function buildWhereClause(Request $request) {
+        if( is_array($request->companies) ){
+            if( count($request->companies) == 1){
+                if($request->companies[0] == "all"){
+                    $where = "";
+                }
+                else{
+                    $where = "WHERE company = '" . $request->companies[0] . "'";
+                }
+            }
+            else{
+                $where = "WHERE company IN(";
+                foreach($request->companies AS $company){
+                    $where .= "'" . $company . "',";
+                }
+                $where = substr($where, 0, -1);
+                $where .= ")";
+            }
+        }
+        else{
+            $where = "";
+        }
+        return $where;
+    }
+
 }
 
 

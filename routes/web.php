@@ -34,6 +34,9 @@ Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
 
 // DATA ROUTES
 Route::get('/data', [DataController::class, 'index']);
+Route::post('/company-data', [DataController::class, 'currentData']);
+
+
 
 // COUNT ROUTES
 Route::get('/count', [CountController::class, 'index']);
@@ -57,3 +60,5 @@ Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
 Route::post('/download-data', [DataController::class, 'downloadData']);
 Route::get('/upload', [UploadController::class, 'index']);
 Route::post('/upload', [UploadController::class, 'processUpload']);
+Route::get('/review', [UploadController::class, 'reviewUpload']);
+Route::post('/save-upload', [UploadController::class, 'saveUpload']);

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Inventory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use League\Csv\Reader;
@@ -101,6 +104,8 @@ class UploadController extends Controller
 
         $parts = [];
 
+        $deleted = InventoryUpload::query()->delete();
+
         foreach ($csv as $part) {
             $date_counted = date_create($part['date_counted']);
             $date_counted = date_format($date_counted, 'Y-m-d');
@@ -154,11 +159,40 @@ class UploadController extends Controller
 
         InventoryUpload::insert($parts);
 
-        //dd($parts);
-        dd("All Parts Imported");
-        //return true;
+        return redirect('/review');
+
     }
 
 
+    public function paginate($items, $perPage = 5, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+
+
+    public function reviewUpload(Request $request){
+        $allParts = InventoryUpload::all();
+        $totalParts = count($allParts);
+        $allParts = $this->paginate($allParts, 30)->setPath('/review');
+        return view('upload.review', ['allParts' => $allParts, 'totalParts' => $totalParts]);
+    }
+
+
+    public function saveUpload(Request $request){
+        $copyCurrentProdData = "CALL backup_inventory_upload();";
+        DB::statement($copyCurrentProdData);
+        $clearProdData = 'TRUNCATE TABLE inventory';
+        DB::statement($clearProdData);
+        $copyToProd = "CALL copy_upload_to_inventory();";
+        DB::statement($copyToProd);
+        return view('upload.saved');
+    }
+
+    public function setTopEighty($table = 'inventory'){
+        $setTopEighty = "CALL update_top_eighty('" . $table . "');";
+        DB::statement($setTopEighty);
+    }
 
 }
