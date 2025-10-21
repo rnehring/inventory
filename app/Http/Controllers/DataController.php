@@ -188,9 +188,25 @@ class DataController extends Controller
 
         $timestamp = date('YmdHis');
 
+        if(!isset($request->companies)){
+            $filename = "inventory_" . $timestamp . ".csv";
+        }
+        elseif(count($request->companies) > 1){
+            $companyString = "";
+            foreach($request->companies AS $company){
+                $companyString .= DashboardController::epicorCodeToCompanyName($company) . "_";
+            }
+            $companyString = strtolower(substr($companyString, 0, -1));
+            $filename = $companyString . "_inventory_" . $timestamp . ".csv";
+        }
+        else{
+            $filename = DashboardController::epicorCodeToCompanyName($request->companies[0]) . "_inventory_" . $timestamp . ".csv";
+        }
+
+
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="inventory_' . $timestamp . '.csv"');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $reader = Reader::from('dataexport.csv', 'r');
         $reader->download();
