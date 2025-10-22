@@ -192,7 +192,7 @@ class UploadController extends Controller
         DB::statement($deleteTrigger);
         $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
         DB::statement($setTopEighty);
-        $addTrigger = "CALL add_inventory_costs_update_trigger_houston()";
+        $addTrigger = "CALL add_inventory_costs_update_trigger_houston();";
         DB::statement($addTrigger);
         return view('upload.saved');
     }
