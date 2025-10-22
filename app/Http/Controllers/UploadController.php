@@ -188,6 +188,12 @@ class UploadController extends Controller
         DB::statement($clearProdData);
         $copyToProd = "CALL copy_upload_to_inventory('" . $this->tableName . "');";
         DB::statement($copyToProd);
+        $deleteTrigger = "DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . ";";
+        DB::statement($deleteTrigger);
+        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
+        DB::statement($setTopEighty);
+        $addTrigger = "CALL add_inventory_costs_update_trigger_houston()";
+        DB::statement($addTrigger);
         return view('upload.saved');
     }
 
