@@ -1,5 +1,6 @@
 const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getPart);
+updateTextColors();
 
 let cells = [];
 
@@ -7,6 +8,14 @@ const formatterUSD = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
+
+function updateTextColors(){
+    document.querySelectorAll('tr:not([class=""])').forEach(tr => {
+        tr.querySelectorAll('td').forEach(td => {
+            td.style.color = '#000000'; // e.g., 'red', '#000', 'rgb(255,0,0)'
+        });
+    });
+}
 
 function makeCell(value, classes){
     let cell = document.createElement('td');
@@ -83,6 +92,9 @@ function getPart(event) {
                         part: part['id']
                     })
                     .then(function (response) {
+                        let row = document.getElementById('row'+part['id']);
+                        row.classList = ('bg-green-300');
+                        updateTextColors();
                         alert("Updated!");
                     });
                 });
@@ -90,6 +102,7 @@ function getPart(event) {
                 let thisRow = makeRow(part);
                 newTbody.appendChild(thisRow);
                 cells = [];
+                updateTextColors();
             });
 
 
