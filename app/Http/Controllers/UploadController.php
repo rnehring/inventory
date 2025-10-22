@@ -192,7 +192,20 @@ class UploadController extends Controller
         DB::statement($deleteTrigger);
         $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
         DB::statement($setTopEighty);
-        $addTrigger = "CALL add_inventory_costs_update_trigger_houston();";
+
+        $addTrigger = DB::unprepared("
+            DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_houston;
+
+            CREATE DEFINER=`rnehring`@`%` TRIGGER `calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . "`
+            BEFORE UPDATE ON `" . $this->tableName . "`
+            FOR EACH ROW
+            BEGIN
+                SET NEW.counted = 1;
+                SET NEW.cost_expected = NEW.expected_qty * NEW.standard_cost;
+                SET NEW.cost_counted = NEW.count * NEW.standard_cost;
+                SET NEW.plus_minus = NEW.cost_counted - NEW.cost_expected;
+            END
+        ");
         DB::statement($addTrigger);
         return view('upload.saved');
     }
