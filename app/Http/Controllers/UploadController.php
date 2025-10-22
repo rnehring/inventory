@@ -19,7 +19,7 @@ class UploadController extends Controller
     public $tableName;
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
         else{
@@ -148,6 +148,7 @@ class UploadController extends Controller
                 'standard_cost' => $part['standard_cost'],
                 'created_at' => now(),
                 'updated_at' => now(),
+                'counted' => 0
             ];
 
             if (count($parts) === 1000){
@@ -181,17 +182,17 @@ class UploadController extends Controller
 
 
     public function saveUpload(Request $request){
-        $copyCurrentProdData = "CALL backup_inventory_upload();";
+        $copyCurrentProdData = "CALL backup_inventory_upload('" . $this->tableName . "');";
         DB::statement($copyCurrentProdData);
-        $clearProdData = 'TRUNCATE TABLE inventory';
+        $clearProdData = 'TRUNCATE TABLE ' . $this->tableName;
         DB::statement($clearProdData);
-        $copyToProd = "CALL copy_upload_to_inventory();";
+        $copyToProd = "CALL copy_upload_to_inventory('" . $this->tableName . "');";
         DB::statement($copyToProd);
         return view('upload.saved');
     }
 
-    public function setTopEighty($table = 'inventory'){
-        $setTopEighty = "CALL update_top_eighty('" . $table . "');";
+    public function setTopEighty(){
+        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
         DB::statement($setTopEighty);
     }
 

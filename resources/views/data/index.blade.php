@@ -18,7 +18,7 @@ use App\Http\Controllers\DashboardController;
         <div class="block max-w-10xl p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 ">
             <h5 class="text-xl font-bold text-white mb-2 ">Export Data</h5>
             <hr class="mb-2">
-            <p class="mb-2 font-bold text-white">Choose all, any, or multiple (hold <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Ctrl</kbd> and click) companies below to export data for.</p>
+            <p class="mb-2 font-bold text-white">Choose all, any, or multiple companies below to export data for.</p>
 
             <form class="max-w-10xl mx-auto" method="post" action="/download-data">
                 @csrf
@@ -91,38 +91,36 @@ use App\Http\Controllers\DashboardController;
                 <th scope = "col" class = "px-2 py-3" > Bin</th >
                 <th scope = "col" class = "px-2 py-3" > Description</th >
                 <th scope = "col" class = "px-2 py-3" > Company</th >
-                <th scope = "col" class = "px-2 py-3" > Lot</th >
-                <th scope = "col" class = "px-2 py-3" > Serial</th >
                 <th scope = "col" class = "px-2 py-3" > Count</th >
                 <th scope = "col" class = "px-2 py-3 text-center" > Counted By </th >
                 <th scope = "col" class = "px-2 py-3" > UOM</th >
                 <th scope = "col" class = "px-2 py-3 text-center" > By Weight </th >
                 <th scope = "col" class = "px-2 py-3" style = "text-align:center;" > Expected Qty </th >
                 <th scope = "col" class = "px-2 py-3" style = "text-align:right;" > Cost Ea </th >
-                <th scope = "col" class = "px-2 py-3 text-center" > Cost Counted </th >
-                <th scope = "col" class = "px-2 py-3 text-center" > Cost Expected </th >
-                <th scope = "col" class = "px-2 py-3" style = "text-align:right;" > +/-</th >
+                <th scope = "col" class = "px-2 py-3 text-right" > Cost Counted </th >
+                <th scope = "col" class = "px-2 py-3 text-right" > Cost Expected </th >
+                <th scope = "col" class = "px-2 py-3 text-right"  > +/-</th >
+                <th scope = "col" class = "px-2 py-3 text-center"> Counted</th >
             </thead>
             <tbody>
                 @foreach ($allData as $row)
                     <tr class = "bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" >
                         <td class = "px-2 py-4" >{{$row->tag}}</td>
                         <td class = "px-2 py-4" >{{$row->part}}</td>
-                        <td class = "px-2 py-4" >{{$row->part_description}}</td>
+                        <td class = "px-2 py-4" >{{Str::limit($row->part_description, 50)}}</td>
                         <td class = "px-2 py-4" >{{$row->bin }}</td>
                         <td class = "px-2 py-4" >{{$row->description}}</td>
-                        <td class = "px-2 py-4" >{{$row->company}}</td>
-                        <td class = "px-2 py-4" >{{$row->lot_number ? $row->lot_number : 'none'}}</td>
-                        <td class = "px-2 py-4" >{{$row->serial_number ? $row->serial_number : 'none'}}</td>
+                        <td class = "px-2 py-4" >{{DashboardController::epicorCodeToCompanyName($row->company)}}</td>
                         <td class = "px-2 py-4" >{{$row->count}}</td>
                         <td class = "px-2 py-4" >{{$row->user}}</td>
                         <td class = "px-2 py-4" >{{$row->uom}}</td>
                         <td class = "px-2 py-4" >{{$row->by_weight}}</td>
                         <td class = "px-2 py-4" >{{$row->expected_qty}}</td>
-                        <td class = "px-2 py-4" >{{$row->standard_cost}}</td >
+                        <td class = "px-2 py-4" text-right>${{number_format($row->standard_cost, 2, '.', ',')}}</td >
                         <td class = "px-2 py-4 text-right" > ${{ $row->cost_counted }} </td>
                         <td class = "px-2 py-4 text-right" > ${{ $row->cost_expected }}</td>
                         <td class = "px-2 py-4 text-right" > ${{ $row->plus_minus }}</td>
+                        <td class = "px-2 py-4 text-center" > {{ $row->counted }}</td>
                     </tr>
                 @endforeach
             </tbody >

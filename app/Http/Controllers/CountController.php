@@ -11,7 +11,7 @@ class CountController extends Controller
     public $tableName;
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
         else{
@@ -20,9 +20,19 @@ class CountController extends Controller
     }
 
     public function index(){
-        return view('count.index');
+        $bins = $this->getBins();
+        return view('count.index',['bins' => $bins ]);
     }
 
+    public function getBins(){
+        $bins = DB::select('
+            SELECT DISTINCT
+                bin
+            FROM ' . $this->tableName
+        );
+
+        return $bins;
+    }
     public function getPart(Request $request){
 
         if(isset($request->part) && isset($request->bin)) {
@@ -59,7 +69,9 @@ class CountController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
-                plus_minus
+                plus_minus,
+                counted,
+                top_eighty
             FROM ' . $this->tableName . ' ' . $where,
                 $params
             );

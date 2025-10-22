@@ -12,7 +12,7 @@ class LocationController extends Controller
 
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
         else{
@@ -21,7 +21,17 @@ class LocationController extends Controller
     }
 
     public function index(){
-        return view('location.index');
+        return view('location.index', ['warehouses' => $this->getWarehouses()]);
+    }
+
+    public function getWarehouses(){
+        $warehouses = DB::select('
+            SELECT DISTINCT
+                warehouse
+            FROM ' . $this->tableName
+        );
+
+        return $warehouses;
     }
 
     public function getPartsByLocation(Request $request){
@@ -50,30 +60,10 @@ class LocationController extends Controller
                 cost_expected,
                 cost_counted,
                 warehouse,
-                ROUND(cost_counted - cost_expected, 2) AS plus_minus
-            FROM(
-                SELECT
-                    id,
-                    tag,
-                    part,
-                    part_description,
-                    bin,
-                    description,
-                    company,
-                    lot_number,
-                    serial_number,
-                    count,
-                    user,
-                    uom,
-                    by_weight,
-                    expected_qty,
-                    standard_cost,
-                    date_counted,
-                    time_counted,
-                    ROUND(standard_cost * expected_qty, 2) AS cost_expected,
-                    ROUND(standard_cost * count, 2) AS cost_counted,
-                    warehouse
-                FROM ' . $this->tableName . ') AS INV
+                plus_minus,
+                counted,
+                top_eighty
+            FROM ' . $this->tableName . '
             WHERE bin LIKE ? AND warehouse = ?',
             [$bin, $request->warehouse]);
 

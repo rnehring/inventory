@@ -12,7 +12,7 @@ class PreCountController extends Controller
     public $tableName;
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
         else{

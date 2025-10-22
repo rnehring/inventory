@@ -148,7 +148,6 @@ use App\Http\Controllers\Controller;
             <th scope="col" class="px-2 py-3 text-right">Cost</th>
             <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
             <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
-            <th scope="col" class="px-2 py-3 text-right">+/-</th>
             <th scope="col" class="px-2 py-3 text-center"></th>
             </thead>
             <tbody>
@@ -167,7 +166,7 @@ use App\Http\Controllers\Controller;
                         <td class="px-2 py-4 text-right">{{ $row->standard_cost }}</td>
                         <td class="px-2 py-4 text-right">${{ $row->cost_counted }} </td>
                         <td class="px-2 py-4 text-right">${{ $row->cost_expected }}</td>
-                        <td class="px-2 py-4 text-right">${{ $row->plus_minus }}</td>
+
 
                     </tr>
 

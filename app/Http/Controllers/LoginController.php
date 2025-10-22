@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Session as Session;
 
 class LoginController extends Controller
 {
@@ -32,11 +33,13 @@ class LoginController extends Controller
         $userAttributes['user_type'] = 1;
         $userAttributes['company'] = $request->companyCode;
 
+        session()->put('location', $request->location);
+
         if(in_array($request->companyCode, self::KENTWOOD_COMPANIES )){
-            $userAttributes['location'] = "Kentwood";
+            session()->put('location', 'Kentwood');
         }
         else{
-            $userAttributes['location'] = "Houston";
+            session()->put('location', 'Houston');
         }
 
         unset($userAttributes['companyCode']);
@@ -57,7 +60,7 @@ class LoginController extends Controller
 
         $userAttributes['user_type'] = 2;
         $userAttributes['company'] = "00";
-        $userAttributes['location'] = "Kentwood";
+        session()->put('location', $request->location);
 
         if(!Auth::attempt($userAttributes)){
             throw ValidationException::withMessages([

@@ -15,7 +15,15 @@
             <form method="post" class="w-4/6 mx-auto">
                 @csrf
                 <x-form-field fieldName="part" labelText="Part" />
-                <x-form-field fieldName="bin" labelText="Bin" />
+                <select id="bin" name="bin" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Choose a Bin</option>
+                    @php
+
+                        foreach($bins as $bin){
+                            echo "<option value='" . $bin->bin . "'>" . $bin->bin . "</option>";
+                        }
+                    @endphp
+                </select>
                 <x-form-submit id="get-part">Search</x-form-submit>
             </form>
 

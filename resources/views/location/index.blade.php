@@ -17,9 +17,12 @@ use App\Http\Controllers\Controller;
                 <x-form-field fieldName="bin" labelText="Bin" />
                 <select id="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                     <option selected>Choose a Plant</option>
-                    <option value="9000-P1">Plant 1</option>
-                    <option value="9000-P2">Plant 2</option>
-                    <option value="9000-P3">Plant 3</option>
+                    @php
+
+                        foreach($warehouses as $warehouse){
+                            echo "<option value='" . $warehouse->warehouse . "'>" . $warehouse->warehouse . "</option>";
+                        }
+                    @endphp
                 </select>
                 <x-form-submit id="get-part">Search</x-form-submit>
             </form>

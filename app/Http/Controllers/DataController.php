@@ -15,13 +15,16 @@ class DataController extends Controller
 {
 
     public $tableName;
+    public $ntTableName;
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
+            $this->ntTableName = "no_tag_parts";
         }
         else{
             $this->tableName = "inventory_houston";
+            $this->ntTableName = "no_tag_parts_houston";
         }
     }
     public function index(Request $request) {
@@ -47,7 +50,8 @@ class DataController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
-                plus_minus
+                plus_minus,
+                counted
             FROM '. $this->tableName);
 
         $total = 0;
@@ -110,7 +114,7 @@ class DataController extends Controller
                 nt.user,
                 p.price,
                 ROUND(nt.count * p.price, 2) AS total
-            FROM no_tag_parts nt
+            FROM ' . $this->ntTableName . ' nt
             JOIN part_prices p ON (nt.part = p.part) ' . $where);
 
         $noTagTotal = 0;

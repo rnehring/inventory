@@ -12,7 +12,7 @@ class NoTagController extends Controller
 
     public function __construct()
     {
-        if(Auth::user()->location == "Kentwood"){
+        if(session()->get('location') == "Kentwood"){
             $this->tableName = "no_tag_parts";
         }
         else{

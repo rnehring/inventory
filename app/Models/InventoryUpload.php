@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $plus_minus
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property int $counted
  *
  * @package App\Models
  */
@@ -95,7 +96,8 @@ class InventoryUpload extends Model
         'standard_cost',
         'cost_counted',
         'cost_expected',
-        'plus_minus'
+        'plus_minus',
+        'counted'
     ];
 
 

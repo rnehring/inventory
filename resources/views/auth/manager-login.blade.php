@@ -13,6 +13,11 @@
                 @csrf
                 <x-form-field fieldName="email" type="email" labelText="Email" required />
                 <x-form-field fieldName="password" type="password" labelText="Password" required />
+                <select id="location" name="location" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Choose a Location</option>
+                    <option value="Kentwood">Kentwood</option>
+                    <option value="Houston">Houston</option>
+                </select>
                 <x-form-submit id="login">Login</x-form-submit>
             </form>
         </div>
