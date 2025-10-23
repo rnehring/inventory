@@ -66,7 +66,7 @@ use App\Http\Controllers\FunctionController;
                             echo 'checked';
                         }
                         echo '>';
-                        echo '<label for="companies" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">' . DashboardController::epicorCodeToCompanyName($company) . '</label>';
+                        echo '<label for="companies" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">' . FunctionController::epicorCodeToCompanyName($company) . '</label>';
                         echo '</div>';
                         echo '</li>';
                     }
