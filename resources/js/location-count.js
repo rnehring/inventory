@@ -58,8 +58,8 @@ function getParts(event) {
                             let row = document.getElementById('row'+part['id']);
                             row.classList = ('bg-green-300');
                             updateTextColors();
-                            row.cells[11].textContent = response.data[0]['cost_counted'];
-                            row.cells[13].textContent = response.data[0]['plus_minus'];
+                            row.cells[11].textContent = '$'+response.data[0]['cost_counted'];
+                            row.cells[13].textContent = '$'+response.data[0]['plus_minus'];
                             showToast('Part Count Updated!');
 
                         });
