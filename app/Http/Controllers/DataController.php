@@ -156,7 +156,7 @@ class DataController extends FunctionController
                 cost_expected,
                 cost_counted,
                 plus_minus
-            FROM inventory ' . $where);
+            FROM ' . $this->tableName . ' ' . $where);
 
         foreach($allData as $data){
             $record = json_decode(json_encode($data), true);
@@ -183,9 +183,9 @@ class DataController extends FunctionController
             'time_counted',
             'cost_expected',
             'cost_counted',
-            'plus_minus'];
+            'plus_minus'
+        ];
 
-        //dd($allDataArray[0]);
         $filename = "dataexport.csv";
         $file_handle = fopen($filename, 'w');
         fclose($file_handle);
@@ -210,7 +210,6 @@ class DataController extends FunctionController
         else{
             $filename = strtolower(parent::epicorCodeToCompanyName($request->companies[0])) . "_inventory_" . $timestamp . ".csv";
         }
-
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Description: File Transfer');
