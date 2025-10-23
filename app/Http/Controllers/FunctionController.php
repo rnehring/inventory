@@ -32,7 +32,7 @@ class FunctionController extends Controller
     const HOUSTON_COMPANIES = [
         'CC0',
         'FC0',
-        'G50',
+        'GS0',
         'GWS',
         'DD'
     ];

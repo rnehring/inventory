@@ -52,6 +52,9 @@
     @if(request()->is('manager-login'))
         @vite(['resources/js/manager-login.js'])
     @endif
+    @if(request()->is('users'))
+        @vite(['resources/js/users.js'])
+    @endif
 </head>
 <body class="h-full">
 

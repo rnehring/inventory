@@ -11,6 +11,7 @@ use App\Http\Controllers\NoTagController;
 use App\Http\Controllers\PreCountController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'auth.login');
@@ -64,3 +65,10 @@ Route::get('/upload', [UploadController::class, 'index']);
 Route::post('/upload', [UploadController::class, 'processUpload']);
 Route::get('/review', [UploadController::class, 'reviewUpload']);
 Route::post('/save-upload', [UploadController::class, 'saveUpload']);
+
+// USER ROUTES
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users/edit', [UserController::class, 'editUser']);
+Route::post('/users/new', [UserController::class, 'newUser']);
+Route::post('/users/update', [UserController::class, 'updateUser'])->name('users.update');
+Route::post('/users/delete', [UserController::class, 'deleteUser']);
