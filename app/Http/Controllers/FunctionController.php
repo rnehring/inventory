@@ -109,7 +109,7 @@ class FunctionController extends Controller
                 return "Conley Composites";
             case "FC0":
                 return "FlowCor";
-            case "G50":
+            case "GS0":
                 return "Endurance Composites";
             case "GWS":
                 return "Great Western Supply";
