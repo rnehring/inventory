@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-class CountController extends Controller
+class CountController extends FunctionController
 {
 
     public $tableName;
     public function __construct()
     {
+        parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
@@ -20,19 +20,9 @@ class CountController extends Controller
     }
 
     public function index(){
-        $bins = $this->getBins();
-        return view('count.index',['bins' => $bins ]);
+        return view('count.index',['bins' => parent::getBins() ]);
     }
 
-    public function getBins(){
-        $bins = DB::select('
-            SELECT DISTINCT
-                bin
-            FROM ' . $this->tableName
-        );
-
-        return $bins;
-    }
     public function getPart(Request $request){
 
         if(isset($request->part) && isset($request->bin)) {
@@ -78,18 +68,4 @@ class CountController extends Controller
 
         return json_encode($partData);
     }
-
-
-    public function updateCount(Request $request){
-        $updatePart = DB::update('
-            UPDATE ' . $this->tableName . '
-            SET count = ?
-            WHERE id = ?',
-            [$request->count, $request->part]);
-
-        return true;
-    }
-
-
-
 }

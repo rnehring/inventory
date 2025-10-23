@@ -3,7 +3,7 @@
 ?>
 
 <x-layout>
-
+    <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
         <x-header>Inventory Count</x-header>
     </x-slot:header>
@@ -33,9 +33,11 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <th scope="col" class="px-2 py-3">Tag</th>
             <th scope="col" class="px-2 py-3">Part</th>
+            <th scope="col" class="px-2 py-3 text-center">Bin</th>
             <th scope="col" class="px-2 py-3 text-center">UOM</th>
             <th scope="col" class="px-2 py-3 text-center">Count</th>
             <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
+            <th scope="col" class="px-2 py-3 text-center">Company</th>
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
             <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>

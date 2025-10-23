@@ -1,65 +1,24 @@
+import {
+    epicorCodeToCompanyName,
+    updateTextColors,
+    formatToTwoDigits,
+    makeCell,
+    makeRow,
+    setCells,
+    formatterUSD,
+    showToast } from './app';
+
+setCells();
+
 const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getParts);
+
 updateTextColors();
-let cells = [];
-
-const formatterUSD = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-});
-
-function updateTextColors(){
-    document.querySelectorAll('tr:not([class=""])').forEach(tr => {
-        tr.querySelectorAll('td').forEach(td => {
-            td.style.color = '#000000'; // e.g., 'red', '#000', 'rgb(255,0,0)'
-        });
-    });
-}
-
-function makeCell(value, classes){
-    let cell = document.createElement('td');
-    cell.innerHTML = value;
-    cell.classList = 'text-gray-400 px-4 border-b ' + classes;
-    cells.push(cell);
-    return cell;
-}
-
-
-function makeRow(part){
-    console.log(part);
-    let row = document.createElement('tr');
-    row.id = `row${part['id']}`;
-    var classes = "";
-    if(part['top_eighty'] == '1' && part['counted'] == '1') {
-        classes += ' bg-green-300';
-    }
-    if(part['top_eighty'] == '1' && part['counted'] == '0') {
-        classes += 'bg-yellow-300';
-    }
-    if(part['top_eighty'] == '0' && part['counted'] == '1') {
-        classes += 'bg-green-300';
-    }
-    row.classList = `${classes}`;
-    row.dataset.lot_number = `${part['lot_number']}`;
-    row.dataset.serial_number = `${part['serial_number']}`;
-    cells.forEach((cell) => {
-        row.appendChild(cell);
-    });
-
-    return row;
-}
-
-
-function saveCount(event, partid){
-    let count = document.getElementById('count'+partid).value;
-    console.log(count);
-}
 
 function getParts(event) {
     event.preventDefault();
 
     let allRows = document.querySelectorAll('tr');
-
 
     axios.post('/location-search', {
         warehouse: document.getElementById('warehouse').value,
@@ -77,12 +36,14 @@ function getParts(event) {
             parts.forEach((part) => {
                 let tag = makeCell(`${part['tag']}`);
                 let part_number = makeCell(`${part['part']}`);
+                let bin = makeCell(`${part['bin']}`, 'text-center');
                 let uom = makeCell(`${part['uom']}`, 'text-center');
-                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 mx-auto block' value='${part['count']}' />`);
-                let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
+                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' value='${part['count']}' />`);
+                let by_weight = makeCell(`<input type='checkbox' class='mx-auto block px-2' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
+                let company = makeCell(`${epicorCodeToCompanyName(part['company'])}`, 'text-center');
                 let lot_number = makeCell(`${part['lot_number']}`);
                 let serial_number = makeCell(`${part['serial_number']}`);
-                let expected_qty = makeCell(`${part['expected_qty']}`, 'text-right');
+                let expected_qty = makeCell(`${formatToTwoDigits(part['expected_qty'])}`, 'text-right');
                 let standard_cost = makeCell(`${formatterUSD.format(part['standard_cost'])}`, 'text-right');
                 let cost_counted = makeCell(`${formatterUSD.format(part['cost_counted'])}`, 'text-right');
                 let cost_expected = makeCell(`${formatterUSD.format(part['cost_expected'])}`, 'text-right');
@@ -97,7 +58,10 @@ function getParts(event) {
                             let row = document.getElementById('row'+part['id']);
                             row.classList = ('bg-green-300');
                             updateTextColors();
-                            alert("Updated!");
+                            row.cells[11].textContent = response.data[0]['cost_counted'];
+                            row.cells[13].textContent = response.data[0]['plus_minus'];
+                            showToast('Part Count Updated!');
+
                         });
                 });
 
@@ -106,9 +70,6 @@ function getParts(event) {
                 cells = [];
                 updateTextColors();
             });
-
-
-
         })
         .catch(function (error) {
             // handle error

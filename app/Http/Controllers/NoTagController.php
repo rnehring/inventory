@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-class NoTagController extends Controller
+class NoTagController extends FunctionController
 {
     public $tableName;
 
     public function __construct()
     {
+        parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "no_tag_parts";
         }
@@ -33,7 +33,7 @@ class NoTagController extends Controller
         $dateNow = date("Y-m-d");
         $timeNow = date("H:i:s");
 
-        $addNoTagPart = DB::insert('
+        DB::insert('
             INSERT INTO ' . $this->tableName . '(
                      part,
                      bin,
@@ -58,7 +58,19 @@ class NoTagController extends Controller
                    ?,
                    ?,
                    ?)',
-            [$request->part, $request->bin, $request->count, $request->uom, $request->by_weight, $request->company, $request->warehouse, $request->lot_number, $request->serial_number, $dateNow, $timeNow]);
+            [
+                $request->part,
+                $request->bin,
+                $request->count,
+                $request->uom,
+                $request->by_weight,
+                $request->company,
+                $request->warehouse,
+                $request->lot_number,
+                $request->serial_number,
+                $dateNow,
+                $timeNow
+            ]);
 
         return true;
     }

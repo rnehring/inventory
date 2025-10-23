@@ -4,6 +4,8 @@ use App\Http\Controllers\Controller;
 
 <x-layout>
 
+    <x-toast-success id="toast-success"></x-toast-success>
+
     <x-slot:header>
         <x-header>Location Count</x-header>
     </x-slot:header>
@@ -14,13 +16,21 @@ use App\Http\Controllers\Controller;
 
             <form method="post" class="w-4/6 mx-auto">
                 @csrf
-                <x-form-field fieldName="bin" labelText="Bin" />
-                <select id="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                    <option selected>Choose a Plant</option>
+                <select id="bin" name="bin" class="block mb-3 py-2.5 px-2 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Choose a Bin</option>
+                    @php
+
+                        foreach($bins as $bin){
+                            echo "<option class='text-gray-800 px-2' value='" . $bin->bin . "'>" . $bin->bin . "</option>";
+                        }
+                    @endphp
+                </select>
+                <select id="warehouse" class="block mb-3 py-2.5 px-2 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                    <option selected class="text-gray-800">Choose a Plant</option>
                     @php
 
                         foreach($warehouses as $warehouse){
-                            echo "<option value='" . $warehouse->warehouse . "'>" . $warehouse->warehouse . "</option>";
+                            echo "<option class='text-gray-800 px-2' value='" . $warehouse->warehouse . "'>" . $warehouse->warehouse . "</option>";
                         }
                     @endphp
                 </select>
@@ -33,9 +43,11 @@ use App\Http\Controllers\Controller;
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <th scope="col" class="px-2 py-3">Tag</th>
             <th scope="col" class="px-2 py-3">Part</th>
+            <th scope="col" class="px-2 py-3 text-center">Bin</th>
             <th scope="col" class="px-2 py-3 text-center">UOM</th>
             <th scope="col" class="px-2 py-3 text-center">Count</th>
             <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
+            <th scope="col" class="px-2 py-3 text-center">Company</th>
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
             <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
@@ -49,6 +61,8 @@ use App\Http\Controllers\Controller;
 
             </tbody>
         </table>
+
+
 
     </x-layout-container>
 </x-layout>

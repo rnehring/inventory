@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 
 
-class DashboardController extends Controller
+class DashboardController extends FunctionController
 {
 
+    public function __construct(){
+        parent::__construct();
+    }
 
     public function index()
     {
@@ -32,7 +35,6 @@ class DashboardController extends Controller
         return json_encode($data);
     }
 
-
     // GET LAST WORKING DAY COUNTS OCCURRED FROM DATABASE
     public static function getLastDay()
     {
@@ -49,7 +51,6 @@ class DashboardController extends Controller
 
         return $getLastDay[0]->date_counted;
     }
-
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
     public static function getLastPreCountDay()
@@ -68,7 +69,6 @@ class DashboardController extends Controller
         return $getLastDay[0]->verified_date;
     }
 
-
     // GET USER COUNTS FROM LAST WORKING DAY
     public function yesterdayCounts(){
         $yesterday = $this->getLastDay();
@@ -85,7 +85,6 @@ class DashboardController extends Controller
         return $yesterdayUserCounts;
     }
 
-
     //  GET ALL TIME USER COUNTS
     public function allTimeCounts(){
         $allTimeCounts = DB::select('
@@ -100,7 +99,6 @@ class DashboardController extends Controller
 
         return $allTimeCounts;
     }
-
 
     //  GET TOTAL COUNTS BY COMPANY
     public function countsByCompany(){
@@ -121,7 +119,6 @@ class DashboardController extends Controller
 
         return $countsByCompany;
     }
-
 
     //  GET PERCENTAGE OF INVENTORY COUNTED BY COMPANY
     public function percentageByCompany(){
@@ -157,7 +154,6 @@ class DashboardController extends Controller
         return $preCountAllTime;
     }
 
-
     //  PRE COUNTS YESTERDAY
     public function yesterdayPreCounts(){
         $yesterday = $this->getLastPreCountDay();
@@ -181,7 +177,6 @@ class DashboardController extends Controller
         return $yesterdayUserPreCounts;
     }
 
-
     // PRE COUNTS BY COMPANY
     public function companyPreCounts(){
         $companyPreCounts = DB::select('
@@ -195,34 +190,4 @@ class DashboardController extends Controller
 
         return $companyPreCounts;
     }
-
-
-    //  HELPER CLASS TO CONVERT EPICOR COMPANY CODES TO TEXT READABLE COMPANY NAMES
-    public static function epicorCodeToCompanyName($code){
-        switch($code){
-            case "00":
-                return "Andronaco Industries";
-            case "10":
-                return "PureFlex";
-            case "20":
-                return "Nil-Cor";
-            case "30":
-                return "Ethylene";
-            case "40":
-                return "Hills-McCanna";
-            case "50":
-                return "Ramparts Pumps";
-            case "CC0":
-                return "Conley Composites";
-            case "FC0":
-                return "FlowCor";
-            case "G50":
-                return "Endurance Composites";
-            case "GWS":
-                return "Great Western Supply";
-            case "PV0":
-                return "PolyValve";
-        }
-    }
-
 }

@@ -1,24 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Inventory;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use League\Csv\Reader;
 use App\Models\InventoryUpload;
-use Illuminate\Database\Eloquent;
-use Illuminate\Database\Eloquent\Model;
-class UploadController extends Controller
+
+class UploadController extends FunctionController
 {
 
     public $tableName;
+
     public function __construct()
     {
+        parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
@@ -67,29 +65,8 @@ class UploadController extends Controller
                 time_counted,
                 cost_expected,
                 cost_counted,
-                ROUND(cost_counted - cost_expected, 2) AS plus_minus
-            FROM(
-                SELECT
-                    id,
-                    tag,
-                    part,
-                    part_description,
-                    bin,
-                    description,
-                    company,
-                    lot_number,
-                    serial_number,
-                    count,
-                    user,
-                    uom,
-                    by_weight,
-                    expected_qty,
-                    standard_cost,
-                    date_counted,
-                    time_counted,
-                    ROUND(standard_cost * expected_qty, 2) AS cost_expected,
-                    ROUND(standard_cost * count, 2) AS cost_counted
-                FROM ' . $this->tableName . ') AS INV ' . $where,
+                plus_minus
+            FROM ' . $this->tableName . ' ' . $where,
             $params
         );
 
@@ -161,9 +138,7 @@ class UploadController extends Controller
         InventoryUpload::insert($parts);
 
         return redirect('/review');
-
     }
-
 
     public function paginate($items, $perPage = 5, $page = null, $options = [])
     {
@@ -177,21 +152,29 @@ class UploadController extends Controller
         $allParts = InventoryUpload::all();
         $totalParts = count($allParts);
         $allParts = $this->paginate($allParts, 30)->setPath('/review');
-        return view('upload.review', ['allParts' => $allParts, 'totalParts' => $totalParts]);
+        return view('upload.review',
+            [
+                'allParts' => $allParts,
+                'totalParts' => $totalParts
+            ]);
     }
-
 
     public function saveUpload(Request $request){
         $copyCurrentProdData = "CALL backup_inventory_upload('" . $this->tableName . "');";
         DB::statement($copyCurrentProdData);
+
         $clearProdData = 'TRUNCATE TABLE ' . $this->tableName;
         DB::statement($clearProdData);
+
         $copyToProd = "CALL copy_upload_to_inventory('" . $this->tableName . "');";
         DB::statement($copyToProd);
+
         $deleteTrigger = "DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . ";";
         DB::statement($deleteTrigger);
+
         $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
         DB::statement($setTopEighty);
+
         DB::unprepared("
             DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_houston;
 
@@ -207,10 +190,4 @@ class UploadController extends Controller
         ");
         return view('upload.saved');
     }
-
-    public function setTopEighty(){
-        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
-        DB::statement($setTopEighty);
-    }
-
 }

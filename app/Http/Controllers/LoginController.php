@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Session as Session;
 
-class LoginController extends Controller
+class LoginController extends FunctionController
 {
-    //
+    public function __construct(){
+        parent::__construct();
+    }
+
     public function employeeLogin()
     {
         return view('auth.employee-login');
@@ -20,7 +22,6 @@ class LoginController extends Controller
     public function managerLogin()
     {
         return view('auth.manager-login');
-
     }
 
     public function loginEmployee(Request $request)
@@ -35,7 +36,7 @@ class LoginController extends Controller
 
         session()->put('location', $request->location);
 
-        if(in_array($request->companyCode, self::KENTWOOD_COMPANIES )){
+        if(in_array($request->companyCode, parent::KENTWOOD_COMPANIES )){
             session()->put('location', 'Kentwood');
         }
         else{
@@ -83,9 +84,8 @@ class LoginController extends Controller
 
         $userAttributes['user_type'] = 2;
         $userAttributes['company'] = "00";
-        $userAttributes['location'] = "Kentwood";
 
-        $user = User::create($userAttributes);
+        User::create($userAttributes);
         return redirect('/admin');
     }
 }

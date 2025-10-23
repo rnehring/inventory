@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-class LocationController extends Controller
+class LocationController extends FunctionController
 {
 
     public $tableName;
 
     public function __construct()
     {
+        parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
         }
@@ -21,22 +21,27 @@ class LocationController extends Controller
     }
 
     public function index(){
-        return view('location.index', ['warehouses' => $this->getWarehouses()]);
-    }
-
-    public function getWarehouses(){
-        $warehouses = DB::select('
-            SELECT DISTINCT
-                warehouse
-            FROM ' . $this->tableName
-        );
-
-        return $warehouses;
+        return view('location.index',
+            [
+                'warehouses' => parent::getWarehouses(),
+                'bins' => parent::getBins(),
+            ]);
     }
 
     public function getPartsByLocation(Request $request){
+        if($request->bin == "Choose a Bin"){
+            $bin = "%";
+        }
+        else{
+            $bin = $request->bin . "%";
+        }
 
-        $bin = $request->bin . "%";
+        if($request->warehouse == "Choose a Plant"){
+            $warehouse = "%";
+        }
+        else{
+            $warehouse = $request->warehouse . "%";
+        }
 
         $partData = DB::select('
             SELECT
@@ -64,20 +69,8 @@ class LocationController extends Controller
                 counted,
                 top_eighty
             FROM ' . $this->tableName . '
-            WHERE bin LIKE ? AND warehouse = ?',
-            [$bin, $request->warehouse]);
-
+            WHERE bin LIKE ? AND warehouse LIKE ?',
+            [$bin, $warehouse]);
         return json_encode($partData);
-    }
-
-
-    public function updateCount(Request $request){
-        $updatePart = DB::update('
-            UPDATE ' . $this->tableName . '
-            SET count = ?
-            WHERE id = ?',
-            [$request->count, $request->part]);
-
-        return true;
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SessionController extends Controller
+class SessionController extends FunctionController
 {
+    public function __construct(){
+        parent::__construct();
+    }
+
     public function create()
     {
         return view('auth.login');

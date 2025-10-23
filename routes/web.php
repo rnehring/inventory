@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\CountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\FunctionController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NoTagController;
@@ -41,7 +43,7 @@ Route::post('/company-data', [DataController::class, 'currentData']);
 // COUNT ROUTES
 Route::get('/count', [CountController::class, 'index']);
 Route::post('/inventory-search', [CountController::class, 'getPart'] );
-Route::post('/update-count', [CountController::class, 'updateCount'] );
+Route::post('/update-count', [FunctionController::class, 'updateCount'] );
 
 // PRECOUNT ROUTES
 Route::get('/pre-count', [PreCountController::class, 'index']);

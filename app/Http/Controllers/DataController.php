@@ -4,20 +4,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
-use Illuminate\View\View;
 use League\Csv\Writer;
 use League\Csv\Reader;
 
-class DataController extends Controller
+class DataController extends FunctionController
 {
 
     public $tableName;
     public $ntTableName;
     public function __construct()
     {
+        parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
             $this->ntTableName = "no_tag_parts";
@@ -55,16 +54,23 @@ class DataController extends Controller
             FROM '. $this->tableName);
 
         $total = 0;
-
+        $totalPlusMinus = 0;
         foreach($allData as $data){
-            $total += $data->plus_minus;
+            $total += $data->cost_counted;
+            $totalPlusMinus += $data->plus_minus;
         }
 
         $allData = $this->paginate($allData, 30)->setPath('/data');
         $noTagTotal = $this->noTagTotals($request);
-        return view('data.index', ['allData' => $allData, 'total' => $total, 'noTagTotal' => $noTagTotal]);
-    }
 
+        return view('data.index',
+            [
+                'allData' => $allData,
+                'total' => $total,
+                'totalPlusMinus' => $totalPlusMinus,
+                'noTagTotal' => $noTagTotal
+            ]);
+    }
 
     public function paginate($items, $perPage = 5, $page = null, $options = [])
     {
@@ -72,7 +78,6 @@ class DataController extends Controller
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
-
 
     public function noTagTotals(Request $request){
 
@@ -127,7 +132,6 @@ class DataController extends Controller
     }
 
     public function downloadData(Request $request){
-
         $where = $this->buildWhereClause($request);
 
         $allData = DB::select('
@@ -198,13 +202,13 @@ class DataController extends Controller
         elseif(count($request->companies) > 1){
             $companyString = "";
             foreach($request->companies AS $company){
-                $companyString .= DashboardController::epicorCodeToCompanyName($company) . "_";
+                $companyString .= parent::epicorCodeToCompanyName($company) . "_";
             }
             $companyString = strtolower(substr($companyString, 0, -1));
             $filename = $companyString . "_inventory_" . $timestamp . ".csv";
         }
         else{
-            $filename = strtolower(DashboardController::epicorCodeToCompanyName($request->companies[0])) . "_inventory_" . $timestamp . ".csv";
+            $filename = strtolower(parent::epicorCodeToCompanyName($request->companies[0])) . "_inventory_" . $timestamp . ".csv";
         }
 
 
@@ -254,9 +258,14 @@ class DataController extends Controller
         $allData = $this->paginate($allData, 30)->setPath('/company-data');
         $noTagTotal = $this->noTagTotals($request);
 
-        return view('data.company-data', ['allData' => $allData, 'total' => $total, 'noTagTotal' => $noTagTotal, 'currentCompanies' => $request->companies]);
+        return view('data.company-data',
+            [
+                'allData' => $allData,
+                'total' => $total,
+                'noTagTotal' => $noTagTotal,
+                'currentCompanies' => $request->companies
+            ]);
     }
-
 
     public function buildWhereClause(Request $request) {
         if( is_array($request->companies) ){
@@ -282,7 +291,6 @@ class DataController extends Controller
         }
         return $where;
     }
-
 }
 
 
