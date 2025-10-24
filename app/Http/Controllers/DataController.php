@@ -104,31 +104,11 @@ class DataController extends FunctionController
         }
 
         $noTagData = DB::select('
-            SELECT DISTINCT
-                nt.id,
-                nt.part,
-                nt.bin,
-                nt.count,
-                nt.uom,
-                nt.by_weight,
-                nt.date_counted,
-                nt.company,
-                nt.warehouse,
-                nt.lot_number,
-                nt.serial_number,
-                nt.user,
-                p.price,
-                ROUND(nt.count * p.price, 2) AS total
-            FROM ' . $this->ntTableName . ' nt
-            JOIN part_prices p ON (nt.part = p.part) ' . $where);
+            SELECT
+                SUM(cost_counted) as total_cost
+            FROM ' . $this->ntTableName . ' ' . $where);
 
-        $noTagTotal = 0;
-
-        foreach($noTagData as $data){
-            $noTagTotal += $data->total;
-        }
-
-        return $noTagTotal;
+        return $noTagData[0]->total_cost;
     }
 
     public function downloadData(Request $request){

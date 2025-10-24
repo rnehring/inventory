@@ -14,7 +14,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'auth.login');
+Route::get('/', [LoginController::class, 'managerLogin']);
 
 // ADMIN ROUTES
 Route::view('/admin', 'admin');
@@ -32,7 +32,7 @@ Route::post('/login', [SessionController::class, 'store']);
 Route::post('/logout', [SessionController::class, 'destroy']);
 
 // DASHBOARD ROUTES
-Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('home.dashboard');
 Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
 
 // DATA ROUTES
@@ -67,8 +67,9 @@ Route::get('/review', [UploadController::class, 'reviewUpload']);
 Route::post('/save-upload', [UploadController::class, 'saveUpload']);
 
 // USER ROUTES
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users/edit', [UserController::class, 'editUser']);
-Route::post('/users/new', [UserController::class, 'newUser']);
-Route::post('/users/update', [UserController::class, 'updateUser'])->name('users.update');
-Route::post('/users/delete', [UserController::class, 'deleteUser']);
+Route::get('/users', [UserController::class, 'index'])->name('users.index');;
+Route::get('/users/edit/{id}', [UserController::class, 'editUser']);
+Route::post('/users/update', [UserController::class, 'update'])->name('users.update');
+Route::get('/users/new', [UserController::class, 'newUser'])->name('users.new');
+Route::post('/users/new', [UserController::class, 'new'])->name('users.add');;
+Route::get('/users/delete/{id}', [UserController::class, 'deleteUser']);

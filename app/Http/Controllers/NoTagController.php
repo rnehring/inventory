@@ -2,26 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NoTagPart;
+use App\Models\NoTagPartHouston;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class NoTagController extends FunctionController
 {
     public $tableName;
-
+    public $ntTableName;
     public function __construct()
     {
         parent::__construct();
         if(session()->get('location') == "Kentwood"){
-            $this->tableName = "no_tag_parts";
+            $this->ntTableName = "no_tag_parts";
+            $this->tableName = "inventory";
         }
         else{
-            $this->tableName = "no_tag_parts_houston";
+            $this->ntTableName = "no_tag_parts_houston";
+            $this->tableName = "inventory_houston";
         }
     }
 
     public function index(){
-        return view('notag.index');
+        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPartHouston::all()]);
     }
 
     public function getNoTagParts(){
@@ -32,9 +37,13 @@ class NoTagController extends FunctionController
 
         $dateNow = date("Y-m-d");
         $timeNow = date("H:i:s");
+        $userId = Auth::id();
+        $partPrice = DB::select('SELECT price FROM part_prices_houston WHERE part = ?', [$request->part]);
+
+        $costCounted = $partPrice[0]->price * $request->count;
 
         DB::insert('
-            INSERT INTO ' . $this->tableName . '(
+            INSERT INTO ' . $this->ntTableName . '(
                      part,
                      bin,
                      count,
@@ -44,9 +53,16 @@ class NoTagController extends FunctionController
                      warehouse,
                      lot_number,
                      serial_number,
+                     user,
                      date_counted,
-                     time_counted)
+                     time_counted,
+                     standard_cost,
+                     cost_counted
+                     )
             VALUES(
+                   ?,
+                   ?,
+                   ?,
                    ?,
                    ?,
                    ?,
@@ -68,10 +84,20 @@ class NoTagController extends FunctionController
                 $request->warehouse,
                 $request->lot_number,
                 $request->serial_number,
+                $userId,
                 $dateNow,
-                $timeNow
+                $timeNow,
+                $partPrice[0]->price,
+                $costCounted
             ]);
 
-        return true;
+        if( session()->get('location') == "Kentwood"){
+            $lastRecord = NoTagPart::latest()->first();
+        }
+        else{
+            $lastRecord = NoTagPartHouston::latest()->first();
+        }
+
+        return $lastRecord;
     }
 }

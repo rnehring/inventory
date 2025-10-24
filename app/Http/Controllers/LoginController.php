@@ -21,7 +21,12 @@ class LoginController extends FunctionController
 
     public function managerLogin()
     {
-        return view('auth.manager-login');
+        if (!Auth::check()) {
+            return view('auth.manager-login');
+        } else{
+            return redirect( route('home.dashboard'), 302);
+        }
+
     }
 
     public function loginEmployee(Request $request)
@@ -59,9 +64,8 @@ class LoginController extends FunctionController
             'password' => ['required', Password::min(6)]
         ]);
 
-        $userAttributes['user_type'] = 2;
-        $userAttributes['company'] = "00";
         session()->put('location', $request->location);
+
 
         if(!Auth::attempt($userAttributes)){
             throw ValidationException::withMessages([

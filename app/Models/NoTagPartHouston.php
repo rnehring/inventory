@@ -34,32 +34,32 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class NoTagPart extends Model
+class NoTagPartHouston extends Model
 {
-	protected $table = 'no_tag_parts';
+    protected $table = 'no_tag_parts_houston';
 
-	protected $casts = [
-		'count' => 'float',
-		'by_weight' => 'int',
-		'date_counted' => 'datetime',
-		'expected_qty' => 'float',
-		'standard_cost' => 'float'
-	];
+    protected $casts = [
+        'count' => 'float',
+        'by_weight' => 'int',
+        'date_counted' => 'datetime',
+        'expected_qty' => 'float',
+        'standard_cost' => 'float'
+    ];
 
-	protected $fillable = [
-		'part',
-		'bin',
-		'count',
-		'uom',
-		'by_weight',
+    protected $fillable = [
+        'part',
+        'bin',
+        'count',
+        'uom',
+        'by_weight',
         'company',
         'warehouse',
         'lot_number',
         'serial_number',
         'user',
-		'date_counted',
+        'date_counted',
         'time_counted',
         'standard_cost',
         'cost_counted',
-	];
+    ];
 }

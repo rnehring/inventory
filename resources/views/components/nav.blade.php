@@ -13,7 +13,7 @@
                                 <x-nav-link href="/data" :active="request()->is('data')">Data</x-nav-link>
                             @endif
 {{--                            <x-nav-link href="/pre-count" :active="request()->is('pre-count')">Pre-Count</x-nav-link>--}}
-{{--                            <x-nav-link href="/count" :active="request()->is('count')">Count</x-nav-link>--}}
+                            <x-nav-link href="/count" :active="request()->is('count')">Count</x-nav-link>
                             <x-nav-link href="/location" :active="request()->is('location')">Location</x-nav-link>
                             <x-nav-link href="/notag" :active="request()->is('notag')">No Tag</x-nav-link>
                             @if( Auth::user()->user_type == 2 )

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class FunctionController extends Controller
 {
@@ -46,11 +47,13 @@ class FunctionController extends Controller
     }
 
     public function updateCount(Request $request){
+        $userId = Auth::id();
         $updatePart = DB::update('
             UPDATE ' . $this->tableName . '
-            SET count = ?
+            SET count = ?,
+            user = ?
             WHERE id = ?',
-            [$request->count, $request->part]);
+            [$request->count, $userId, $request->part]);
 
         $costs = DB::select('
             SELECT cost_counted, plus_minus FROM ' . $this->tableName . ' WHERE id = ?',[$request->part]

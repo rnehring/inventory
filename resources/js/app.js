@@ -50,7 +50,10 @@ export function makeCell(value, classes){
     cell.innerHTML = value;
     cell.classList = 'text-gray-400 px-4 border-b ';
     if(classes){
-        cell.classList.add(classes);
+        classes = classes.split(' ');
+        classes.forEach((className) => {
+            cell.classList.add(className);
+        });
     }
     cells.push(cell);
     return cell;
