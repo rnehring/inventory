@@ -94,7 +94,12 @@ class DashboardController extends FunctionController
             GROUP BY user ORDER BY counts DESC',
             [$yesterday]);
 
-        return $yesterdayUserCounts;
+        if( $getLastDay[0]->date_counted ){
+            return $getLastDay[0]->date_counted;
+        }
+        else{
+            return "2025-10-23";
+        }
     }
 
     //  GET ALL TIME USER COUNTS
