@@ -78,7 +78,12 @@ class DashboardController extends FunctionController
             WHERE verified_date < ?)',
             [$today]);
 
-        return $getLastDay[0]->verified_date;
+        if ($getLastDay[0]->verified_date){
+            return $getLastDay[0]->verified_date;
+        }
+        else{
+            return "2025-10-23";
+        }
     }
 
     // GET USER COUNTS FROM LAST WORKING DAY
@@ -94,12 +99,7 @@ class DashboardController extends FunctionController
             GROUP BY user ORDER BY counts DESC',
             [$yesterday]);
 
-        if( $getLastDay[0]->date_counted ){
-            return $getLastDay[0]->date_counted;
-        }
-        else{
-            return "2025-10-23";
-        }
+        return $yesterdayUserCounts;
     }
 
     //  GET ALL TIME USER COUNTS
