@@ -55,13 +55,7 @@ class DashboardController extends FunctionController
                 WHERE date_counted < ?)
                 ',
             [$todayCount]);
-
-        if( $getLastDay[0]->date_counted ){
-            return $getLastDay[0]->date_counted;
-        }
-        else{
             return "2025-10-23";
-        }
     }
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
@@ -78,12 +72,8 @@ class DashboardController extends FunctionController
             WHERE verified_date < ?)',
             [$today]);
 
-        if ($getLastDay[0]->verified_date){
-            return $getLastDay[0]->verified_date;
-        }
-        else{
             return "2025-10-23";
-        }
+
     }
 
     // GET USER COUNTS FROM LAST WORKING DAY
