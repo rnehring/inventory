@@ -38,7 +38,7 @@ Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
 // DATA ROUTES
 Route::get('/data', [DataController::class, 'index']);
 Route::post('/company-data', [DataController::class, 'currentData']);
-
+Route::get('/company-data', [DataController::class, 'currentData']);
 
 
 // COUNT ROUTES

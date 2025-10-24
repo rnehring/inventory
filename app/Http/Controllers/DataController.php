@@ -14,6 +14,11 @@ class DataController extends FunctionController
 
     public $tableName;
     public $ntTableName;
+
+    public $currentCompanies;
+
+    public $functionController;
+
     public function __construct()
     {
         parent::__construct();
@@ -25,6 +30,7 @@ class DataController extends FunctionController
             $this->tableName = "inventory_houston";
             $this->ntTableName = "no_tag_parts_houston";
         }
+        $this->functionController = new FunctionController();
     }
     public function index(Request $request) {
 
@@ -203,6 +209,7 @@ class DataController extends FunctionController
     public function currentData(Request $request) {
 
         $where = $this->buildWhereClause($request);
+        $this->functionController->setCurrentCompanies($request->companies);
 
         $allData = DB::select('
             SELECT
@@ -242,7 +249,7 @@ class DataController extends FunctionController
                 'allData' => $allData,
                 'total' => $total,
                 'noTagTotal' => $noTagTotal,
-                'currentCompanies' => $request->companies
+                'currentCompanies' => $this->functionController->getCurrentCompanies()
             ]);
     }
 

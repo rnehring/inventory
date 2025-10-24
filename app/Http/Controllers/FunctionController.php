@@ -11,6 +11,8 @@ class FunctionController extends Controller
     public $tableName;
     public $tableNamePre;
 
+    public $currentCompanies;
+
     public function __construct(){
         parent::__construct();
         if(session()->get('location') == "Kentwood"){
@@ -119,6 +121,14 @@ class FunctionController extends Controller
             case "PV0":
                 return "PolyValve";
         }
+    }
+
+    public function setCurrentCompanies($companies){
+        $this->currentCompanies = $companies;
+    }
+
+    public function getCurrentCompanies(){
+        return $this->currentCompanies;
     }
 
 }
