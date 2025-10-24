@@ -131,4 +131,15 @@ class FunctionController extends Controller
         return $this->currentCompanies;
     }
 
+    public function getInventoryCompanies(){
+        $companies = DB::select('SELECT DISTINCT company FROM ' . $this->tableName);
+        foreach($companies as $company) {
+            $companySelect[] = [
+                "companyName" => self::epicorCodeToCompanyName($company->company),
+                "companyCode" => $company->company
+            ];
+        }
+        return $companySelect;
+    }
+
 }

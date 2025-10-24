@@ -26,7 +26,7 @@ class NoTagController extends FunctionController
     }
 
     public function index(){
-        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPartHouston::all()]);
+        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPartHouston::all(), 'companies' => FunctionController::getInventoryCompanies()]);
     }
 
     public function getNoTagParts(){

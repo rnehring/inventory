@@ -1,10 +1,6 @@
-<?php
-
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FunctionController;
-
-?>
+@php
+    use App\Http\Controllers\FunctionController;
+@endphp
 
 <x-layout>
 
@@ -18,9 +14,7 @@ use App\Http\Controllers\FunctionController;
             class="block max-w-10xl p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 ">
             <h5 class="text-xl font-bold text-white mb-2 ">Export Data</h5>
             <hr class="mb-2">
-            <p class="mb-2 font-bold text-white">Choose all, any, or multiple (hold <kbd
-                    class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Ctrl</kbd>
-                and click) companies below to export data for.</p>
+            <p class="mb-2 font-bold text-white">Choose all, any, or multiple companies below to export data for.</p>
 
             <form class="max-w-10xl mx-auto" method="post" action="/download-data">
                 @csrf
@@ -28,7 +22,7 @@ use App\Http\Controllers\FunctionController;
                 <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-8">
 
                     <?php
-                    $companies = ['10', '20', '30', '40', '50', 'CC0', 'FC0', 'GS0', 'GWS', 'PV0'];
+                    $companies = ['10', '20', '30', '40', '50', 'CC0', 'GS0',  'PV0'];
                     foreach ($companies as $company) {
                         echo '<li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">';
                         echo '<div class="flex items-center ps-3">';
@@ -57,7 +51,7 @@ use App\Http\Controllers\FunctionController;
                 <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-8">
 
                     <?php
-                    $companies = ['10', '20', '30', '40', '50', 'CC0', 'FC0', 'GS0', 'GWS', 'PV0'];
+                    $companies = ['10', '20', '30', '40', '50', 'CC0', 'GS0', 'PV0'];
                     foreach ($companies as $company) {
                         echo '<li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">';
                         echo '<div class="flex items-center ps-3">';
@@ -87,9 +81,9 @@ use App\Http\Controllers\FunctionController;
                 $companyNameString = "";
                 foreach ($currentCompanies as $company) {
                     if (count($currentCompanies) == 1) {
-                        echo DashboardController::epicorCodeToCompanyName($company) . ' ';
+                        echo FunctionController::epicorCodeToCompanyName($company) . ' ';
                     } else {
-                        $companyNameString .= DashboardController::epicorCodeToCompanyName($company) . ', ';
+                        $companyNameString .= FunctionController::epicorCodeToCompanyName($company) . ', ';
                     }
                 }
                 $companyNameString = substr($companyNameString, 0, -2);
@@ -99,11 +93,17 @@ use App\Http\Controllers\FunctionController;
             </h5>
             <div>
                 <div
-                    class="inline-block focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                    Inventory Total : {{ Controller::formatCurrency($total) }}</div>
+                    class="inline-block focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">
+                    Inventory Total : {{ FunctionController::formatCurrency($total) }}
+                </div>
                 <div
                     class="inline-block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                    No Tag Total : {{ Controller::formatCurrency($noTagTotal) }}</div>
+                    No Tag Total : {{ FunctionController::formatCurrency($noTagTotal) }}
+                </div>
+                <div
+                    class="inline-block focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                    Total Plus/Minus : {{ FunctionController::formatCurrency($totalPlusMinus) }}
+                </div>
             </div>
         </div>
 

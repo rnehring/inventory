@@ -40,16 +40,11 @@ use App\Http\Controllers\FunctionController;
                 <x-form-label class="mt-4">Company</x-form-label>
                 <select id="company" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Company</option>
-                    <option value="10">PureFlex</option>
-                    <option value="20">Nil-Cor</option>
-                    <option value="30">Ethyene</option>
-                    <option value="40">Hills-McCanna</option>
-                    <option value="50">Ramparts Pumps</option>
-                    <option value="CC0">Conley Composites</option>
-                    <option value="FC0">Flowcor</option>
-                    <option value="GS0">Endurance Composites</option>
-                    <option value="GW0">GWS</option>
-                    <option value="PV0">PolyValve</option>
+
+                    @foreach($companies as $company)
+                        <option value="{{ $company['companyCode'] }}">{{ $company['companyName'] }}</option>
+                    @endforeach
+
                 </select>
 
                 <x-form-label class="mt-4">Plant</x-form-label>

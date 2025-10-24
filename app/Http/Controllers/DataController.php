@@ -236,9 +236,10 @@ class DataController extends FunctionController
             FROM '. $this->tableName . ' ' . $where);
 
         $total = 0;
-
+        $totalPlusMinus = 0;
         foreach($allData as $data){
-            $total += $data->plus_minus;
+            $total += $data->cost_counted;
+            $totalPlusMinus += $data->plus_minus;
         }
 
         $allData = $this->paginate($allData, 30)->setPath('/company-data');
@@ -249,7 +250,8 @@ class DataController extends FunctionController
                 'allData' => $allData,
                 'total' => $total,
                 'noTagTotal' => $noTagTotal,
-                'currentCompanies' => $this->functionController->getCurrentCompanies()
+                'currentCompanies' => $this->functionController->getCurrentCompanies(),
+                'totalPlusMinus' => $totalPlusMinus,
             ]);
     }
 
