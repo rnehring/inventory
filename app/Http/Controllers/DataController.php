@@ -87,11 +87,11 @@ class DataController extends FunctionController
                     $where = "";
                 }
                 else{
-                    $where = "WHERE nt.company = '" . $request->companies[0] . "'";
+                    $where = "WHERE company = '" . $request->companies[0] . "'";
                 }
             }
             else{
-                $where = "WHERE nt.company IN(";
+                $where = "WHERE company IN(";
                 foreach($request->companies AS $company){
                     $where .= "'" . $company . "',";
                 }
