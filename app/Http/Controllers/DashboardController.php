@@ -10,6 +10,13 @@ class DashboardController extends FunctionController
 
     public function __construct(){
         parent::__construct();
+            if(session()->get('location') == "Kentwood"){
+                $this->tableName = "inventory";
+                $this->tableNamePre = "inventory";
+            }
+            else{
+                $this->tableName = "inventory_houston";
+            }
     }
 
     public function index()
@@ -36,15 +43,15 @@ class DashboardController extends FunctionController
     }
 
     // GET LAST WORKING DAY COUNTS OCCURRED FROM DATABASE
-    public static function getLastDay()
+    public function getLastDay()
     {
         $todayCount = date('Y-m-d');
         $getLastDay = DB::select('
             SELECT date_counted
-            FROM inventory
+            FROM ' . $this->tableName . '
             WHERE date_counted = (
                 SELECT MAX(date_counted)
-                FROM inventory AS yesterday
+                FROM ' . $this->tableName . ' AS yesterday
                 WHERE date_counted < ?)
                 ',
             [$todayCount]);
@@ -53,7 +60,7 @@ class DashboardController extends FunctionController
     }
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
-    public static function getLastPreCountDay()
+    public function getLastPreCountDay()
     {
         $today = date('Y-m-d');
         $getLastDay = DB::select('
@@ -77,7 +84,7 @@ class DashboardController extends FunctionController
             SELECT
                 user,
                 COUNT(user) as counts
-            FROM inventory
+            FROM ' . $this->tableName . '
             WHERE date_counted = ?
             GROUP BY user ORDER BY counts DESC',
             [$yesterday]);
@@ -91,7 +98,7 @@ class DashboardController extends FunctionController
             SELECT
                 user,
                 COUNT(user) as counts
-            FROM inventory
+            FROM ' . $this->tableName . '
             WHERE user != ?
             GROUP BY user
             ORDER BY counts DESC',
@@ -106,7 +113,7 @@ class DashboardController extends FunctionController
             SELECT
                 company,
                 COUNT(count) as counts
-            FROM inventory
+            FROM ' . $this->tableName . '
             WHERE date_counted != ?
             GROUP BY company
             ORDER BY counts DESC',
@@ -124,11 +131,11 @@ class DashboardController extends FunctionController
     public function percentageByCompany(){
         $percentageByCompany = DB::select('
             SELECT
-                SUM(date_counted != ? )*100/count(*) AS percentage,
+                SUM(counted = ? )*100/count(*) AS percentage,
                 company
-            FROM inventory
+            FROM ' . $this->tableName . '
             GROUP BY company',
-            ['0000-00-00']);
+            ['1']);
 
         $percentageByCompany = json_decode(json_encode($percentageByCompany), true);
         for($i = 0; $i < count($percentageByCompany); $i++){
