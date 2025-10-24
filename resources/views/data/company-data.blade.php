@@ -51,7 +51,7 @@ use App\Http\Controllers\FunctionController;
             <h5 class="text-xl font-bold text-white mb-2 ">Current Data</h5>
             <hr class="mb-2">
             <p class="mb-2 font-bold text-white">Choose all, any, or multiple companies below to view data for.</p>
-            <form class="max-w-10xl mx-auto" method="post" action="/data">
+            <form class="max-w-10xl mx-auto" method="post" action="/company-data">
                 @csrf
 
                 <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-8">
