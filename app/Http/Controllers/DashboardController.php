@@ -56,7 +56,12 @@ class DashboardController extends FunctionController
                 ',
             [$todayCount]);
 
-        return $getLastDay[0]->date_counted;
+        if( $getLastDay[0]->date_counted ){
+            return $getLastDay[0]->date_counted;
+        }
+        else{
+            return "2025-10-23";
+        }
     }
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
