@@ -13,7 +13,7 @@ axios.get('/dashboard-data')
                         {
                             label: 'Counts by User (All Time)',
                             data: response.data.allTimeCounts.map(row => row.counts),
-                            backgroundColor: '#d6fad6'
+                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
                         }
                     ]
                 },
@@ -39,7 +39,7 @@ axios.get('/dashboard-data')
                         {
                             label: 'Counts by User (All Time)',
                             data: response.data.yesterdayCounts.map(row => row.counts),
-                            backgroundColor: '#d6fad6'
+                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
                         }
                     ]
                 },
@@ -65,7 +65,7 @@ axios.get('/dashboard-data')
                         {
                             label: 'Counts by User (All Time)',
                             data: response.data.percentageByCompany.map(row => row.percentage),
-                            backgroundColor: '#d6fad6'
+                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
                         }
                     ]
                 },
