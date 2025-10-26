@@ -80,83 +80,83 @@ axios.get('/dashboard-data')
         )
 
         // PRE COUNT BINS VERIFIED
-        new Chart(
-            document.getElementById('bins-verified-all-time'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.preCountAllTime.map(row => row.user),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.preCountAllTime.map(row => row.counts),
-
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
+        // new Chart(
+        //     document.getElementById('bins-verified-all-time'),
+        //     {
+        //         type: 'bar',
+        //         responsive: true,
+        //         data: {
+        //             labels: response.data.preCountAllTime.map(row => row.user),
+        //             datasets: [
+        //                 {
+        //                     label: 'Counts by User (All Time)',
+        //                     data: response.data.preCountAllTime.map(row => row.counts),
+        //
+        //                 }
+        //             ]
+        //         },
+        //         options: {
+        //             plugins: {
+        //                 legend: {
+        //                     display: false
+        //                 }
+        //             }
+        //         }
+        //     }
+        // )
 
         // PRE COUNT BINS VERIFIED
-        new Chart(
-            document.getElementById('bins-verified-yesterday'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.yesterdayPreCounts.map(row => row.user),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.yesterdayPreCounts.map(row => row.counts),
-
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
+        // new Chart(
+        //     document.getElementById('bins-verified-yesterday'),
+        //     {
+        //         type: 'bar',
+        //         responsive: true,
+        //         data: {
+        //             labels: response.data.yesterdayPreCounts.map(row => row.user),
+        //             datasets: [
+        //                 {
+        //                     label: 'Counts by User (All Time)',
+        //                     data: response.data.yesterdayPreCounts.map(row => row.counts),
+        //
+        //                 }
+        //             ]
+        //         },
+        //         options: {
+        //             plugins: {
+        //                 legend: {
+        //                     display: false
+        //                 }
+        //             }
+        //         }
+        //     }
+        // )
 
 
         // PRE COUNT BINS VERIFIED BY COMPANY
-        new Chart(
-            document.getElementById('bins-verified-by-company'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.companyPreCounts.map(row => row.company),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.companyPreCounts.map(row => row.counts),
-
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
+        // new Chart(
+        //     document.getElementById('bins-verified-by-company'),
+        //     {
+        //         type: 'bar',
+        //         responsive: true,
+        //         data: {
+        //             labels: response.data.companyPreCounts.map(row => row.company),
+        //             datasets: [
+        //                 {
+        //                     label: 'Counts by User (All Time)',
+        //                     data: response.data.companyPreCounts.map(row => row.counts),
+        //
+        //                 }
+        //             ]
+        //         },
+        //         options: {
+        //             plugins: {
+        //                 legend: {
+        //                     display: false
+        //                 }
+        //             }
+        //         }
+        //     }
+        // )
 
     })
     .catch(function (error) {

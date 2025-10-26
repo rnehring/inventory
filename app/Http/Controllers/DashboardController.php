@@ -34,9 +34,9 @@ class DashboardController extends FunctionController
             'allTimeCounts' => $this->allTimeCounts(),
             'yesterdayCounts' => $this->yesterdayCounts(),
             'percentageByCompany' => $this->percentageByCompany(),
-            'preCountAllTime' => $this->preCountAllTime(),
-            'yesterdayPreCounts' => $this->yesterdayPreCounts(),
-            'companyPreCounts' => $this->companyPreCounts()
+//            'preCountAllTime' => $this->preCountAllTime(),
+//            'yesterdayPreCounts' => $this->yesterdayPreCounts(),
+//            'companyPreCounts' => $this->companyPreCounts()
         ];
 
         return json_encode($data);
