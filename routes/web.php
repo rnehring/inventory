@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\CountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;

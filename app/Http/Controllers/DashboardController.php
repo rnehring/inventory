@@ -55,7 +55,8 @@ class DashboardController extends FunctionController
                 WHERE date_counted < ?)
                 ',
             [$todayCount]);
-            return "2025-10-23";
+
+            return $getLastDay[0]->date_counted;
     }
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
@@ -72,7 +73,7 @@ class DashboardController extends FunctionController
             WHERE verified_date < ?)',
             [$today]);
 
-            return "2025-10-23";
+        return $getLastDay[0]->verified_date;
 
     }
 
@@ -82,11 +83,16 @@ class DashboardController extends FunctionController
 
         $yesterdayUserCounts = DB::select('
             SELECT
-                user,
-                COUNT(user) as counts
-            FROM ' . $this->tableName . '
-            WHERE date_counted = ?
-            GROUP BY user ORDER BY counts DESC',
+                ih.user,
+                COUNT(ih.user) as counts,
+                u.id,
+                u.first_name as first_name,
+                u.last_name as last_name
+            FROM ' . $this->tableName . ' ih
+            JOIN users u ON u.id = ih.user
+            WHERE ih.date_counted = ?
+            GROUP BY ih.user
+            ORDER BY counts DESC;',
             [$yesterday]);
 
         return $yesterdayUserCounts;
@@ -96,10 +102,14 @@ class DashboardController extends FunctionController
     public function allTimeCounts(){
         $allTimeCounts = DB::select('
             SELECT
-                user,
-                COUNT(user) as counts
-            FROM ' . $this->tableName . '
-            WHERE user != ?
+                ih.user,
+                COUNT(user) as counts,
+                u.id,
+                u.first_name as first_name,
+                u.last_name as last_name
+            FROM ' . $this->tableName . ' ih
+            JOIN users u ON u.id = ih.user
+            WHERE ih.user != ?
             GROUP BY user
             ORDER BY counts DESC',
             ['']);

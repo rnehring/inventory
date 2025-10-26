@@ -8,7 +8,7 @@ axios.get('/dashboard-data')
                 type: 'bar',
                 responsive: true,
                 data: {
-                    labels: response.data.allTimeCounts.map(row => row.user),
+                    labels: response.data.allTimeCounts.map(row => row.first_name + ' ' + row.last_name),
                     datasets: [
                         {
                             label: 'Counts by User (All Time)',
@@ -34,7 +34,7 @@ axios.get('/dashboard-data')
                 type: 'bar',
                 responsive: true,
                 data: {
-                    labels: response.data.yesterdayCounts.map(row => row.user),
+                    labels: response.data.yesterdayCounts.map(row => row.first_name + ' ' + row.last_name),
                     datasets: [
                         {
                             label: 'Counts by User (All Time)',

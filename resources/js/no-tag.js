@@ -22,6 +22,9 @@ function saveCount(event, partid){
 
 function addNoTag(event) {
     event.preventDefault();
+    submitButton.disabled = true;
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
 
     let allRows = document.querySelectorAll('tr');
     let checkbox = document.getElementById('by_weight');
@@ -73,7 +76,12 @@ function addNoTag(event) {
             console.log(error);
         })
         .finally(function () {
-            // always executed
+            setTimeout(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+                const form = document.querySelector('#NoTagForm');
+                form.reset();
+            }, 3000);
         });
 }
 

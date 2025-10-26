@@ -12,7 +12,7 @@ use App\Http\Controllers\FunctionController;
 
         <x-search-form formTitle="Add Inventory Without a Tag Number" imageName="/images/notagsidebar.jpg" class="max-w-6xl">
 
-            <form method="post" action="/notag/save" class="w-4/6 mx-auto">
+            <form method="post" action="/notag/save" class="w-4/6 mx-auto" name="NoTagForm" id="NoTagForm">
                 @csrf
                 <x-form-field fieldName="part" labelText="Part Number" />
                 <x-form-field fieldName="bin" labelText="Bin" />
@@ -33,7 +33,7 @@ use App\Http\Controllers\FunctionController;
                 </select>
 
                 <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700 mt-4">
-                    <input checked id="by_weight" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <input id="by_weight" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 
