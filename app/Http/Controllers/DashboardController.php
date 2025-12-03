@@ -12,10 +12,13 @@ class DashboardController extends FunctionController
         parent::__construct();
             if(session()->get('location') == "Kentwood"){
                 $this->tableName = "inventory";
-                $this->tableNamePre = "inventory";
+                $this->tableNamePre = "precount";
+                $this->ntTableName = "no_tag_parts";
             }
             else{
                 $this->tableName = "inventory_houston";
+                $this->tableNamePre = "precount_houston";
+                $this->ntTableName = "no_tag_parts_houston";
             }
     }
 
@@ -46,6 +49,16 @@ class DashboardController extends FunctionController
     public function getLastDay()
     {
         $todayCount = date('Y-m-d');
+        $getLastNtDay = DB::select('
+            SELECT date_counted
+            FROM ' . $this->ntTableName . '
+            WHERE date_counted = (
+                SELECT MAX(date_counted)
+                FROM ' . $this->ntTableName . ' AS yesterday
+                WHERE date_counted < ?)
+                ',
+            [$todayCount]);
+
         $getLastDay = DB::select('
             SELECT date_counted
             FROM ' . $this->tableName . '
@@ -56,7 +69,12 @@ class DashboardController extends FunctionController
                 ',
             [$todayCount]);
 
-            return $getLastDay[0]->date_counted;
+            if($getLastNtDay[0]->date_counted > $getLastDay[0]->date_counted){
+                return $getLastNtDay[0]->date_counted;
+            } else{
+                return $getLastDay[0]->date_counted;
+            }
+
     }
 
     // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
@@ -95,6 +113,39 @@ class DashboardController extends FunctionController
             ORDER BY counts DESC;',
             [$yesterday]);
 
+        $yesterdayUserNtCounts = DB::select('
+            SELECT
+                ih.user,
+                COUNT(ih.user) as counts,
+                u.id,
+                u.first_name as first_name,
+                u.last_name as last_name
+            FROM ' . $this->ntTableName . ' ih
+            JOIN users u ON u.id = ih.user
+            WHERE ih.date_counted = ?
+            GROUP BY ih.user
+            ORDER BY counts DESC;',
+            [$yesterday]);
+
+        $combined = [];
+
+        foreach (array_merge($yesterdayUserCounts, $yesterdayUserNtCounts) as $user) {
+            $userId = $user->id;
+
+            if (isset($combined[$userId])) {
+                // User already exists, add to count
+                $combined[$userId]->count += $user->count;
+            } else {
+                // New user, add to array
+                $combined[$userId] = clone $user; // Clone to avoid reference issues
+            }
+        }
+
+// Convert back to indexed array
+        $combined = array_values($combined);
+
+        //dd($combined);
+
         return $yesterdayUserCounts;
     }
 
@@ -113,6 +164,8 @@ class DashboardController extends FunctionController
             GROUP BY user
             ORDER BY counts DESC',
             ['']);
+
+
 
         return $allTimeCounts;
     }

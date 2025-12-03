@@ -18,7 +18,7 @@
 {{--                    <option value="Kentwood">Kentwood</option>--}}
 {{--                    <option value="Houston">Houston</option>--}}
 {{--                </select>--}}
-                <input type="hidden" name="location" value="Houston" />
+                <input type="hidden" name="location" value="Kentwood" />
                 <x-form-submit id="login">Login</x-form-submit>
             </form>
         </div>
