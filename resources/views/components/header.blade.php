@@ -10,7 +10,7 @@
 @endif
 
     <div class="">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $slot }}</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Kentwood {{ $slot }}</h1>
     </div>
 
     @if(request()->is('data'))

@@ -12,21 +12,24 @@ class NoTagController extends FunctionController
 {
     public $tableName;
     public $ntTableName;
+    public $className;
     public function __construct()
     {
         parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->ntTableName = "no_tag_parts";
             $this->tableName = "inventory";
+            $this->className = "NoTagPart";
         }
         else{
             $this->ntTableName = "no_tag_parts_houston";
             $this->tableName = "inventory_houston";
+            $this->className = "NoTagPartHouston";
         }
     }
 
     public function index(){
-        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPartHouston::all(), 'companies' => FunctionController::getInventoryCompanies()]);
+        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPart::all(), 'companies' => FunctionController::getInventoryCompanies()]);
     }
 
     public function getNoTagParts(){
