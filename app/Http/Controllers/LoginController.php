@@ -14,6 +14,11 @@ class LoginController extends FunctionController
         parent::__construct();
     }
 
+    public function index()
+    {
+        return view('auth.login');
+    }
+
     public function employeeLogin()
     {
         return view('auth.employee-login');
