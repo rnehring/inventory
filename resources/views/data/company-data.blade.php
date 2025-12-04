@@ -142,7 +142,7 @@
                         <td class="px-2 py-4">{{$row->part_description}}</td>
                         <td class="px-2 py-4">{{$row->bin }}</td>
                         <td class="px-2 py-4">{{$row->description}}</td>
-                        <td class="px-2 py-4">{{$row->company}}</td>
+                        <td class="px-2 py-4">{{ FunctionController::epicorCodeToCompanyName($row->company) }}</td>
                         <td class="px-2 py-4">{{$row->lot_number ? $row->lot_number : 'none'}}</td>
                         <td class="px-2 py-4">{{$row->serial_number ? $row->serial_number : 'none'}}</td>
                         <td class="px-2 py-4">{{$row->count}}</td>
