@@ -2,6 +2,10 @@
    use App\Http\Controllers\Controller;
 ?>
 
+<script>
+    const userType = {{ Auth::user()->user_type ?? 0 }};
+</script>
+
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
