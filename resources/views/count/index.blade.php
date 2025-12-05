@@ -36,6 +36,7 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <th scope="col" class="px-2 py-3">Tag</th>
             <th scope="col" class="px-2 py-3">Part</th>
+            <th scope="col" class="px-2 py-3 text-center">Warehouse</th>
             <th scope="col" class="px-2 py-3 text-center">Bin</th>
             <th scope="col" class="px-2 py-3 text-center">UOM</th>
             <th scope="col" class="px-2 py-3 text-center">Count</th>

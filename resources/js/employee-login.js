@@ -8,7 +8,7 @@ window.onload = () => {
 function checkSelect(){
     let companyChosen = document.getElementById("company");
     let companyValue = companyChosen.value;
-    updateLogo(companyValue);
+    //updateLogo(companyValue);
 
 
     let companyCode = document.getElementById("companyCode");

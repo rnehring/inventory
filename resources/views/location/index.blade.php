@@ -2,6 +2,10 @@
 use App\Http\Controllers\Controller;
 ?>
 
+
+<script>
+    const userType = {{ Auth::user()->user_type ?? 0 }};
+</script>
 <x-layout>
 
     <x-toast-success id="toast-success"></x-toast-success>
@@ -43,6 +47,7 @@ use App\Http\Controllers\Controller;
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <th scope="col" class="px-2 py-3">Tag</th>
             <th scope="col" class="px-2 py-3">Part</th>
+            <th scope="col" class="px-2 py-3 text-center">Warehouse</th>
             <th scope="col" class="px-2 py-3 text-center">Bin</th>
             <th scope="col" class="px-2 py-3 text-center">UOM</th>
             <th scope="col" class="px-2 py-3 text-center">Count</th>
@@ -51,10 +56,12 @@ use App\Http\Controllers\Controller;
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
             <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
-            <th scope="col" class="px-2 py-3 text-right">+/-</th>
+            @if( Auth::user()->user_type == 2 )
+                <th scope="col" class="px-2 py-3 text-right">Cost</th>
+                <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
+                <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
+                <th scope="col" class="px-2 py-3 text-right">+/-</th>
+            @endif
             <th scope="col" class="px-2 py-3 text-center"></th>
             </thead>
             <tbody class="text-gray-900 px-2 border-b">

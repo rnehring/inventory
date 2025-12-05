@@ -19,16 +19,20 @@
                 @csrf
 
                 <select id="company" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                    <option value="logo-white.png" selected data-cc="00">Choose Your Company</option>
-                    <option value="pureflex-logo-grey-2.png" data-cc="10">PureFlex</option>
-                    <option value="nil-cor-logo.png" data-cc="20">Nilcor</option>
-                    <option value="ethylene-new.png" data-cc="30">Ethylene</option>
-                    <option value="hills-mccanna-logo.png" data-cc="40">Hills-McCanna</option>
-                    <option value="conley-composites-logo.png" data-cc="CC0">Conley Composites</option>
-                    <option value="polyvalve-grey-2.png" data-cc="PV0">PolyValve</option>
-                    <option value="ramparts-logo-grey.png" data-cc="50">Ramparts Pumps</option>
-                    <option value="diamond-fiberglass-tagline-final-grey.png" data-cc="DD">Diamond Fiberglass</option>
-                    <option value="endurance-grey-logo.png" data-cc="10">Endurance Composites</option>
+{{--                    <option value="logo-white.png" selected data-cc="00">Choose Your Company</option>--}}
+{{--                    <option value="pureflex-logo-grey-2.png" data-cc="10">PureFlex</option>--}}
+{{--                    <option value="nil-cor-logo.png" data-cc="20">Nilcor</option>--}}
+{{--                    <option value="ethylene-new.png" data-cc="30">Ethylene</option>--}}
+{{--                    <option value="hills-mccanna-logo.png" data-cc="40">Hills-McCanna</option>--}}
+{{--                    <option value="conley-composites-logo.png" data-cc="CC0">Conley Composites</option>--}}
+{{--                    <option value="polyvalve-grey-2.png" data-cc="PV0">PolyValve</option>--}}
+{{--                    <option value="ramparts-logo-grey.png" data-cc="50">Ramparts Pumps</option>--}}
+{{--                    <option value="diamond-fiberglass-tagline-final-grey.png" data-cc="DD">Diamond Fiberglass</option>--}}
+{{--                    <option value="endurance-grey-logo.png" data-cc="10">Endurance Composites</option>--}}
+                    <option value="logo-white.png" selected data-cc="">Choose Your Plant/Warehouse</option>
+                    <option value="9000-P1" selected data-cc="9000-P1">Plant 1</option>
+                    <option value="9000-P2" selected data-cc="9000-P2">Plant 2</option>
+                    <option value="9000-P3" selected data-cc="9000-P3">Plant 3</option>
                 </select>
 
                 <input type="hidden" name="companyCode" id="companyCode" />
