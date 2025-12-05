@@ -69,8 +69,8 @@ class LoginController extends FunctionController
             'password' => ['required', Password::min(6)]
         ]);
 
+        $userAttributes['user_type'] = 2;
         session()->put('location', $request->location);
-
 
         if(!Auth::attempt($userAttributes)){
             throw ValidationException::withMessages([
