@@ -16,6 +16,9 @@ class LoginController extends FunctionController
 
     public function index()
     {
+        if (Auth::check()) {
+            return redirect('/dashboard');
+        }
         return view('auth.login');
     }
 
