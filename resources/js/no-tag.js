@@ -58,8 +58,11 @@ function addNoTag(event) {
             let warehouse = makeCell(`${part.warehouse}`, 'text-center');
             let lot_number = makeCell(`${part.lot_number}`, 'text-center');
             let serial_number = makeCell(`${part.serial_number}`, 'text-center');
-            let standard_cost = makeCell(`${formatterUSD.format(part.standard_cost)}`, 'text-right');
-            let cost_counted = makeCell(`${formatterUSD.format(part.cost_counted)}`, 'text-right');
+            if(userType == 2){
+                let standard_cost = makeCell(`${formatterUSD.format(part.standard_cost)}`, 'text-right');
+                let cost_counted = makeCell(`${formatterUSD.format(part.cost_counted)}`, 'text-right');
+            }
+
             let thisRow = makeRow(part);
             tableBody.appendChild(thisRow);
             cells = [];

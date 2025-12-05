@@ -1,7 +1,9 @@
 <?php
 use App\Http\Controllers\FunctionController;
 ?>
-
+<script>
+    const userType = {{ Auth::user()->user_type ?? 0 }};
+</script>
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
@@ -106,8 +108,10 @@ use App\Http\Controllers\FunctionController;
                     <td class="border-b px-4 py-4 text-center"> {{ $row->warehouse }} </td>
                     <td class="border-b px-4 py-4 text-center"> {{ $row->lot_number }} </td>
                     <td class="border-b px-4 py-4 text-center"> {{ $row->serial_number }} </td>
-                    <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->standard_cost, 2, '.', ',') }} </td>
-                    <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->cost_counted, 2, '.', ',') }} </td>
+                    @if( Auth::user()->user_type == 2 )
+                        <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->standard_cost, 2, '.', ',') }} </td>
+                        <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->cost_counted, 2, '.', ',') }} </td>
+                    @endif
                 </tr>
             @endforeach
             </tbody>
