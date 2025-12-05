@@ -83,8 +83,10 @@ use App\Http\Controllers\FunctionController;
                 <th scope="col" class="px-4 py-3 text-center">Warehouse</th>
                 <th scope="col" class="px-4 py-3 text-center">Lot Number</th>
                 <th scope="col" class="px-4 py-3 text-center">Serial Number</th>
-                <th scope="col" class="px-4 py-3 text-right">Cost</th>
-                <th scope="col" class="px-4 py-3 text-right">Cost Counted</th>
+                @if( Auth::user()->user_type == 2 )
+                    <th scope="col" class="px-4 py-3 text-right">Cost</th>
+                    <th scope="col" class="px-4 py-3 text-right">Cost Counted</th>
+                @endif
             </thead>
             <tbody class="text-gray-900 px-4 border-b">
             @foreach ($noTagParts as $row)
