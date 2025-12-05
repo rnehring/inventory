@@ -26,4 +26,3 @@ yarn-error.log
 /routes/  G G
 /public/dataexport.csv
 /config/models-generator.php
-Envoy.blade.php
