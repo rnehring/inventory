@@ -21,3 +21,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/storage/clockwork/.gitignore
+/storage/debugbar/.gitignore
+/routes/  G G
+/public/dataexport.csv
+/config/models-generator.php
+Envoy.blade.php
