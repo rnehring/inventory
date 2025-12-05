@@ -43,6 +43,7 @@ class CountController extends FunctionController
                 id,
                 tag,
                 part,
+                warehouse,
                 part_description,
                 bin,
                 description,
