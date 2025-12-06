@@ -55,8 +55,10 @@ Route::get('/location', [LocationController::class, 'index']);
 Route::post('/location-search', [LocationController::class, 'getPartsByLocation']);
 
 // NO TAG ROUTES
-Route::get('/notag', [NoTagController::class, 'index']);
+Route::get('/notag', [NoTagController::class, 'index'])->name('notag.index');
+Route::get('/notag/edit/{id}', [NoTagController::class, 'editNoTag']);
 Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
+Route::post('/notag/update', [NoTagController::class, 'update'])->name('notag.update');
 
 // CSV ROUTES
 Route::post('/download-data', [DataController::class, 'downloadData']);

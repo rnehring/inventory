@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class NoTagPart
  *
  * @property int $id
+ * @property string $tag
  * @property string $part
  * @property string $bin
  * @property float $count
@@ -47,6 +48,7 @@ class NoTagPart extends Model
 	];
 
 	protected $fillable = [
+        'tag',
 		'part',
 		'bin',
 		'count',

@@ -32,10 +32,18 @@ class NoTagController extends FunctionController
         return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPart::all(), 'companies' => FunctionController::getInventoryCompanies()]);
     }
 
-    public function getNoTagParts(){
-
+    public function editNoTag(Request $request){
+        return view('notag.edit',['warehouses' => FunctionController::getWarehouses(), 'noTagPart' => NoTagPart::findOrFail($request->id), 'companies' => FunctionController::getInventoryCompanies()]);
     }
 
+    public function update(Request $request){
+        $noTagPart = NoTagPart::findOrFail($request->id);
+
+        $noTagPart->fill($request->all());
+        $noTagPart->save();
+
+        return redirect()->route('notag.index')->with('success', 'Part updated successfully');
+    }
     public function saveNoTagPart(Request $request){
 
         $dateNow = date("Y-m-d");

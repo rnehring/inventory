@@ -62,7 +62,7 @@ function addNoTag(event) {
                 let standard_cost = makeCell(`${formatterUSD.format(part.standard_cost)}`, 'text-right');
                 let cost_counted = makeCell(`${formatterUSD.format(part.cost_counted)}`, 'text-right');
             }
-
+            let edit_link = makeCell(`<a href="notag/update/${part.id}"> Edit </a>`, 'text-center');
             let thisRow = makeRow(part);
             tableBody.appendChild(thisRow);
             cells = [];

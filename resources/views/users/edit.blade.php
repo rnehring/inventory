@@ -49,12 +49,12 @@
                     <span style="color: red;">{{ $message }}</span>
                 @enderror
                 <label for="company"
-                       class="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company</label>
+                       class="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Brand</label>
                 <select
                     id="company"
                     name="company"
                     class="mt-4 block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                    <option value="00" selected>Choose Your Company</option>
+                    <option value="00" selected>Choose Your Brand</option>
                     <option value="10" @if( $user->company  == "10" ) selected @endif>PureFlex</option>
                     <option value="20" @if(  $user->company  == "20" ) selected @endif>Nilcor</option>
                     <option value="30" @if(  $user->company  == "30" ) selected @endif>Ethylene</option>

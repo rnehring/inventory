@@ -39,9 +39,9 @@ use App\Http\Controllers\FunctionController;
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 
-                <x-form-label class="mt-4">Company</x-form-label>
+                <x-form-label class="mt-4">Brand</x-form-label>
                 <select id="company" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Company</option>
+                    <option selected>Brand</option>
 
                     @foreach($companies as $company)
                         <option value="{{ $company['companyCode'] }}">{{ $company['companyName'] }}</option>
@@ -74,6 +74,7 @@ use App\Http\Controllers\FunctionController;
 
         <table id="noTagData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <th scope="col" class="px-4 py-3">Tag</th>
                 <th scope="col" class="px-4 py-3">Part</th>
                 <th scope="col" class="px-4 py-3 text-center">Count</th>
                 <th scope="col" class="px-4 py-3 text-center">Bin</th>
@@ -83,14 +84,17 @@ use App\Http\Controllers\FunctionController;
                 <th scope="col" class="px-4 py-3 text-center">Warehouse</th>
                 <th scope="col" class="px-4 py-3 text-center">Lot Number</th>
                 <th scope="col" class="px-4 py-3 text-center">Serial Number</th>
+
                 @if( Auth::user()->user_type == 2 )
                     <th scope="col" class="px-4 py-3 text-right">Cost</th>
                     <th scope="col" class="px-4 py-3 text-right">Cost Counted</th>
                 @endif
+                <th scope="col" class="px-4 py-3 text-center">Edit</th>
             </thead>
             <tbody class="text-gray-900 px-4 border-b">
             @foreach ($noTagParts as $row)
                 <tr class="bg-green-300 border-b">
+                    <td class="border-b px-4 py-4"> {{ $row->tag}} </td>
                     <td class="border-b px-4 py-4"> {{ $row->part}} </td>
                     <td class="border-b px-4 py-4 text-center"> {{ $row->count }} </td>
                     <td class="border-b px-4 py-4 text-center"> {{ $row->bin }} </td>
@@ -114,6 +118,12 @@ use App\Http\Controllers\FunctionController;
                         <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->standard_cost, 2, '.', ',') }} </td>
                         <td class="border-b px-4 py-4 text-right"> ${{ number_format($row->cost_counted, 2, '.', ',') }} </td>
                     @endif
+                    <td class="text-center py-2 px-2">
+                        <a href="/notag/edit/{{ $row->id }}">
+                            <x-notag-edit-button></x-notag-edit-button>
+                        </a>
+                    </td>
+
                 </tr>
             @endforeach
             </tbody>
