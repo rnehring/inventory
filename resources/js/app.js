@@ -1,5 +1,6 @@
 import './bootstrap';
 import 'flowbite';
+import ApexCharts from 'apexcharts';
 
 export function setCells(){
     window.cells = [];
