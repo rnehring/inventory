@@ -32,6 +32,52 @@ class DataController extends FunctionController
         }
         $this->functionController = new FunctionController();
     }
+//    public function index(Request $request) {
+//
+//        $allData = DB::select('
+//            SELECT
+//                id,
+//                tag,
+//                part,
+//                part_description,
+//                bin,
+//                description,
+//                company,
+//                lot_number,
+//                serial_number,
+//                count,
+//                user,
+//                uom,
+//                by_weight,
+//                expected_qty,
+//                standard_cost,
+//                date_counted,
+//                time_counted,
+//                cost_expected,
+//                cost_counted,
+//                plus_minus,
+//                counted
+//            FROM '. $this->tableName);
+//
+//        $total = 0;
+//        $totalPlusMinus = 0;
+//        foreach($allData as $data){
+//            $total += $data->cost_counted;
+//            $totalPlusMinus += $data->plus_minus;
+//        }
+//
+//        $allData = $this->paginate($allData, 30)->setPath('/data');
+//        $noTagTotal = $this->noTagTotals($request);
+//
+//        return view('data.index',
+//            [
+//                'allData' => $allData,
+//                'total' => $total,
+//                'totalPlusMinus' => $totalPlusMinus,
+//                'noTagTotal' => $noTagTotal
+//            ]);
+//    }
+
     public function index(Request $request) {
 
         $allData = DB::select('
@@ -66,7 +112,6 @@ class DataController extends FunctionController
             $totalPlusMinus += $data->plus_minus;
         }
 
-        $allData = $this->paginate($allData, 30)->setPath('/data');
         $noTagTotal = $this->noTagTotals($request);
 
         return view('data.index',
@@ -77,6 +122,38 @@ class DataController extends FunctionController
                 'noTagTotal' => $noTagTotal
             ]);
     }
+
+    public function getAllData(Request $request) {
+        $allData = DB::select('
+            SELECT
+                id,
+                tag,
+                part,
+                part_description,
+                bin,
+                description,
+                company,
+                lot_number,
+                serial_number,
+                count,
+                user,
+                uom,
+                by_weight,
+                expected_qty,
+                standard_cost,
+                date_counted,
+                time_counted,
+                cost_expected,
+                cost_counted,
+                plus_minus,
+                counted
+            FROM '. $this->tableName);
+
+            $returnData = [];
+            $returnData['columns'] = ['Id', 'Tag', 'Part','Part Description','Bin','Description']
+            return json_encode($allData);
+    }
+
 
     public function paginate($items, $perPage = 5, $page = null, $options = [])
     {

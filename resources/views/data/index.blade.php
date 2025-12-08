@@ -81,26 +81,141 @@
             </div>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+
             <table id="data"
                    class="w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <th scope="col" class="px-2 py-3 text-center"> Counted</th>
-                    <th scope="col" class="px-2 py-3"> Tag</th>
-                    <th scope="col" class="px-2 py-3"> Part</th>
-                    <th scope="col" class="px-2 py-3"> Part Description</th>
-                    <th scope="col" class="px-2 py-3"> Bin</th>
-                    <th scope="col" class="px-2 py-3"> Description</th>
-                    <th scope="col" class="px-2 py-3"> Company</th>
-                    <th scope="col" class="px-2 py-3"> Count</th>
-                    <th scope="col" class="px-2 py-3 text-center"> Counted By</th>
-                    <th scope="col" class="px-2 py-3"> UOM</th>
-                    <th scope="col" class="px-2 py-3 text-center"> By Weight</th>
-                    <th scope="col" class="px-2 py-3" style="text-align:center;"> Expected Qty</th>
-                    <th scope="col" class="px-2 py-3" style="text-align:right;"> Cost Ea</th>
-                    <th scope="col" class="px-2 py-3 text-right"> Cost Counted</th>
-                    <th scope="col" class="px-2 py-3 text-right"> Cost Expected</th>
-                    <th scope="col" class="px-2 py-3 text-center"> +/-</th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COUNTED
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            TAG
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            PART
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            PART DESCRIPTION
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            BIN
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            DESCRIPTION
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COMPANY
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COUNT
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COUNTED BY
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            UOM
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            BY WEIGHT
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            EXPECTED QTY
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COST EA
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COST COUNTED
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            COST EXPECTED
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-2 py-3 text-center">
+                        <span class="flex items-center">
+                            +/-
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+
                 </thead>
                 <tbody>
                 @foreach ($allData as $row)
@@ -142,7 +257,7 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $allData->links() }}
+
         </div>
 
     </x-layout-container>

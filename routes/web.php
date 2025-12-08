@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CountController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardControllerAlt;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\FunctionController;
 use App\Http\Controllers\LocationController;
@@ -30,15 +31,46 @@ Route::get('/login', [SessionController::class, 'create']);
 Route::post('/login', [SessionController::class, 'store']);
 Route::post('/logout', [SessionController::class, 'destroy']);
 
+
+Route::middleware(['auth'])->group(function () {
+
+    // Main dashboard with Expected Qty Reliability
+    Route::get('/dashboardalt', [DashboardControllerAlt::class, 'index'])
+        ->name('dashboardalt');
+
+    // Detailed drill-down pages
+    Route::get('/dashboardalt/surprise-finds', [DashboardControllerAlt::class, 'surpriseFinds'])
+        ->name('dashboardalt.surprise-finds');
+
+    Route::get('/dashboardalt/missing-stock', [DashboardControllerAlt::class, 'missingStock'])
+        ->name('dashboardalt.missing-stock');
+
+    // API endpoint for AJAX data refresh (optional)
+    Route::get('/api/dashboardalt/data', [DashboardControllerAlt::class, 'getData'])
+        ->name('api.dashboardalt.data');
+
+    Route::get('/all-time-counts', [DashboardControllerAlt::class, 'allTimeCounts'])
+        ->name('dashboardalt.allTimeCounts');
+
+    Route::get('/brand-progress', [DashboardControllerAlt::class, 'percentageByCompany'])
+        ->name('dashboardalt.brandProgress');
+
+    Route::get('/warehouse-value', [DashboardControllerAlt::class, 'warehouseValue'])
+        ->name('dashboardalt.warehouseValue');
+});
+
+
+
+
 // DASHBOARD ROUTES
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('home.dashboard');
-Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
+Route::get('/dashboardalt', [DashboardControllerAlt::class, 'index'])->name('home.dashboard');
+Route::get('/dashboard-data', [DashboardControllerAlt::class, 'getDashboardData']);
 
 // DATA ROUTES
 Route::get('/data', [DataController::class, 'index']);
 Route::post('/company-data', [DataController::class, 'currentData']);
 Route::get('/company-data', [DataController::class, 'currentData']);
-
+Route::get('/get-all-data', [DataController::class, 'getAllData']);
 
 // COUNT ROUTES
 Route::get('/count', [CountController::class, 'index']);
@@ -74,3 +106,6 @@ Route::post('/users/update', [UserController::class, 'update'])->name('users.upd
 Route::get('/users/new', [UserController::class, 'newUser'])->name('users.new');
 Route::post('/users/new', [UserController::class, 'new'])->name('users.add');;
 Route::get('/users/delete/{id}', [UserController::class, 'deleteUser']);
+
+
+

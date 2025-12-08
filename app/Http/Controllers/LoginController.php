@@ -17,7 +17,7 @@ class LoginController extends FunctionController
     public function index()
     {
         if (Auth::check()) {
-            return redirect('/dashboard');
+            return redirect('/dashboardalt');
         }
         return view('auth.login');
     }
@@ -32,7 +32,7 @@ class LoginController extends FunctionController
         if (!Auth::check()) {
             return view('auth.manager-login');
         } else{
-            return redirect( route('home.dashboard'), 302);
+            return redirect( route('home.dashboardalt'), 302);
         }
 
     }
@@ -85,7 +85,7 @@ class LoginController extends FunctionController
 
         request()->session()->regenerate();
 
-        return redirect('/dashboard');
+        return redirect('/dashboardalt');
     }
 
     public function createManager(Request $request){
