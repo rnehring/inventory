@@ -149,8 +149,9 @@ class DataController extends FunctionController
                 counted
             FROM '. $this->tableName);
 
+            $allData = json_decode(json_encode($allData), true);
             $returnData = [];
-            $returnData['columns'] = ['Id', 'Tag', 'Part','Part Description','Bin','Description']
+//            $returnData['columns'] = ['Id', 'Tag', 'Part','Part Description','Bin','Description', 'Company', 'Lot Number', 'Serial Number', 'Count', 'User', 'UOM', 'By Weight', 'Expected Qty', 'Cost', 'Date Counted', 'Time Counted', 'Cost Expected', 'Cost Counted', 'Plus Minus', 'Counted'];
             return json_encode($allData);
     }
 
