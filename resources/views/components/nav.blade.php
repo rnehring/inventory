@@ -9,7 +9,7 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         @auth
                             @if( Auth::user()->user_type == 2 )
-                                <x-nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-nav-link>
+                                <x-nav-link href="/dashboardalt" :active="request()->is('dashboardalt')">Dashboard</x-nav-link>
                                 <x-nav-link href="/data" :active="request()->is('data')">Data</x-nav-link>
                             @endif
 {{--                            <x-nav-link href="/pre-count" :active="request()->is('pre-count')">Pre-Count</x-nav-link>--}}
