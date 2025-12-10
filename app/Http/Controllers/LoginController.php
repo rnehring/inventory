@@ -49,13 +49,6 @@ class LoginController extends FunctionController
 
         session()->put('location', $request->location);
 
-        if(in_array($request->companyCode, parent::KENTWOOD_COMPANIES )){
-            session()->put('location', 'Kentwood');
-        }
-        else{
-            session()->put('location', 'Houston');
-        }
-
         unset($userAttributes['companyCode']);
 
         $user = User::firstOrCreate($userAttributes);

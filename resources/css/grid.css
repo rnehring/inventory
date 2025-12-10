@@ -1,4 +1,4 @@
-.gridjs-head button, .gridjs-footer button {
+.gridjs-footer button {
     cursor: pointer;
     background-color: transparent;
     background-image: none;
@@ -284,7 +284,7 @@ th.gridjs-th:last-child {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.26);
     border-radius: 8px 8px 0 0;
     display: block;
-    border-top-width: 1px;
+    border-top-width: 0px;
     border-color: #646465;
     margin: 2px;
 }
@@ -368,10 +368,30 @@ td.gridjs-td:nth-of-type(13){
     text-align: center;
 }
 
+div.gridjs-wrapper > table > thead > tr > th:nth-child(13),
+td.gridjs-td:nth-of-type(13){
+    border-right: 3px solid #1f2937
+}
 
 td.gridjs-td:nth-of-type(14),
 td.gridjs-td:nth-of-type(15),
 td.gridjs-td:nth-of-type(16),
 td.gridjs-td:nth-of-type(17){
     text-align: right;
+}
+
+.gridjs-thead td.monospace-cell {
+    /*font-family: monospace;*/
+    /*text-align: right;*/
+}
+.gridjs-tbody td.monospace-cell {
+    font-family: monospace;
+    text-align: right;
+}
+
+div.gridjs-wrapper > table > thead > tr > th:nth-child(14),
+div.gridjs-wrapper > table > thead > tr > th:nth-child(15),
+div.gridjs-wrapper > table > thead > tr > th:nth-child(16),
+div.gridjs-wrapper > table > thead > tr > th:nth-child(17){
+    text-align:center;
 }

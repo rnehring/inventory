@@ -57,20 +57,23 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/warehouse-value', [DashboardControllerAlt::class, 'warehouseValue'])
         ->name('dashboardalt.warehouseValue');
+
+    // DATA ROUTES
+    Route::get('/data', [DataController::class, 'index']);
+    Route::post('/company-data', [DataController::class, 'currentData']);
+    Route::get('/company-data', [DataController::class, 'currentData']);
+    Route::get('/get-all-data', [DataController::class, 'getAllData']);
+
+    // USER ROUTES
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');;
+    Route::get('/users/edit/{id}', [UserController::class, 'editUser']);
+    Route::post('/users/update', [UserController::class, 'update'])->name('users.update');
+    Route::get('/users/new', [UserController::class, 'newUser'])->name('users.new');
+    Route::post('/users/new', [UserController::class, 'new'])->name('users.add');;
+    Route::get('/users/delete/{id}', [UserController::class, 'deleteUser']);
 });
 
 
-
-
-// DASHBOARD ROUTES
-Route::get('/dashboardalt', [DashboardControllerAlt::class, 'index'])->name('home.dashboard');
-Route::get('/dashboard-data', [DashboardControllerAlt::class, 'getDashboardData']);
-
-// DATA ROUTES
-Route::get('/data', [DataController::class, 'index']);
-Route::post('/company-data', [DataController::class, 'currentData']);
-Route::get('/company-data', [DataController::class, 'currentData']);
-Route::get('/get-all-data', [DataController::class, 'getAllData']);
 
 // COUNT ROUTES
 Route::get('/count', [CountController::class, 'index']);
@@ -99,13 +102,7 @@ Route::post('/upload', [UploadController::class, 'processUpload']);
 Route::get('/review', [UploadController::class, 'reviewUpload']);
 Route::post('/save-upload', [UploadController::class, 'saveUpload']);
 
-// USER ROUTES
-Route::get('/users', [UserController::class, 'index'])->name('users.index');;
-Route::get('/users/edit/{id}', [UserController::class, 'editUser']);
-Route::post('/users/update', [UserController::class, 'update'])->name('users.update');
-Route::get('/users/new', [UserController::class, 'newUser'])->name('users.new');
-Route::post('/users/new', [UserController::class, 'new'])->name('users.add');;
-Route::get('/users/delete/{id}', [UserController::class, 'deleteUser']);
+
 
 
 

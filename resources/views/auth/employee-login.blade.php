@@ -36,6 +36,7 @@
                 </select>
 
                 <input type="hidden" name="companyCode" id="companyCode" />
+                <input type="hidden" name="location" value="Kentwood" />
                 <x-form-field name="initials" id="initials" fieldName="initials" labelText="Initials" required minlength="3" />
                 <x-form-submit id="login">Login</x-form-submit>
             </form>
