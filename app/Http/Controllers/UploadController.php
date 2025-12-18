@@ -113,12 +113,8 @@ class UploadController extends FunctionController
                 'time_counted' => $time_counted,
                 'note' => $part['note'],
                 'has_transactions' => $part['has_transactions'],
-                'sheet_number' => $part['sheet_number'],
-                'tag_status' => $part['tag_status'],
-                'enable_uom_worksheet' => $part['enable_uom_worksheet'],
                 'period_end_date' => $period_end_date,
                 'period_start_date' => $period_start_date,
-                'cycle_period' => $part['cycle_period'],
                 'company' => $part['company'],
                 'warehouse' => $part['warehouse'],
                 'expected_qty' => $part['expected_qty'],
@@ -176,7 +172,7 @@ class UploadController extends FunctionController
         DB::statement($setTopEighty);
 
         DB::unprepared("
-            DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_houston;
+            DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . "
 
             CREATE DEFINER=`rnehring`@`%` TRIGGER `calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . "`
             BEFORE UPDATE ON `" . $this->tableName . "`

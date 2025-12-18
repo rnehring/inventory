@@ -23,8 +23,7 @@
                             </p>
                         </div>
                         <div class="text-right">
-                            <div class="text-7xl mb-2">📊</div>
-                            <p class="text-sm opacity-90">Last Count Cycle</p>
+                            <div class="text-7xl mb-2"><img class="max-w-80 max-h-48" src="{{URL::asset('/images/data.jpg')}}" alt="analytics"></div>
                         </div>
                     </div>
                 </div>
