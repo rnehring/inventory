@@ -12,7 +12,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        DocumentationGenerator::usePath(fn () => base_path('app/Models'));
     }
 
     /**
