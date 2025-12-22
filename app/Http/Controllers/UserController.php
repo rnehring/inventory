@@ -47,6 +47,7 @@ class UserController extends FunctionController
             'last_name' => 'required|string|max:255',
             'initials' => 'required|string|max:10',
             'email' => 'required|email',
+            'plant' => 'required|string|max:255',
             'password' => 'nullable|min:6|confirmed',
             'company' => 'required',
             'user_type' => 'required',
@@ -59,6 +60,7 @@ class UserController extends FunctionController
         $user->last_name = $validated['last_name'];
         $user->initials = $validated['initials'];
         $user->email = $validated['email'];
+        $user->plant = $validated['plant'];
         $user->company = $validated['company'];
         $user->user_type = $validated['user_type'];
 
@@ -78,6 +80,7 @@ class UserController extends FunctionController
             'last_name' => 'required|string|max:255',
             'initials' => 'required|string|max:10',
             'email' => 'required|email',
+            'plant' => 'required|string|max:255',
             'password' => ['required', Password::min(6)],
             'company' => 'required',
             'user_type' => 'required',

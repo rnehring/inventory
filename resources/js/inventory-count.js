@@ -33,13 +33,13 @@ function getPart(event) {
 
             parts.forEach((part) => {
                 let tag = makeCell(`${part['tag']}`);
+                let tag_status = makeCell(`${part['tag_status']}`);
                 let part_number = makeCell(`${part['part']}`);
                 let part_warehouse = makeCell(`${part['warehouse']}`);
                 let bin = makeCell(`${part['bin']}`, 'text-center');
                 let uom = makeCell(`${part['uom']}`, 'text-center');
                 let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' value='${part['count']}' />`);
                 let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
-                let company = makeCell(`${epicorCodeToCompanyName(part['company'])}`, 'text-center');
                 let lot_number = makeCell(`${part['lot_number']}`);
                 let serial_number = makeCell(`${part['serial_number']}`);
                 if(userType == 2){

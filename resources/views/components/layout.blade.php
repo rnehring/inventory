@@ -21,14 +21,8 @@
         </style>
     @endif
 
-
-
-@if(request()->is('dashboard'))
+    @if(request()->is('dashboard'))
         @vite(['resources/js/dashboard.js'])
-    @endif
-
-    @if(request()->is('dashboardalt'))
-        @vite(['resources/js/dashboardalt.js'])
     @endif
 
     @if(request()->is('data'))
@@ -40,11 +34,15 @@
     @endif
 
     @if(request()->is('pre-count'))
-        @vite(['resources/js/inventory-count.js'])
+        @vite(['resources/js/inventory-precount.js'])
     @endif
 
     @if(request()->is('location'))
         @vite(['resources/js/location-count.js'])
+    @endif
+
+    @if(request()->is('location'))
+        @vite(['resources/js/location-precount.js'])
     @endif
 
     @if(request()->is('notag'))

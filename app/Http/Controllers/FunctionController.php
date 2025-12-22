@@ -17,28 +17,13 @@ class FunctionController extends Controller
         parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->tableName = "inventory";
-            $this->tableNamePre = "inventory";
+            $this->tableNamePre = "inventory_precount";
         }
         else{
             $this->tableName = "inventory_houston";
+            $this->tableNamePre = "inventory_precount_houston";
         }
     }
-    const KENTWOOD_COMPANIES = [
-        '10',
-        '20',
-        '30',
-        '40',
-        '50',
-        'PV0'
-    ];
-
-    const HOUSTON_COMPANIES = [
-        'CC0',
-        'FC0',
-        'GS0',
-        'GWS',
-        'DD'
-    ];
 
     public static function formatCurrency($amount){
         $amount = floatval($amount);
@@ -50,15 +35,21 @@ class FunctionController extends Controller
 
     public function updateCount(Request $request){
         $userId = Auth::id();
+        $countTable = $request->path_info == '/pre-count' ? $this->tableNamePre : $this->tableName;
+
         $updatePart = DB::update('
-            UPDATE ' . $this->tableName . '
+            UPDATE ' . $countTable . '
             SET count = ?,
             user = ?
             WHERE id = ?',
             [$request->count, $userId, $request->part]);
 
         $costs = DB::select('
-            SELECT cost_counted, plus_minus FROM ' . $this->tableName . ' WHERE id = ?',[$request->part]
+            SELECT
+                cost_counted,
+                plus_minus
+            FROM ' . $this->tableName . '
+                WHERE id = ?',[$request->part]
         );
         return json_encode($costs);
     }
@@ -71,7 +62,11 @@ class FunctionController extends Controller
             [$request->count, $request->part]);
 
         $costs = DB::select('
-            SELECT cost_counted, plus_minus FROM ' . $this->tableNamePre . ' WHERE id = ?',[$request->part]
+            SELECT
+                cost_counted,
+                plus_minus
+            FROM ' . $this->tableNamePre . '
+            WHERE id = ?',[$request->part]
         );
         return json_encode($costs);
     }
@@ -80,8 +75,7 @@ class FunctionController extends Controller
         $bins = DB::select('
             SELECT DISTINCT
                 bin
-            FROM ' . $this->tableName
-        );
+            FROM valid_bins');
 
         return $bins;
     }
@@ -90,8 +84,7 @@ class FunctionController extends Controller
         $warehouses = DB::select('
             SELECT DISTINCT
                 warehouse
-            FROM ' . $this->tableName
-        );
+            FROM valid_bins');
         return $warehouses;
     }
 

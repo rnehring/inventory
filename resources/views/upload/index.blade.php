@@ -16,6 +16,12 @@ use App\Http\Controllers\Controller;
                 <x-form-submit id="upload-csv">Upload CSV</x-form-submit>
             </form>
 
+        <form method="post" action="/uploadpre" class="w-4/6 mx-auto" enctype="multipart/form-data">
+            @csrf
+            <x-form-field fieldName="csvfilepre" id="csvfilepre" labelText="" type="file" />
+            <x-form-submit id="upload-csv-pre">Upload Precount CSV</x-form-submit>
+        </form>
+
 
     </x-layout-container>
 </x-layout>

@@ -128,11 +128,11 @@ class DataController extends FunctionController
             SELECT
                 id,
                 tag,
+                tag_status,
                 part,
                 part_description,
                 bin,
-                description,
-                company,
+                bin_description,
                 lot_number,
                 serial_number,
                 count,
@@ -150,8 +150,6 @@ class DataController extends FunctionController
             FROM '. $this->tableName);
 
             $allData = json_decode(json_encode($allData), true);
-            $returnData = [];
-//            $returnData['columns'] = ['Id', 'Tag', 'Part','Part Description','Bin','Description', 'Company', 'Lot Number', 'Serial Number', 'Count', 'User', 'UOM', 'By Weight', 'Expected Qty', 'Cost', 'Date Counted', 'Time Counted', 'Cost Expected', 'Cost Counted', 'Plus Minus', 'Counted'];
             return json_encode($allData);
     }
 
@@ -202,11 +200,11 @@ class DataController extends FunctionController
             SELECT
                 id,
                 tag,
+                tag_status,
                 part,
                 part_description,
                 bin,
-                description,
-                company,
+                bin_description,
                 lot_number,
                 serial_number,
                 count,
@@ -230,11 +228,11 @@ class DataController extends FunctionController
         $headers = [
             'id',
             'tag',
+            'tag_status',
             'part',
             'part_description',
             'bin',
-            'description',
-            'company',
+            'bin_description',
             'lot_number',
             'serial_number',
             'count',
@@ -293,11 +291,11 @@ class DataController extends FunctionController
             SELECT
                 id,
                 tag,
+                tag_status,
                 part,
                 part_description,
                 bin,
-                description,
-                company,
+                bin_description,
                 lot_number,
                 serial_number,
                 count,

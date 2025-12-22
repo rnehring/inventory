@@ -17,7 +17,7 @@ class LoginController extends FunctionController
     public function index()
     {
         if (Auth::check()) {
-            return redirect('/dashboardalt');
+            return redirect('/dashboard');
         }
         return view('auth.login');
     }
@@ -32,7 +32,7 @@ class LoginController extends FunctionController
         if (!Auth::check()) {
             return view('auth.manager-login');
         } else{
-            return redirect( route('home.dashboardalt'), 302);
+            return redirect( route('home.dashboard'), 302);
         }
 
     }
@@ -41,11 +41,11 @@ class LoginController extends FunctionController
     {
         $userAttributes = $request->validate([
             'initials' => ['required', 'min:3'],
-            'companyCode' => ['required']
+            'plant' => ['required']
         ]);
 
         $userAttributes['user_type'] = 1;
-        $userAttributes['company'] = $request->companyCode;
+        $userAttributes['plant'] = $request->plant;
 
         session()->put('location', $request->location);
 
@@ -78,7 +78,7 @@ class LoginController extends FunctionController
 
         request()->session()->regenerate();
 
-        return redirect('/dashboardalt');
+        return redirect('/dashboard');
     }
 
     public function createManager(Request $request){

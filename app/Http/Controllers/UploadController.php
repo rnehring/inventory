@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\InventoryUploadPrecount;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -98,7 +99,7 @@ class UploadController extends FunctionController
             $parts[] = [
                 'tag' => $part['tag'],
                 'part' => $part['part'],
-                'part_description' => $part['part_description'],
+                'part_description' => Str::limit($part['part_description']),
                 'bin' => $part['bin'],
                 'description' => $part['description'],
                 'lot_number' => $part['lot_number'],
@@ -143,7 +144,6 @@ class UploadController extends FunctionController
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
-
     public function reviewUpload(Request $request){
         $allParts = InventoryUpload::all();
         $totalParts = count($allParts);
@@ -168,7 +168,7 @@ class UploadController extends FunctionController
         $deleteTrigger = "DROP TRIGGER IF EXISTS calculate_inventory_costs_before_update_" . strtolower(session()->get('location')) . ";";
         DB::statement($deleteTrigger);
 
-        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
+        $setTopEighty = "CALL update_top_eighty_precount('precount');";
         DB::statement($setTopEighty);
 
         DB::unprepared("
@@ -186,4 +186,101 @@ class UploadController extends FunctionController
         ");
         return view('upload.saved');
     }
+
+
+
+    public function processPrecountUpload(Request $request){
+
+        $csv = Reader::from(request()->file('csvfilepre')->getRealPath(), 'r');
+        $csv->setHeaderOffset(0);
+
+        $parts = [];
+
+        $deleted = InventoryUploadPrecount::query()->delete();
+
+        foreach ($csv as $part) {
+            $date_counted = date_create($part['date_counted']);
+            $date_counted = date_format($date_counted, 'Y-m-d');
+            $time_counted = date_create($part['time_counted']);
+            $time_counted = date_format($time_counted, 'H:i:s');
+
+            $cycle = 0;
+
+            $parts[] = [
+                'tag' => $part['tag'],
+                'tag_status' => $part['tag_status'],
+                'part' => $part['part'],
+                'part_description' => Str::limit($part['part_description']),
+                'bin' => $part['bin'],
+                'bin_description' => $part['bin_description'],
+                'lot_number' => $part['lot_number'],
+                'serial_number' => $part['serial_number'],
+                'count' => $part['count'],
+                'by_weight' => $part['by_weight'],
+                'uom' => $part['uom'],
+                'user' => $part['user'],
+                'date_counted' => $date_counted,
+                'time_counted' => $time_counted,
+                'note' => $part['note'],
+                'warehouse' => $part['warehouse'],
+                'expected_qty' => $part['expected_qty'],
+                'standard_cost' => $part['standard_cost'],
+                'created_at' => now(),
+                'updated_at' => now(),
+                'counted' => 0
+            ];
+
+            if (count($parts) === 1000){
+                InventoryUploadPrecount::insert($parts);
+                $parts = [];
+                $cycle++;
+            }
+        }
+
+        InventoryUploadPrecount::insert($parts);
+
+        return redirect('/reviewpre');
+    }
+
+
+    public function reviewPrecountUpload(Request $request){
+        $allParts = InventoryUploadPrecount::all();
+        $totalParts = count($allParts);
+        $allParts = $this->paginate($allParts, 30)->setPath('/reviewpre');
+        return view('upload.reviewpre',
+            [
+                'allParts' => $allParts,
+                'totalParts' => $totalParts
+            ]);
+    }
+
+    public function savePrecountUpload(Request $request){
+        $copyCurrentProdPrecountData = "CALL backup_inventory_precount_upload('inventory_precount');";
+        DB::statement($copyCurrentProdPrecountData);
+
+        $clearProdData = 'TRUNCATE TABLE inventory_precount';
+        DB::statement($clearProdData);
+
+        $copyToProd = "CALL copy_upload_to_inventory_precount('inventory_precount');";
+        DB::statement($copyToProd);
+
+        $deleteTrigger = "DROP TRIGGER IF EXISTS calculate_precount_inventory_costs_before_update;";
+        DB::statement($deleteTrigger);
+
+        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
+        DB::statement($setTopEighty);
+
+        DB::unprepared("
+            DROP TRIGGER IF EXISTS calculate_precount_inventory_costs_before_update
+
+            CREATE DEFINER=`rnehring`@`%` TRIGGER `calculate_precount_inventory_costs_before_update` BEFORE UPDATE ON `inventory_precount` FOR EACH ROW BEGIN
+                SET NEW.counted = 1;
+                SET NEW.cost_expected = NEW.expected_qty * NEW.standard_cost;
+                SET NEW.cost_counted = NEW.count * NEW.standard_cost;
+                SET NEW.plus_minus = NEW.cost_counted - NEW.cost_expected;
+            END
+        ");
+        return view('upload.savedpre');
+    }
+
 }

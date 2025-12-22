@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use romanzipp\ModelDoc\Services\DocumentationGenerator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        DocumentationGenerator::usePath(fn () => base_path('app/Models'));
     }
 
     /**

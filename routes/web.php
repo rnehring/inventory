@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\CountController;
+use App\Http\Controllers\DashboardControllerOld;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DashboardControllerAlt;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\FunctionController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\LocationPreController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NoTagController;
 use App\Http\Controllers\PreCountController;
@@ -35,28 +36,28 @@ Route::post('/logout', [SessionController::class, 'destroy']);
 Route::middleware(['auth'])->group(function () {
 
     // Main dashboard with Expected Qty Reliability
-    Route::get('/dashboardalt', [DashboardControllerAlt::class, 'index'])
-        ->name('dashboardalt');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
     // Detailed drill-down pages
-    Route::get('/dashboardalt/surprise-finds', [DashboardControllerAlt::class, 'surpriseFinds'])
-        ->name('dashboardalt.surprise-finds');
+    Route::get('/dashboard/surprise-finds', [DashboardController::class, 'surpriseFinds'])
+        ->name('dashboard.surprise-finds');
 
-    Route::get('/dashboardalt/missing-stock', [DashboardControllerAlt::class, 'missingStock'])
-        ->name('dashboardalt.missing-stock');
+    Route::get('/dashboard/missing-stock', [DashboardController::class, 'missingStock'])
+        ->name('dashboard.missing-stock');
 
     // API endpoint for AJAX data refresh (optional)
-    Route::get('/api/dashboardalt/data', [DashboardControllerAlt::class, 'getData'])
-        ->name('api.dashboardalt.data');
+    Route::get('/api/dashboard/data', [DashboardController::class, 'getData'])
+        ->name('api.dashboard.data');
 
-    Route::get('/all-time-counts', [DashboardControllerAlt::class, 'allTimeCounts'])
-        ->name('dashboardalt.allTimeCounts');
+    Route::get('/all-time-counts', [DashboardController::class, 'allTimeCounts'])
+        ->name('dashboard.allTimeCounts');
 
-    Route::get('/brand-progress', [DashboardControllerAlt::class, 'percentageByCompany'])
-        ->name('dashboardalt.brandProgress');
+    Route::get('/brand-progress', [DashboardController::class, 'percentageByCompany'])
+        ->name('dashboard.brandProgress');
 
-    Route::get('/warehouse-value', [DashboardControllerAlt::class, 'warehouseValue'])
-        ->name('dashboardalt.warehouseValue');
+    Route::get('/warehouse-value', [DashboardController::class, 'warehouseValue'])
+        ->name('dashboard.warehouseValue');
 
     // DATA ROUTES
     Route::get('/data', [DataController::class, 'index']);
@@ -82,12 +83,16 @@ Route::post('/update-count', [FunctionController::class, 'updateCount'] );
 
 // PRECOUNT ROUTES
 Route::get('/pre-count', [PreCountController::class, 'index']);
-//Route::post('/inventory-search', [PreCountController::class, 'getPart'] );
-//Route::post('/update-count', [PreCountController::class, 'updateCount'] );
+Route::post('/inventory-precount-search', [PreCountController::class, 'getPart'] );
+Route::post('/update-precount', [PreCountController::class, 'updateCount'] );
 
 // LOCATION ROUTES
 Route::get('/location', [LocationController::class, 'index']);
 Route::post('/location-search', [LocationController::class, 'getPartsByLocation']);
+
+// LOCATION PRECOUNT ROUTES
+Route::get('/locationpre', [LocationPreController::class, 'index']);
+Route::post('/location-precount-search', [LocationPreController::class, 'getPartsByLocation']);
 
 // NO TAG ROUTES
 Route::get('/notag', [NoTagController::class, 'index'])->name('notag.index');
@@ -102,6 +107,9 @@ Route::post('/upload', [UploadController::class, 'processUpload']);
 Route::get('/review', [UploadController::class, 'reviewUpload']);
 Route::post('/save-upload', [UploadController::class, 'saveUpload']);
 
+Route::post('/uploadpre', [UploadController::class, 'processPrecountUpload']);
+Route::get('/reviewpre', [UploadController::class, 'reviewPrecountUpload']);
+Route::post('/save-uploadpre', [UploadController::class, 'savePrecountUpload']);
 
 
 

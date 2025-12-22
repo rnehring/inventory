@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PreCountController extends FunctionController
+class LocationPreController extends FunctionController
 {
 
     public $tableName;
+
     public function __construct()
     {
         parent::__construct();
@@ -21,22 +21,26 @@ class PreCountController extends FunctionController
     }
 
     public function index(){
-        return view('precount.index', ['bins' => parent::getBins()]);
+        return view('location.index',
+            [
+                'warehouses' => parent::getWarehouses(),
+                'bins' => parent::getBins(),
+            ]);
     }
 
-    public function getPart(Request $request){
+    public function getPartsByLocation(Request $request){
+        if($request->bin == "Choose a Bin"){
+            $bin = "%";
+        }
+        else{
+            $bin = $request->bin . "%";
+        }
 
-        if(isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE part = ? AND bin = ?';
-            $params = [$request->part, $request->bin];
+        if($request->warehouse == "Choose a Plant"){
+            $warehouse = "%";
         }
-        if(isset($request->part) && !isset($request->bin)) {
-            $where = 'WHERE part = ?';
-            $params = [$request->part];
-        }
-        if(!isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE bin = ?';
-            $params = [$request->bin];
+        else{
+            $warehouse = $request->warehouse . "%";
         }
 
         $partData = DB::select('
@@ -66,11 +70,11 @@ class PreCountController extends FunctionController
                 plus_minus,
                 created_at,
                 updated_at
-             FROM ' . $this->tableName . ' ' . $where,
-            $params
-        );
-
+             FROM ' . $this->tableName . '
+            WHERE bin LIKE ? AND warehouse LIKE ?',
+            [$bin, $warehouse]);
         return json_encode($partData);
     }
-
 }
+
+

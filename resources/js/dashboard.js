@@ -1,168 +1,298 @@
-import Chart from 'chart.js/auto';
-axios.get('/dashboard-data')
+import ApexCharts from 'apexcharts';
+import {
+    formatterUSD
+} from './app';
+
+axios.get('/all-time-counts')
     .then(function (response) {
         //  COUNTS BY USER ALL TIME
-        new Chart(
-            document.getElementById('counts-by-user-all-time'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.allTimeCounts.map(row => row.first_name + ' ' + row.last_name),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.allTimeCounts.map(row => row.counts),
-                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
-                        }
-                    ]
+        console.log(response);
+
+        let chartData = [];
+
+        response.data.forEach((record) => {
+            chartData.push({
+                x: `${record.first_name} ${record.last_name}`,
+                y: parseInt(record.counts) || 0  // Ensure it's a number
+            });
+        });
+
+        const options = {
+            colors: ['#0015FF','#FF00A1','#90FE00','#8400FF','#00FFF7'],
+            series: [
+                {
+                    name: "Total Counts",  // Better name
+                    data: chartData,  // ✅ Use the array directly, not wrapped in []
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
+            ],
+            chart: {
+                type: "bar",
+                height: "400px",
+                fontFamily: "Inter, sans-serif",
+                toolbar: {
+                    show: false,
+                },
+                background: '#FFFFFF00',
+            },
+            plotOptions: {
+                bar: {
+                    distributed: true,
+                    horizontal: false,
+                    columnWidth: "70%",
+                    borderRadiusApplication: "end",
+                    borderRadius: 8,
+                },
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                style: {
+                    fontFamily: "Inter, sans-serif",
+                },
+            },
+            states: {
+                hover: {
+                    filter: {
+                        type: "darken",
+                        value: 1,
+                    },
+                },
+            },
+            stroke: {
+                show: true,
+                width: 0,
+                colors: ["transparent"],
+            },
+            grid: {
+                show: false,
+                strokeDashArray: 4,
+                padding: {
+                    left: 2,
+                    right: 2,
+                    top: -14
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            legend: {
+                show: false,
+            },
+            xaxis: {
+                floating: false,
+                labels: {
+                    show: true,
+                    style: {
+                        fontFamily: "Inter, sans-serif",
+                        cssClass: 'text-xs font-normal fill-body text-white'
+                    }
+                },
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    show: false,
+                },
+            },
+            yaxis: {
+                show: true,
+            },
+            fill: {
+                opacity: 1,
+            },
+            theme:{
+                mode: 'dark',
+            }
+        }
+
+        if(document.getElementById("column-chart") && typeof ApexCharts !== 'undefined') {
+            const chart = new ApexCharts(document.getElementById("column-chart"), options);
+            chart.render();
+        }
+
+    });
+
+
+
+
+axios.get('/brand-progress')
+    .then(function (response) {
+
+        let percentageData = [];
+        let companies = [];
+
+        response.data.forEach((record) => {
+            percentageData.push(parseFloat(record.percentage) || 0);  // Ensure numbers
+            companies.push(record.company);
+        });
+
+        const getChartOptions = () => {
+            return {
+                series: percentageData,
+                colors: ['#0015FF','#FF00A1','#90FE00','#8400FF','#00FFF7','#FF7300'],
+                chart: {
+                    height: "350px",
+                    width: "100%",
+                    type: "radialBar",
+                    sparkline: {
+                        enabled: true,
+                    },
+                    background: "#FFFFFF00",
+                },
+                plotOptions: {
+                    radialBar: {
+                        track: {
+                            background: "#203765",
+                        },
+                        dataLabels: {
+                            show: false,
+                        },
+                        hollow: {
+                            margin: 0,
+                            size: "32%",
+                        }
+                    },
+                },
+                grid: {
+                    show: false,
+                    strokeDashArray: 4,
+                    padding: {
+                        left: 2,
+                        right: 2,
+                        top: -23,
+                        bottom: -20,
+                    },
+                },
+                labels: companies,
+                legend: {
+                    show: true,
+                    position: "bottom",
+                    fontFamily: "Inter, sans-serif",
+                },
+                tooltip: {
+                    enabled: true,
+                    x: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    show: false,
+                    labels: {
+                        formatter: function (value) {
+                            return value + '%';
                         }
                     }
                 }
             }
-        )
+        }
 
-        //  COUNTS BY USER YESTERDAY
-        new Chart(
-            document.getElementById('counts-by-user-yesterday'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.yesterdayCounts.map(row => row.first_name + ' ' + row.last_name),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.yesterdayCounts.map(row => row.counts),
-                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
-                        }
-                    ]
+        if (document.getElementById("radial-chart") && typeof ApexCharts !== 'undefined') {
+            const chart = new ApexCharts(document.querySelector("#radial-chart"), getChartOptions());
+            chart.render();
+        }
+
+    });
+
+
+axios.get('/warehouse-value')
+    .then(function (response) {
+
+        let percentageData = [];
+        let companies = [];
+        let totalValue = 0;
+
+        response.data.forEach((record) => {
+            percentageData.push(parseFloat(record.pct) || 0);  // Ensure numbers
+            totalValue += record.expected;
+        });
+
+        const getChartOptions = () => {
+            return {
+                series: percentageData,
+                colors: ['#0015FF','#FF00A1','#90FE00'],
+                chart: {
+                    height: 320,
+                    width: "100%",
+                    type: "donut",
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
-
-        // COUNT PERCENTAGE BY COMPANY
-        new Chart(
-            document.getElementById('percent-by-company'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.percentageByCompany.map(row => row.company),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.percentageByCompany.map(row => row.percentage),
-                            backgroundColor: ['#C33C54','#254E70','#37718E','#8EE3EF','#AEF3E7']
-                        }
-                    ]
+                stroke: {
+                    colors: ["transparent"],
+                    lineCap: "",
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
-
-        //PRE COUNT BINS VERIFIED
-        new Chart(
-            document.getElementById('bins-verified-all-time'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.preCountAllTime.map(row => row.user),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.preCountAllTime.map(row => row.counts),
-
-                        }
-                    ]
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontFamily: "Inter, sans-serif",
+                                    offsetY: 20,
+                                    color: "#FFFFFF",
+                                },
+                                total: {
+                                    showAlways: true,
+                                    show: true,
+                                    label: "Inventory Value",
+                                    fontFamily: "Inter, sans-serif",
+                                    color: "#FFFFFF",
+                                    formatter: function (w) {
+                                        return formatterUSD.format(totalValue)
+                                    },
+                                },
+                                value: {
+                                    show: true,
+                                    fontFamily: "Inter, sans-serif",
+                                    offsetY: -20,
+                                    formatter: function (value) {
+                                        return value + "k"
+                                    },
+                                },
+                            },
+                            size: "80%",
+                        },
+                    },
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
-
-        //PRE COUNT BINS VERIFIED
-        new Chart(
-            document.getElementById('bins-verified-yesterday'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.yesterdayPreCounts.map(row => row.user),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.yesterdayPreCounts.map(row => row.counts),
-
-                        }
-                    ]
+                grid: {
+                    padding: {
+                        top: -2,
+                    },
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        )
-
-
-        //PRE COUNT BINS VERIFIED BY COMPANY
-        new Chart(
-            document.getElementById('bins-verified-by-company'),
-            {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: response.data.companyPreCounts.map(row => row.company),
-                    datasets: [
-                        {
-                            label: 'Counts by User (All Time)',
-                            data: response.data.companyPreCounts.map(row => row.counts),
-
-                        }
-                    ]
+                labels: ["Plant 1", "Plant 2", "Plant 3"],
+                dataLabels: {
+                    enabled: false,
                 },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
+                legend: {
+                    position: "bottom",
+                    fontFamily: "Inter, sans-serif",
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value + "k"
+                        },
+                    },
+                },
+                xaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value  + "k"
+                        },
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                },
             }
-        )
+        }
 
-    })
-    .catch(function (error) {
-        // handle error
-        console.log(error);
-    })
-    .finally(function () {
-        // always executed
+        if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
+            const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
+            chart.render();
+        }
+
+
     });

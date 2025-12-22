@@ -9,18 +9,18 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         @auth
                             @if( Auth::user()->user_type == 2 )
-                                <x-nav-link href="/dashboardalt" :active="request()->is('dashboardalt')"><x-ri-dashboard-line  class="w-6 h-6 inline-block mr-2" />Dashboard</x-nav-link>
-                                <x-nav-link href="/data" :active="request()->is('data')"><x-ri-database-line class="w-6 h-6 inline-block mr-2"/>Data</x-nav-link>
+                                <x-nav-link href="/dashboard" :active="request()->is('dashboard')"><x-ri-dashboard-line  class="w-4 h-4 inline-block mr-2" />Dashboard</x-nav-link>
+                                <x-nav-link href="/data" :active="request()->is('data')"><x-ri-database-line class="w-4 h-4 inline-block mr-2"/>Data</x-nav-link>
                             @endif
-{{--                            <x-nav-link href="/pre-count" :active="request()->is('pre-count')">Pre-Count</x-nav-link>--}}
-                            <x-nav-link href="/count" :active="request()->is('count')"><x-tabler-numbers class="w-6 h-6 inline-block mr-2"/>Count</x-nav-link>
-                            <x-nav-link href="/location" :active="request()->is('location')"><x-bx-box class="w-6 h-6 inline-block mr-2"/>Location</x-nav-link>
-                            <x-nav-link href="/notag" :active="request()->is('notag')"><x-tabler-tag class="w-6 h-6 inline-block mr-2"/>No Tag</x-nav-link>
+                            <x-nav-link href="/pre-count" :active="request()->is('pre-count')"><x-mdi-counter class="w-4 h-4 inline-block mr-2"/>Pre-Count</x-nav-link>
+                            <x-nav-link href="/count" :active="request()->is('count')"><x-tabler-numbers class="w-4 h-4 inline-block mr-2"/>Count</x-nav-link>
+                            <x-nav-link href="/location" :active="request()->is('location')"><x-bx-box class="w-4 h-4 inline-block mr-2"/>Location</x-nav-link>
+                            <x-nav-link href="/notag" :active="request()->is('notag')"><x-tabler-tag class="w-4 h-4 inline-block mr-2"/>No Tag</x-nav-link>
                             @if( Auth::user()->user_type == 2 )
-                                <x-nav-link href="/upload" :active="request()->is('upload')"><x-tabler-upload class="w-6 h-6 inline-block mr-2"/>Upload</x-nav-link>
+                                <x-nav-link href="/upload" :active="request()->is('upload')"><x-tabler-upload class="w-4 h-4 inline-block mr-2"/>Upload</x-nav-link>
                             @endif
                             @if( Auth::user()->user_type == 2 )
-                                <x-nav-link href="/users" :active="request()->is('users')"><x-tabler-users class="w-6 h-6 inline-block mr-2" />Users</x-nav-link>
+                                <x-nav-link href="/users" :active="request()->is('users')"><x-tabler-users class="w-4 h-4 inline-block mr-2" />Users</x-nav-link>
                             @endif
                         @endauth
                     </div>

@@ -2,155 +2,192 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class DashboardController extends FunctionController
 {
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
-            if(session()->get('location') == "Kentwood"){
-                $this->tableName = "inventory";
-                $this->tableNamePre = "precount";
-                $this->ntTableName = "no_tag_parts";
-            }
-            else{
-                $this->tableName = "inventory_houston";
-                $this->tableNamePre = "precount_houston";
-                $this->ntTableName = "no_tag_parts_houston";
-            }
+        if (session()->get('location') == "Kentwood") {
+            $this->tableName = "inventory";
+            $this->tableNamePre = "precount";
+            $this->ntTableName = "no_tag_parts";
+        } else {
+            $this->tableName = "inventory_houston";
+            $this->tableNamePre = "precount_houston";
+            $this->ntTableName = "no_tag_parts_houston";
+        }
     }
 
+    /**
+     * Display the dashboard with Expected Qty Reliability metrics
+     */
     public function index()
     {
-        return view('dashboard',[
-            'lastPreCountDay' => $this->getLastPreCountDay(),
-            'yesterdayPreCounts' => $this->yesterdayPreCounts()
+        // Get overall statistics
+        $stats = $this->getOverallStats();
+
+        // Get warehouse breakdown
+        $warehouseData = $this->getWarehouseBreakdown();
+
+        // Calculate reliability score
+        $reliabilityScore = $this->calculateReliabilityScore($stats);
+
+        return view('dashboard', compact('stats', 'warehouseData', 'reliabilityScore'));
+    }
+
+    /**
+     * Get overall expected quantity reliability statistics
+     */
+    private function getOverallStats()
+    {
+        $result = DB::table('inventory')
+            ->selectRaw('
+                -- Expected was zero scenarios
+                SUM(CASE WHEN expected_qty = 0 AND count = 0 THEN 1 ELSE 0 END) AS expectedZeroCountedZero,
+                SUM(CASE WHEN expected_qty = 0 AND count > 0 THEN 1 ELSE 0 END) AS expectedZeroCountedNonZero,
+
+                -- Expected was non-zero scenarios
+                SUM(CASE WHEN expected_qty > 0 AND count = 0 THEN 1 ELSE 0 END) AS expectedNonZeroCountedZero,
+                SUM(CASE WHEN expected_qty > 0 AND count = expected_qty THEN 1 ELSE 0 END) AS expectedNonZeroCountedCorrect,
+                SUM(CASE WHEN expected_qty > 0 AND count > 0 AND count != expected_qty THEN 1 ELSE 0 END) AS expectedNonZeroCountedWrong,
+
+                -- Totals
+                COUNT(*) AS totalItems,
+                SUM(CASE WHEN expected_qty = 0 THEN 1 ELSE 0 END) AS expectedZero,
+                SUM(CASE WHEN expected_qty > 0 THEN 1 ELSE 0 END) AS expectedNonZero
+            ')
+            ->first();
+
+        return [
+            'expectedZeroCountedZero' => $result->expectedZeroCountedZero ?? 0,
+            'expectedZeroCountedNonZero' => $result->expectedZeroCountedNonZero ?? 0,
+            'expectedNonZeroCountedZero' => $result->expectedNonZeroCountedZero ?? 0,
+            'expectedNonZeroCountedCorrect' => $result->expectedNonZeroCountedCorrect ?? 0,
+            'expectedNonZeroCountedWrong' => $result->expectedNonZeroCountedWrong ?? 0,
+            'totalItems' => $result->totalItems ?? 0,
+            'expectedZero' => $result->expectedZero ?? 0,
+            'expectedNonZero' => $result->expectedNonZero ?? 0,
+        ];
+    }
+
+    /**
+     * Get warehouse-by-warehouse breakdown
+     */
+    private function getWarehouseBreakdown()
+    {
+        $results = DB::table('inventory')
+            ->select('warehouse')
+            ->selectRaw('
+                COUNT(*) AS total,
+                SUM(CASE WHEN expected_qty = 0 AND count > 0 THEN 1 ELSE 0 END) AS surpriseFinds,
+                SUM(CASE WHEN expected_qty > 0 AND count = 0 THEN 1 ELSE 0 END) AS unexpectedEmpty,
+                SUM(CASE WHEN (expected_qty = 0 AND count = 0) OR (expected_qty > 0 AND count > 0) THEN 1 ELSE 0 END) AS accurate
+            ')
+            ->groupBy('warehouse')
+            ->orderByDesc('total')
+            ->get();
+
+        return $results->map(function ($item) {
+            return [
+                'warehouse' => $item->warehouse,
+                'total' => $item->total ?? 0,
+                'surpriseFinds' => $item->surpriseFinds ?? 0,
+                'unexpectedEmpty' => $item->unexpectedEmpty ?? 0,
+                'accurate' => $item->accurate ?? 0,
+            ];
+        })->toArray();
+    }
+
+    /**
+     * Calculate overall reliability score
+     */
+    private function calculateReliabilityScore($stats)
+    {
+        if ($stats['totalItems'] == 0) {
+            return 0;
+        }
+
+        $accurateItems = $stats['expectedZeroCountedZero'] +
+            ($stats['expectedNonZero'] - $stats['expectedNonZeroCountedZero']);
+
+        return ($accurateItems / $stats['totalItems']) * 100;
+    }
+
+    /**
+     * Get surprise finds (items found where expected_qty = 0)
+     * This can be used for a detailed drill-down page
+     */
+    public function surpriseFinds()
+    {
+        $items = DB::table('inventory')
+            ->where('expected_qty', 0)
+            ->where('count', '>', 0)
+            ->select(
+                'part',
+                'part_description',
+                'bin',
+                'warehouse',
+                'expected_qty',
+                'count',
+                'cost_counted',
+                'user',
+                'date_counted'
+            )
+            ->orderByDesc('cost_counted')
+            ->paginate(50);
+
+        return view('dashboardalt.surprise-finds', compact('items'));
+    }
+
+    /**
+     * Get missing stock (items expected but count = 0)
+     * This can be used for a detailed drill-down page
+     */
+    public function missingStock()
+    {
+        $items = DB::table('inventory')
+            ->where('expected_qty', '>', 0)
+            ->where('count', 0)
+            ->select(
+                'part',
+                'part_description',
+                'bin',
+                'warehouse',
+                'expected_qty',
+                'count',
+                'cost_expected',
+                'user',
+                'date_counted'
+            )
+            ->orderByDesc('cost_expected')
+            ->paginate(50);
+
+        return view('dashboardalt.missing-stock', compact('items'));
+    }
+
+    /**
+     * API endpoint for getting dashboard data in JSON format
+     * Useful for AJAX refreshes or chart updates
+     */
+    public function getData()
+    {
+        $stats = $this->getOverallStats();
+        $warehouseData = $this->getWarehouseBreakdown();
+        $reliabilityScore = $this->calculateReliabilityScore($stats);
+
+        return response()->json([
+            'stats' => $stats,
+            'warehouseData' => $warehouseData,
+            'reliabilityScore' => $reliabilityScore,
         ]);
     }
 
-
-    // GET DASHBOARD DATA
-    public function getDashboardData(){
-        $data = [
-            'allTimeCounts' => $this->allTimeCounts(),
-            'yesterdayCounts' => $this->yesterdayCounts(),
-            'percentageByCompany' => $this->percentageByCompany(),
-            'preCountAllTime' => $this->preCountAllTime(),
-            'yesterdayPreCounts' => $this->yesterdayPreCounts(),
-            'companyPreCounts' => $this->companyPreCounts()
-        ];
-
-        return json_encode($data);
-    }
-
-    // GET LAST WORKING DAY COUNTS OCCURRED FROM DATABASE
-    public function getLastDay()
+    public function allTimeCounts()
     {
-        $todayCount = date('Y-m-d');
-        $getLastNtDay = DB::select('
-            SELECT date_counted
-            FROM ' . $this->ntTableName . '
-            WHERE date_counted = (
-                SELECT MAX(date_counted)
-                FROM ' . $this->ntTableName . ' AS yesterday
-                WHERE date_counted < ?)
-                ',
-            [$todayCount]);
-
-        $getLastDay = DB::select('
-            SELECT date_counted
-            FROM ' . $this->tableName . '
-            WHERE date_counted = (
-                SELECT MAX(date_counted)
-                FROM ' . $this->tableName . ' AS yesterday
-                WHERE date_counted < ?)
-                ',
-            [$todayCount]);
-
-            if($getLastNtDay[0]->date_counted > $getLastDay[0]->date_counted){
-                return $getLastNtDay[0]->date_counted;
-            } else{
-                return $getLastDay[0]->date_counted;
-            }
-
-    }
-
-    // GET LAST WORKING DAY PRE COUNTS OCCURRED FROM DATABASE
-    public function getLastPreCountDay()
-    {
-        $today = date('Y-m-d');
-        $getLastDay = DB::select('
-            SELECT
-                verified_date
-            FROM pre_count
-            WHERE verified_date = (
-            SELECT MAX(verified_date)
-            FROM pre_count AS yesterday
-            WHERE verified_date < ?)',
-            [$today]);
-
-        return $getLastDay[0]->verified_date;
-
-    }
-
-    // GET USER COUNTS FROM LAST WORKING DAY
-    public function yesterdayCounts(){
-        $yesterday = $this->getLastDay();
-
-        $yesterdayUserCounts = DB::select('
-            SELECT
-                ih.user,
-                COUNT(ih.user) as counts,
-                u.id,
-                u.first_name as first_name,
-                u.last_name as last_name
-            FROM ' . $this->tableName . ' ih
-            JOIN users u ON u.id = ih.user
-            WHERE ih.date_counted = ?
-            GROUP BY ih.user
-            ORDER BY counts DESC;',
-            [$yesterday]);
-
-        $yesterdayUserNtCounts = DB::select('
-            SELECT
-                ih.user,
-                COUNT(ih.user) as counts,
-                u.id,
-                u.first_name as first_name,
-                u.last_name as last_name
-            FROM ' . $this->ntTableName . ' ih
-            JOIN users u ON u.id = ih.user
-            WHERE ih.date_counted = ?
-            GROUP BY ih.user
-            ORDER BY counts DESC;',
-            [$yesterday]);
-
-        $combined = [];
-
-        foreach (array_merge($yesterdayUserCounts, $yesterdayUserNtCounts) as $user) {
-            $userId = $user->id;
-
-            if (isset($combined[$userId])) {
-                // User already exists, add to count
-                $combined[$userId]->count += $user->count;
-            } else {
-                // New user, add to array
-                $combined[$userId] = clone $user; // Clone to avoid reference issues
-            }
-        }
-
-// Convert back to indexed array
-        $combined = array_values($combined);
-
-        //dd($combined);
-
-        return $yesterdayUserCounts;
-    }
-
-    //  GET ALL TIME USER COUNTS
-    public function allTimeCounts(){
         $allTimeCounts = DB::select('
             SELECT
                 ih.user,
@@ -165,31 +202,12 @@ class DashboardController extends FunctionController
             ORDER BY counts DESC',
             ['']);
 
-        return $allTimeCounts;
+        return json_encode($allTimeCounts);
     }
 
-    //  GET TOTAL COUNTS BY COMPANY
-    public function countsByCompany(){
-        $countsByCompany = DB::select('
-            SELECT
-                company,
-                COUNT(count) as counts
-            FROM ' . $this->tableName . '
-            WHERE date_counted != ?
-            GROUP BY company
-            ORDER BY counts DESC',
-            ['0000-00-00']);
 
-        $countsByCompany = json_decode(json_encode($countsByCompany), true);
-        for($i = 0; $i < count($countsByCompany); $i++){
-            $countsByCompany[$i]['company'] = $this->epicorCodeToCompanyName($countsByCompany[$i]['company']);
-        }
-
-        return $countsByCompany;
-    }
-
-    //  GET PERCENTAGE OF INVENTORY COUNTED BY COMPANY
-    public function percentageByCompany(){
+    public function percentageByCompany()
+    {
         $percentageByCompany = DB::select('
             SELECT
                 SUM(counted = ? )*100/count(*) AS percentage,
@@ -199,63 +217,36 @@ class DashboardController extends FunctionController
             ['1']);
 
         $percentageByCompany = json_decode(json_encode($percentageByCompany), true);
-        for($i = 0; $i < count($percentageByCompany); $i++){
+        for ($i = 0; $i < count($percentageByCompany); $i++) {
             $percentageByCompany[$i]['company'] = $this->epicorCodeToCompanyName($percentageByCompany[$i]['company']);
         }
 
-        return $percentageByCompany;
+        return json_encode($percentageByCompany);
     }
 
 
-    // ALL TIME PRECOUNTS
-    public function preCountAllTime(){
-        $preCountAllTime = DB::select('
-            SELECT
-                user,
-                COUNT(user) as counts
-            FROM pre_count
-            WHERE user != ?
-            GROUP BY user
-            ORDER BY counts DESC',
-            ['']);
+    public function warehouseValue()
+    {
+        $results = DB::table('inventory')
+            ->select('warehouse')
+            ->selectRaw('
+                COUNT(*) AS item_count,
+                SUM(cost_counted) AS total_value,
+                SUM(cost_expected) AS expected_value,
+                ROUND((SUM(cost_counted) / (SELECT SUM(cost_counted) FROM inventory)) * 100, 2) AS pct_of_total
+            ')
+            ->groupBy('warehouse')
+            ->orderByDesc('total_value')
+            ->get();
 
-        return $preCountAllTime;
+        return $results->map(function ($item) {
+            return [
+                'warehouse' => $item->warehouse,
+                'total' => $item->total_value ?? 0,
+                'expected' => $item->expected_value ?? 0,
+                'pct' => $item->pct_of_total ?? 0,
+            ];
+        })->toArray();
     }
 
-    //  PRE COUNTS YESTERDAY
-    public function yesterdayPreCounts(){
-        $yesterday = $this->getLastPreCountDay();
-        $yesterday = explode(' ', $yesterday);
-        $yesterday = $yesterday[0];
-
-        $yesterdayStart = $yesterday . " 00:00:00";
-        $yesterdayEnd = $yesterday . " 23:59:59";
-
-        $yesterdayUserPreCounts = DB::select('
-            SELECT
-                user,
-                COUNT(user) as counts
-            FROM pre_count
-            WHERE verified_date >  ? AND verified_date < ?
-            GROUP BY user
-            ORDER BY counts DESC
-            ',
-            [$yesterdayStart, $yesterdayEnd]);
-
-        return $yesterdayUserPreCounts;
-    }
-
-    // PRE COUNTS BY COMPANY
-    public function companyPreCounts(){
-        $companyPreCounts = DB::select('
-            SELECT
-                company,
-                COUNT(bin_verified) as counts
-            FROM pre_count
-            WHERE bin_verified = ?
-            GROUP BY company ORDER BY counts DESC',
-            ['1']);
-
-        return $companyPreCounts;
-    }
 }

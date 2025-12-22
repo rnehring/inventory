@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
     <x-toast-success id="toast-success"></x-toast-success>
 
     <x-slot:header>
-        <x-header>Location Count</x-header>
+        <x-header>Location Precount</x-header>
     </x-slot:header>
 
     <x-layout-container class="max-w-9xl">

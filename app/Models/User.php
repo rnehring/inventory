@@ -10,12 +10,13 @@ use Illuminate\Notifications\Notifiable;
  * Class User
  *
  * @property int $id
+ * @property int $user_type
+ * @property string $email
  * @property string $first_name
  * @property string $last_name
- * @property string $email
  * @property string $initials
  * @property string $company
- * @property int $user_type
+ * @property string $plant
  * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
@@ -39,6 +40,7 @@ class User extends Authenticatable
         'last_name',
         'initials',
         'company',
+        'plant',
         'user_type',
 		'email',
 		'password',

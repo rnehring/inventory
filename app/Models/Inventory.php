@@ -14,37 +14,30 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $tag
+ * @property bool $tagStatus
  * @property string $part
- * @property string $part_description
+ * @property string $partDescription
  * @property string $bin
- * @property string $description
- * @property string $lot_number
- * @property string $serial_number
- * @property float $count
- * @property int $by_weight
- * @property string $uom
- * @property string $activity_before_count
- * @property string $returned
- * @property string $user
- * @property Carbon $date_counted
- * @property Carbon $time_counted
- * @property string $note
- * @property string $has_transactions
- * @property string $sheet_number
- * @property string $tag_status
- * @property string $enable_uom_worksheet
- * @property Carbon $period_end_date
- * @property Carbon $period_start_date
- * @property string $cycle_period
- * @property string $company
  * @property string $warehouse
- * @property string $expected_qty
- * @property string $standard_cost
- * @property string $cost_counted
- * @property string $cost_expected
- * @property string $plus_minus
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property string $binDescription
+ * @property string $lot
+ * @property string $serial
+ * @property float $count
+ * @property bool $byWeight
+ * @property string $uom
+ * @property int $user
+ * @property Carbon $dateCounted
+ * @property Carbon $timeCounted
+ * @property string $note
+ * @property double $expectedQty
+ * @property float $standardCost
+ * @property float $costCounted
+ * @property float $costExpected
+ * @property float plus_minus
+ * @property string $top_eight
+ * @property Carbon|null $createdAt
+ * @property Carbon|null $updatedAt
+ * @property bool $counted
  *
  * @package App\Models
  */
@@ -54,11 +47,8 @@ class Inventory extends Model
 
 	protected $casts = [
 		'count' => 'float',
-		'by_weight' => 'int',
 		'date_counted' => 'date',
 		'time_counted' => 'time',
-		'period_end_date' => 'datetime',
-		'period_start_date' => 'datetime'
 	];
 
 	protected $fillable = [
@@ -90,13 +80,5 @@ class Inventory extends Model
 		'expected_qty',
 		'standard_cost'
 	];
-
-
-    public static function product(){
-
-
-
-    }
-
 
 }

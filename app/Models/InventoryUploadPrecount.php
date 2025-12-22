@@ -7,10 +7,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class PreCount
+ * Class InventoryUploadPrecount
  *
  * @property int $id
  * @property string $tag
@@ -40,38 +41,56 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class PreCount extends Model
+class InventoryUploadPrecount extends Model
 {
-	protected $table = 'inventory_precount';
-	public $timestamps = false;
+    use HasFactory;
 
-	protected $casts = [
-		'bin_verified' => 'bool',
-		'verified_date' => 'datetime'
-	];
+    protected $table = 'inventory_upload';
 
-	protected $fillable = [
-		'tag',
+    protected $casts = [
+        'count' => 'float',
+        'by_weight' => 'int',
+        'date_counted' => 'date',
+        'time_counted' => 'date'
+    ];
+
+    protected $fillable = [
+        'tag',
         'tag_status',
-		'part',
+        'part',
         'part_description',
-        'warehouse',
-		'bin',
+        'bin',
         'bin_description',
-		'bin_verified',
-		'verified_date',
-		'count',
+        'lot_number',
+        'serial_number',
+        'count',
         'by_weight',
-		'uom',
-		'lot',
-		'serial',
-		'user',
-		'expected_qty',
-		'standard_cost',
-		'cost_counted',
-        'cost_expected',
+        'uom',
+        'user',
         'date_counted',
         'time_counted',
-        'plus_minus'
-	];
+        'note',
+        'warehouse',
+        'expected_qty',
+        'standard_cost',
+        'cost_counted',
+        'cost_expected',
+        'plus_minus',
+        'counted'
+    ];
+
+
+    protected function date_counted(): Attribute {
+        return Attribute::make(
+            set: fn(string $date) => Carbon::createFromFormat('Y-m-d', $date),
+        );
+    }
+
+    protected function time_counted(): Attribute {
+        return Attribute::make(
+            set: fn(string $time) => Carbon::createFromFormat('H:i:s', $time),
+        );
+    }
 }
+
+
