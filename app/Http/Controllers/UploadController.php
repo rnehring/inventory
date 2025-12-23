@@ -90,10 +90,6 @@ class UploadController extends FunctionController
             $date_counted = date_format($date_counted, 'Y-m-d');
             $time_counted = date_create($part['time_counted']);
             $time_counted = date_format($time_counted, 'H:i:s');
-            $period_start_date = date_create($part['period_start_date']);
-            $period_start_date = date_format($period_start_date, 'Y-m-d H:i:s');
-            $period_end_date = date_create($part['period_end_date']);
-            $period_end_date = date_format($period_end_date, 'Y-m-d H:i:s');
 
             $cycle = 0;
 
@@ -102,25 +98,21 @@ class UploadController extends FunctionController
                 'part' => $part['part'],
                 'part_description' => Str::limit($part['part_description']),
                 'bin' => $part['bin'],
-                'description' => $part['description'],
+                'bin_description' => $part['bin_description'],
                 'lot_number' => $part['lot_number'],
                 'serial_number' => $part['serial_number'],
                 'count' => $part['count'],
                 'by_weight' => $part['by_weight'],
                 'uom' => $part['uom'],
-                'activity_before_count' => $part['activity_before_count'],
-                'returned' => $part['returned'],
                 'user' => $part['user'],
                 'date_counted' => $date_counted,
                 'time_counted' => $time_counted,
                 'note' => $part['note'],
-                'has_transactions' => $part['has_transactions'],
-                'period_end_date' => $period_end_date,
-                'period_start_date' => $period_start_date,
-                'company' => $part['company'],
                 'warehouse' => $part['warehouse'],
                 'expected_qty' => $part['expected_qty'],
                 'standard_cost' => $part['standard_cost'],
+                'cost_counted' => $part['cost_counted'],
+                'cost_expected' => $part['cost_expected'],
                 'created_at' => now(),
                 'updated_at' => now(),
                 'counted' => 0
@@ -226,6 +218,8 @@ class UploadController extends FunctionController
                 'warehouse' => $part['warehouse'],
                 'expected_qty' => $part['expected_qty'],
                 'standard_cost' => $part['standard_cost'],
+                'cost_counted' => $part['cost_counted'],
+                'cost_expected' => $part['cost_expected'],
                 'created_at' => now(),
                 'updated_at' => now(),
                 'counted' => 0
