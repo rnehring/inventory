@@ -57,9 +57,9 @@ class FunctionController extends Controller
     public function updatePreCount(Request $request){
         $updatePart = DB::update('
             UPDATE ' . $this->tableNamePre . '
-            SET count = ?, bin_verified = ?, tag_status = ?
+            SET count = ?, bin_verified = ?, tag_status = 1, counted = 1
             WHERE id = ?',
-            [$request->count, $request->bin_verified, $request->tag_status, $request->part]);
+            [$request->count, $request->bin_verified, $request->part]);
 
         $costs = DB::select('
             SELECT
