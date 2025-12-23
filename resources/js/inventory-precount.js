@@ -15,7 +15,7 @@ const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getPart);
 updateTextColors();
 
-
+let verified = 0;
 function getPart(event) {
     event.preventDefault();
 
