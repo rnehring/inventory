@@ -84,11 +84,11 @@ class DataController extends FunctionController
             SELECT
                 id,
                 tag,
+                tag_status,
                 part,
                 part_description,
                 bin,
-                description,
-                company,
+                bin_description,
                 lot_number,
                 serial_number,
                 count,
