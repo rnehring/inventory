@@ -16,29 +16,29 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $tag
- * @property bool $tagStatus
+ * @property bool $tag_status
  * @property string $part
- * @property string $partDescription
+ * @property string $part_description
  * @property string $warehouse
  * @property string $bin
- * @property string $binDescription
- * @property bool $binVerified
- * @property string $verifiedDate
+ * @property string $bin_description
+ * @property bool $bin_verified
+ * @property string $verified_date
  * @property float $count
- * @property bool $byWeight
+ * @property bool $by_weight
  * @property string $uom
  * @property string $lot
  * @property string $serial
  * @property int $user
- * @property double $expectedQty
- * @property float $standardCost
- * @property float $costCounted
- * @property float $costExpected
- * @property Carbon $dateCounted
- * @property Carbon $timeCounted
+ * @property double $expected_qty
+ * @property float $standard_cost
+ * @property float $cost_counted
+ * @property float $cost_expected
+ * @property Carbon $date_counted
+ * @property Carbon $time_counted
  * @property float plus_minus
- * @property Carbon|null $createdAt
- * @property Carbon|null $updatedAt
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
  * @package App\Models
  */
