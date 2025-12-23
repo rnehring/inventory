@@ -109,7 +109,7 @@ Route::post('/save-upload', [UploadController::class, 'saveUpload']);
 
 Route::post('/uploadpre', [UploadController::class, 'processPrecountUpload']);
 Route::get('/reviewpre', [UploadController::class, 'reviewPrecountUpload']);
-Route::post('/save-uploadpre', [UploadController::class, 'savePrecountUpload']);
+Route::post('/saveuploadpre', [UploadController::class, 'savePrecountUpload']);
 
 
 
