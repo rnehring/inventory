@@ -218,7 +218,6 @@ class UploadController extends FunctionController
                 'warehouse' => $part['warehouse'],
                 'expected_qty' => $part['expected_qty'],
                 'standard_cost' => $part['standard_cost'],
-                'cost_counted' => $part['cost_counted'],
                 'cost_expected' => $part['cost_expected'],
                 'created_at' => now(),
                 'updated_at' => now(),

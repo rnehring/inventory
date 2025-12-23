@@ -146,7 +146,6 @@ use App\Http\Controllers\Controller;
             <th scope="col" class="px-2 py-3 text-center">Serial Number</th>
             <th scope="col" class="px-2 py-3 text-center">Expected Qty</th>
             <th scope="col" class="px-2 py-3 text-right">Cost</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
             <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
             <th scope="col" class="px-2 py-3 text-center"></th>
             </thead>
@@ -164,7 +163,6 @@ use App\Http\Controllers\Controller;
                         <td class="px-2 py-4 text-center">{{ $row->serial_number ? $row->serial_number : 'none'}}</td>
                         <td class="px-2 py-4 text-center">{{ $row->expected_qty }}</td>
                         <td class="px-2 py-4 text-right">{{ $row->standard_cost }}</td>
-                        <td class="px-2 py-4 text-right">${{ $row->cost_counted }} </td>
                         <td class="px-2 py-4 text-right">${{ $row->cost_expected }}</td>
 
 
