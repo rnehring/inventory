@@ -211,7 +211,6 @@ class UploadController extends FunctionController
                 'count' => $part['count'],
                 'by_weight' => $part['by_weight'],
                 'uom' => $part['uom'],
-                'user' => $part['user'],
                 'date_counted' => $date_counted,
                 'time_counted' => $time_counted,
                 'note' => $part['note'],

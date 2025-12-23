@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $uom
  * @property string $lot
  * @property string $serial
- * @property int $user
  * @property double $expected_qty
  * @property float $standard_cost
  * @property float $cost_counted
@@ -67,7 +66,6 @@ class InventoryUploadPrecount extends Model
         'count',
         'by_weight',
         'uom',
-        'user',
         'date_counted',
         'time_counted',
         'note',
