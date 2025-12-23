@@ -1,4 +1,7 @@
 <x-layout>
+    <script>
+        const userType = {{ Auth::user()->user_type ?? 0 }};
+    </script>
     <x-slot:header>
         <x-header>Inventory Pre-Count</x-header>
     </x-slot:header>
