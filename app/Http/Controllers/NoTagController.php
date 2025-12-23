@@ -12,17 +12,20 @@ class NoTagController extends FunctionController
 {
     public $tableName;
     public $ntTableName;
+    public $ntPreTableName;
     public $className;
     public function __construct()
     {
         parent::__construct();
         if(session()->get('location') == "Kentwood"){
             $this->ntTableName = "no_tag_parts";
+            $this->ntPreTableName = "no_tag_part_precount";
             $this->tableName = "inventory";
             $this->className = "NoTagPart";
         }
         else{
             $this->ntTableName = "no_tag_parts_houston";
+            $this->ntPreTableName = "no_tag_part_houston_precount";
             $this->tableName = "inventory_houston";
             $this->className = "NoTagPartHouston";
         }
