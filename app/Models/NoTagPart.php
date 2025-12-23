@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $count
  * @property string $uom
  * @property int $by_weight
- * @property string $company
  * @property string $warehouse
  * @property string $lot_number
  * @property string $serial_number
@@ -54,7 +53,6 @@ class NoTagPart extends Model
 		'count',
 		'uom',
 		'by_weight',
-        'company',
         'warehouse',
         'lot_number',
         'serial_number',

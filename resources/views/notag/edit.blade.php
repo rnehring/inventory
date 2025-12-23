@@ -39,22 +39,11 @@ use App\Http\Controllers\FunctionController;
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 
-                <x-form-label class="mt-4">Brand</x-form-label>
-                <select id="company" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Brand</option>
-
-                    @foreach($companies as $company)
-                        <option value="{{ $company['companyCode'] }}" @if( $noTagPart->company == $company['companyCode']) selected @endif>{{ $company['companyName'] }}</option>
-                    @endforeach
-
-                </select>
-
                 <x-form-label class="mt-4">Plant</x-form-label>
 
                 <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-2 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
                     <option value="">Choose a Warehouse</option>
                     @php
-
                         foreach($warehouses as $warehouse){
                             echo "<option class='text-gray-800 px-2' value='" . $warehouse->warehouse . "' @if( $noTagPart->warehouse == $warehouse->warehouse) selected @endif>" . $warehouse->warehouse . "</option>";
                         }

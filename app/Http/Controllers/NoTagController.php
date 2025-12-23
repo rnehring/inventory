@@ -32,11 +32,11 @@ class NoTagController extends FunctionController
     }
 
     public function index(){
-        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPart::all(), 'companies' => FunctionController::getInventoryCompanies()]);
+        return view('notag.index',['warehouses' => FunctionController::getWarehouses(), 'noTagParts' => NoTagPart::all()]);
     }
 
     public function editNoTag(Request $request){
-        return view('notag.edit',['warehouses' => FunctionController::getWarehouses(), 'noTagPart' => NoTagPart::findOrFail($request->id), 'companies' => FunctionController::getInventoryCompanies()]);
+        return view('notag.edit',['warehouses' => FunctionController::getWarehouses(), 'noTagPart' => NoTagPart::findOrFail($request->id)]);
     }
 
     public function update(Request $request){
@@ -63,7 +63,6 @@ class NoTagController extends FunctionController
                      count,
                      uom,
                      by_weight,
-                     company,
                      warehouse,
                      lot_number,
                      serial_number,
@@ -86,7 +85,6 @@ class NoTagController extends FunctionController
                    ?,
                    ?,
                    ?,
-                   ?,
                    ?)',
             [
                 $request->part,
@@ -94,7 +92,6 @@ class NoTagController extends FunctionController
                 $request->count,
                 $request->uom,
                 $request->by_weight,
-                $request->company,
                 $request->warehouse,
                 $request->lot_number,
                 $request->serial_number,
