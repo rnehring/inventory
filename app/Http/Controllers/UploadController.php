@@ -260,7 +260,7 @@ class UploadController extends FunctionController
         $deleteTrigger = "DROP TRIGGER IF EXISTS calculate_precount_inventory_costs_before_update;";
         DB::statement($deleteTrigger);
 
-        $setTopEighty = "CALL update_top_eighty('" . $this->tableName . "');";
+        $setTopEighty = "CALL update_top_eighty_precount('inventory_precount');";
         DB::statement($setTopEighty);
 
         DB::unprepared("
