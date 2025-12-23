@@ -266,7 +266,7 @@ class UploadController extends FunctionController
         DB::unprepared("
             DROP TRIGGER IF EXISTS calculate_precount_inventory_costs_before_update;
 
-            CREATE DEFINER=`rnehring`@`%` TRIGGER `calculate_inventory_costs_before_update`
+            CREATE DEFINER=`rnehring`@`%` TRIGGER `calculate_precount_inventory_costs_before_update`
             BEFORE UPDATE ON `inventory_precount`
             FOR EACH ROW
             BEGIN
