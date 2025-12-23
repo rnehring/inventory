@@ -21,7 +21,7 @@ class PreCountController extends FunctionController
     }
 
     public function index(){
-        return view('precount.index', ['bins' => parent::getBins()]);
+        return view('precount.index', ['bins' => parent::getBins('inventory_precount')]);
     }
 
     public function getPart(Request $request){

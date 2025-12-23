@@ -71,22 +71,22 @@ class FunctionController extends Controller
         return json_encode($costs);
     }
 
-    public function getBins(){
+    public function getBins($table){
         $bins = DB::select('
             SELECT DISTINCT
                 bin
-            FROM valid_bins
-            ORDER BY bin DESC');
+            FROM ' . $table . '
+            ORDER BY bin ASC');
 
         return $bins;
     }
 
-    public function getWarehouses(){
+    public function getWarehouses($table){
         $warehouses = DB::select('
             SELECT DISTINCT
                 warehouse
-            FROM valid_bins
-            ORDER BY warehouse DESC');
+            FROM ' . $table . '
+            ORDER BY warehouse ASC');
         return $warehouses;
     }
 
