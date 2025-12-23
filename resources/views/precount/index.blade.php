@@ -41,6 +41,7 @@ use App\Http\Controllers\Controller;
             <th scope="col" class="px-2 py-3">Bin</th>
             <th scope="col" class="px-2 py-3 text-center">UOM</th>
             <th scope="col" class="px-2 py-3 text-center">Count</th>
+            <th scope="col" class="px-2 py-3 text-center">Bin Verified</th>
             <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
