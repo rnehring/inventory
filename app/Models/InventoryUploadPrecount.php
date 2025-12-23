@@ -46,7 +46,7 @@ class InventoryUploadPrecount extends Model
 {
     use HasFactory;
 
-    protected $table = 'inventory_upload';
+    protected $table = 'inventory_precount_upload';
 
     protected $casts = [
         'count' => 'float',
