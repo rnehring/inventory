@@ -36,10 +36,12 @@
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
             <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
-            <th scope="col" class="px-2 py-3 text-right">+/-</th>
+            @if( Auth::user()->user_type == 2 )
+                <th scope="col" class="px-2 py-3 text-right">Cost</th>
+                <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
+                <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
+                <th scope="col" class="px-2 py-3 text-right">+/-</th>
+            @endif
             <th scope="col" class="px-2 py-3 text-center"></th>
             </thead>
             <tbody class="text-gray-900 px-2 border-b">
