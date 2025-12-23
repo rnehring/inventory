@@ -75,7 +75,8 @@ class FunctionController extends Controller
         $bins = DB::select('
             SELECT DISTINCT
                 bin
-            FROM valid_bins');
+            FROM valid_bins
+            ORDER BY bin DESC');
 
         return $bins;
     }
@@ -84,7 +85,8 @@ class FunctionController extends Controller
         $warehouses = DB::select('
             SELECT DISTINCT
                 warehouse
-            FROM valid_bins');
+            FROM valid_bins
+            ORDER BY warehouse DESC');
         return $warehouses;
     }
 
