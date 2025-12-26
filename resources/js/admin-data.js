@@ -71,7 +71,17 @@ function renderGrid(data) {
             },
             { id: 'id', name: 'ID', hidden: true},
             { id: 'tag', name: 'Tag', width: '5%'},
-            { id: 'tag_printed', name: 'Tag', width: '5%'},
+            {
+                id: 'tag_status',
+                formatter: (cell) => {
+                    if (cell == 1) {
+                        return html('<span>Printed</span>');
+                    }
+                    return html('<span></span>');
+                },
+                name: 'Tag Printed',
+                width: '4%'
+            },
             { id: 'part', name: 'Part', width: '10%'},
             { id: 'bin', name: 'Bin', width: '5%'},
             { id: 'lot_number', name: 'Lot #', width: '5%'},
