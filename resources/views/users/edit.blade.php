@@ -28,6 +28,19 @@
                 <x-form-field fieldName="initials" labelText="Initials" value="{{ $user->initials }}"></x-form-field>
                 <x-form-field fieldName="email" labelText="Email Address" value="{{ $user->email }}"></x-form-field>
 
+                <label for="plant"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-4">Plant</label>
+                <select id="plant" name="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Choose Your Plant</option>
+                    @php
+                        foreach($plants as $plant){
+                            echo "<option value='" . $plant->id . "'>" . $plant->display_name . "</option>";
+                        }
+                    @endphp
+                </select>
+
+
+
                 <label for="password"
                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                 <input
@@ -48,25 +61,9 @@
                 @error('password')
                     <span style="color: red;">{{ $message }}</span>
                 @enderror
-                <label for="company"
-                       class="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Brand</label>
-                <select
-                    id="company"
-                    name="company"
-                    class="mt-4 block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                    <option value="00" selected>Choose Your Brand</option>
-                    <option value="10" @if( $user->company  == "10" ) selected @endif>PureFlex</option>
-                    <option value="20" @if(  $user->company  == "20" ) selected @endif>Nilcor</option>
-                    <option value="30" @if(  $user->company  == "30" ) selected @endif>Ethylene</option>
-                    <option value="40" @if(  $user->company  == "40" ) selected @endif>Hills-McCanna</option>
-                    <option value="CC0" @if(  $user->company  == "CC0" ) selected @endif>Conley Composites</option>
-                    <option value="PV0" @if(  $user->company  == "PV0" ) selected @endif>PolyValve</option>
-                    <option value="50" @if(  $user->company  == "50" ) selected @endif>Ramparts Pumps</option>
-                    <option value="G50" @if(  $user->company  == "G50" ) selected @endif>Endurance Composites</option>
-                </select>
 
                 <label for="user_type"
-                       class='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Password</label>
+                       class='block mb-2 mt-4 text-sm font-medium text-gray-900 dark:text-white'>User Type</label>
                 <select
                     id="user_type"
                     name="user_type"

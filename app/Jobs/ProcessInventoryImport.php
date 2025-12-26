@@ -31,14 +31,6 @@ class ProcessInventoryImport implements ShouldQueue
         foreach ($records as $record) {
             $mapped = $this->mapRecord($record, $this->mapping);
 
-            $uoms = "GR,LB,FLOZ,ST";
-            $uom_array = explode(',', $uoms);
-            if (in_array($mapped['uom'], $uom_array)) {
-                $mapped['by_weight'] = 1;
-            } else {
-                $mapped['by_weight'] = 0;
-            }
-
             $batch[] = $mapped;
 
             // Insert in chunks of 1000

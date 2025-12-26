@@ -37,7 +37,11 @@ function getPart(event) {
                     let top_eighty_star = makeCell('');
                 }
                 let tag = makeCell(`${part['tag']}`);
-                let tag_printed = makeCell(`${part['tag_printed']}`);
+                if(`${part['tag_printed']}` == 1){
+                    let tag_printed = makeCell(`Printed`);
+                } else{
+                    let tag_printed = makeCell('');
+                }
                 let part_number = makeCell(`${part['part']}`);
                 let part_warehouse = makeCell(`${part['warehouse']}`);
                 let bin = makeCell(`${part['bin']}`, 'text-center');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,10 @@ class UserController extends FunctionController
     }
 
     public function editUser(Request $request){
-        return view('users.edit',['user' => $this->getUser($request->id) ]);
+        return view('users.edit',[
+            'user' => $this->getUser($request->id),
+            'plants' => Plant::all()->where('active', 1)
+        ]);
     }
 
     public function newUser(Request $request){
@@ -49,7 +53,6 @@ class UserController extends FunctionController
             'email' => 'required|email',
             'plant' => 'required|string|max:255',
             'password' => 'nullable|min:6|confirmed',
-            'company' => 'required',
             'user_type' => 'required',
         ]);
         //dd($validated);
@@ -61,7 +64,6 @@ class UserController extends FunctionController
         $user->initials = $validated['initials'];
         $user->email = $validated['email'];
         $user->plant = $validated['plant'];
-        $user->company = $validated['company'];
         $user->user_type = $validated['user_type'];
 
         // Only update password if provided
@@ -82,7 +84,6 @@ class UserController extends FunctionController
             'email' => 'required|email',
             'plant' => 'required|string|max:255',
             'password' => ['required', Password::min(6)],
-            'company' => 'required',
             'user_type' => 'required',
         ]);
 

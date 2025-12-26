@@ -53,10 +53,7 @@ class PreCountController extends FunctionController
                 verified_date,
                 count,
                 uom,
-                CASE
-                    WHEN uom IN ('GR', 'LB', 'FLOZ', 'ST') THEN 1
-                    ELSE 0
-                END AS by_weight,
+                by_weight,
                 IFNULL(lot_number, '') AS lot_number,
                 IFNULL(serial_number, '') AS serial_number,
                 `user`,

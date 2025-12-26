@@ -1,5 +1,6 @@
 @php
     use App\Http\Controllers\FunctionController;
+    use App\Models\Plant;
 @endphp
 
 <x-layout>
@@ -23,7 +24,7 @@
                     <th scope="col" class="px-2 py-3">Last Name</th>
                     <th scope="col" class="px-2 py-3 text-center">Initials</th>
                     <th scope="col" class="px-2 py-3">Email Address</th>
-                    <th scope="col" class="px-2 py-3 text-center">Company</th>
+                    <th scope="col" class="px-2 py-3 text-center">Plant</th>
                     <th scope="col" class="px-2 py-3 text-center">User Type</th>
                     <th scope="col" class="px-2 py-3 text-center">Edit</th>
                     <th scope="col" class="px-2 py-3 text-center">Delete</th>
@@ -36,7 +37,7 @@
                             <td>{{ $user->last_name }}</td>
                             <td class="text-center">{{ $user->initials }}</td>
                             <td>{{ $user->email }}</td>
-                            <td class="text-center">{{ FunctionController::epicorCodeToCompanyName($user->company) }}</td>
+                            <td class="text-center">{{ Plant::find($user->plant)->display_name }}</td>
                             <td class="text-center" >{{ $user->user_type == 1 ? "User" : "Admin" }}</td>
                             <td class="text-center py-2 px-2">
                                 <a href="/users/edit/{{ $user->id }}">
