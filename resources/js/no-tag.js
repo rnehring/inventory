@@ -15,10 +15,59 @@ submitButton.addEventListener("click", addNoTag);
 updateTextColors();
 
 
+
 function saveCount(event, partid){
     let count = document.getElementById('count'+partid).value;
     console.log(count);
 }
+
+
+axios.get('/get-part-numbers',)
+    .then(function (response) {
+        let partNumbers = response.data;
+        console.log(partNumbers);
+        let partField = document.getElementById('part');
+
+        partField.addEventListener('change', function(event){
+            const performSearch = (partNumbers, query) => {
+                if ( partNumbers.includes(query) ) {
+                    return true;
+                }
+                return false;
+            };
+
+            let query = event.target.value;
+            console.log(query);
+            let partExists = performSearch(partNumbers, query);
+
+            if (partExists) {
+               partField.style.backgroundColor = "rgb(55, 65, 81)";
+               let partFieldError = document.getElementById('partError');
+               if( partFieldError ){
+                   let partFieldDiv = partFieldError.parentElement;
+                   partFieldDiv.removeChild(partFieldError);
+               }
+                var submitButton = document.getElementById('add-notag');
+                submitButton.disabled = false;
+            } else {
+                let partFieldDiv = partField.parentElement;
+                partField.style.backgroundColor = "#c40000";
+                let partFieldError = document.getElementById('partError');
+                if( partFieldError ){
+                    partFieldDiv.removeChild(partFieldError);
+                }
+                let error = document.createElement("p");
+                error.id = "partError";
+                error.style.color = "#c40000";
+                error.style.marginBottom = "4px";
+                error.style.fontWeight = "bold";
+                error.textContent = "Part Number Not Found.";
+                partFieldDiv.appendChild(error);
+                var submitButton = document.getElementById('add-notag');
+                submitButton.disabled = true;
+            }
+        });
+    })
 
 function addNoTag(event) {
     event.preventDefault();
@@ -36,7 +85,6 @@ function addNoTag(event) {
         count: document.getElementById('count').value,
         uom: document.getElementById('uom').value,
         by_weight: isChecked,
-        company: document.getElementById('company').value,
         warehouse: document.getElementById('warehouse').value,
         lot_number: document.getElementById('lot_number').value,
         serial_number: document.getElementById('serial_number').value
@@ -54,7 +102,6 @@ function addNoTag(event) {
             let bin = makeCell(`${part.bin}`, 'text-center');
             let uom = makeCell(`${part.uom}`, 'text-center');
             let by_weight = makeCell(`${part.by_weight}` == 1 ? "Yes" : "No", 'text-center');
-            let company = makeCell(`${epicorCodeToCompanyName(part.company)}`, 'text-center');
             let warehouse = makeCell(`${part.warehouse}`, 'text-center');
             let lot_number = makeCell(`${part.lot_number}`, 'text-center');
             let serial_number = makeCell(`${part.serial_number}`, 'text-center');

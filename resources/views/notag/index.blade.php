@@ -16,7 +16,7 @@ use App\Http\Controllers\FunctionController;
 
             <form method="post" action="/notag/save" class="w-4/6 mx-auto" name="NoTagForm" id="NoTagForm">
                 @csrf
-                <x-form-field fieldName="part" labelText="Part Number" />
+                <x-form-field id="part" fieldName="part" labelText="Part Number" />
                 <x-form-field fieldName="bin" labelText="Bin" />
                 <x-form-field fieldName="count" labelText="Count" />
 
@@ -39,20 +39,20 @@ use App\Http\Controllers\FunctionController;
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 
-                <x-form-label class="mt-4">Plant</x-form-label>
+{{--                <x-form-label class="mt-4">Plant</x-form-label>--}}
 
-                <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
-                    <option value="">Plant</option>
-                    @php
-                        foreach($plants as $plant){
-                            echo "<option value='" . $plant->id . "'>" . $plant->display_name . "</option>";
-                        }
-                    @endphp
-                </select>
+{{--                <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>--}}
+{{--                    <option value="">Plant</option>--}}
+{{--                    @php--}}
+{{--                        foreach($plants as $plant){--}}
+{{--                            echo "<option value='" . $plant->id . "'>" . $plant->display_name . "</option>";--}}
+{{--                        }--}}
+{{--                    @endphp--}}
+{{--                </select>--}}
 
                 <x-form-field fieldName="lot_number" labelText="Lot Number" />
                 <x-form-field fieldName="serial_number" labelText="Serial Number" />
-
+                <input type="hidden" id="warehouse" name="warehouse" value="{{ session('plant') }}" />
                 <x-form-submit id="add-notag">Add Part</x-form-submit>
             </form>
 

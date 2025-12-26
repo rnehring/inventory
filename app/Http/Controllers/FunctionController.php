@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Inventory;
 
 class FunctionController extends Controller
 {
@@ -81,6 +82,7 @@ class FunctionController extends Controller
             SELECT DISTINCT
                 bin
             FROM ' . $table . '
+            WHERE warehouse = "' . session('plant') . '"
             ORDER BY bin ASC');
 
         return $bins;
@@ -98,4 +100,13 @@ class FunctionController extends Controller
         return $warehouses;
     }
 
+    public function getPartNumbers(){
+        $partNums = DB::select('
+            SELECT DISTINCT
+                part
+            FROM inventory');
+
+        $partNumbers = json_encode(Inventory::pluck('part')->toArray());
+        return $partNumbers;
+    }
 }

@@ -100,6 +100,9 @@ Route::get('/notag/edit/{id}', [NoTagController::class, 'editNoTag']);
 Route::post('/notag/save', [NoTagController::class, 'saveNoTagPart']);
 Route::post('/notag/update', [NoTagController::class, 'update'])->name('notag.update');
 
+Route::get('/get-part-numbers', [FunctionController::class, 'getPartNumbers']);
+
+
 // CSV ROUTES
 Route::post('/download-data', [DataController::class, 'downloadData']);
 Route::get('/upload', [UploadController::class, 'index']);

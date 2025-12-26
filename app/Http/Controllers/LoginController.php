@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,7 +50,7 @@ class LoginController extends FunctionController
         $userAttributes['plant'] = $request->plant;
 
         session()->put('location', $request->location);
-
+        session()->put('plant', Plant::find($request->plant)->plant);
         $user = User::firstOrCreate($userAttributes);
 
         Auth::login($user);

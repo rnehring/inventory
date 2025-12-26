@@ -32,7 +32,11 @@ class NoTagController extends FunctionController
     }
 
     public function index(){
-        return view('notag.index',['plants' => FunctionController::getWarehouses($this->tableName), 'noTagParts' => NoTagPart::all()]);
+        return view('notag.index',
+            [
+                'plants' => FunctionController::getWarehouses($this->tableName),
+                'noTagParts' => NoTagPart::all()
+            ]);
     }
 
     public function editNoTag(Request $request){
@@ -52,9 +56,9 @@ class NoTagController extends FunctionController
         $dateNow = date("Y-m-d");
         $timeNow = date("H:i:s");
         $userId = Auth::id();
-        $partPrice = DB::select('SELECT price FROM part_prices_houston WHERE part = ?', [$request->part]);
+        $partPrice = DB::select('SELECT standard_cost FROM inventory WHERE part = ?', [$request->part]);
 
-        $costCounted = $partPrice[0]->price * $request->count;
+        $costCounted = $partPrice[0]->standard_cost * $request->count;
 
         DB::insert('
             INSERT INTO ' . $this->ntTableName . '(
@@ -98,7 +102,7 @@ class NoTagController extends FunctionController
                 $userId,
                 $dateNow,
                 $timeNow,
-                $partPrice[0]->price,
+                $partPrice[0]->standard_cost,
                 $costCounted
             ]);
 
