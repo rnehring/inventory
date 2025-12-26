@@ -49,8 +49,6 @@ class LoginController extends FunctionController
 
         session()->put('location', $request->location);
 
-        unset($userAttributes['companyCode']);
-
         $user = User::firstOrCreate($userAttributes);
 
         Auth::login($user);

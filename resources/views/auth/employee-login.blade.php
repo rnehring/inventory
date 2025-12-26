@@ -8,14 +8,14 @@
         <img class="max-w-sm items-center m-auto" id="company-logo" src="{{URL::asset('/images/company-logos/logo-white.png')}}" alt="company-logo">
 
         <h5 class="mb-4 text-3xl font-bold text-gray-900 dark:text-white mt-6">Employee Login</h5>
-        <p class="mb-8 text-base text-gray-500 sm:text-lg dark:text-gray-400">Choose the company you work for from the dropdown menu, and then enter your initials. <span class="font-bold">Please use all 3 of your initials, including middle name.  If you don't have a middle name, use 'x' as the middle initial.</span></p>
+        <p class="mb-8 text-base text-gray-500 sm:text-lg dark:text-gray-400">Choose the plant you work in from the dropdown menu, and then enter your initials. <span class="font-bold">Please use all 3 of your initials, including middle name.  If you don't have a middle name, use 'x' as the middle initial.</span></p>
 
         <div class="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4 rtl:space-x-reverse">
 
             <form method="post" action="/employee-login" id="loginForm" class="w-4/6 mx-auto">
                 @csrf
 
-                <select id="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                <select id="plant" name="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                     <option value="logo-white.png" selected data-cc="">Choose Your Plant/Warehouse</option>
                     <option value="9000-P1" selected data-cc="9000-P1">Plant 1</option>
                     <option value="9000-P2" selected data-cc="9000-P2">Plant 2</option>
