@@ -96,7 +96,7 @@ function addNoTag(event) {
 
 
             let part = response.data;
-
+            let tag = makeCell(`${part.tag}`, 'px-2 py-4');
             let part_number = makeCell(`${part.part}`, 'px-2 py-4');
             let count = makeCell(`${part.count}`, 'text-center');
             let bin = makeCell(`${part.bin}`, 'text-center');
