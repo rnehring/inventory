@@ -39,11 +39,11 @@ class PreCountController extends FunctionController
             $params = [$request->bin];
         }
 
-        $partData = DB::select('
+        $partData = DB::select("
             SELECT
                 id,
-                tag,
-                tag_status,
+                IFNULL(tag, '') AS tag,
+                IFNULL(tag_status, '') AS tag_status,
                 part,
                 part_description,
                 warehouse,
@@ -52,10 +52,13 @@ class PreCountController extends FunctionController
                 bin_verified,
                 verified_date,
                 count,
-                by_weight,
                 uom,
-                lot_number,
-                serial_number,
+                CASE
+                    WHEN uom IN ('GR', 'LB', 'FLOZ', 'ST') THEN 1
+                    ELSE 0
+                END AS by_weight,
+                IFNULL(lot_number, '') AS lot_number,
+                IFNULL(serial_number, '') AS serial_number,
                 `user`,
                 expected_qty,
                 standard_cost,
@@ -65,8 +68,11 @@ class PreCountController extends FunctionController
                 time_counted,
                 plus_minus,
                 created_at,
-                updated_at
-             FROM ' . $this->tableName . ' ' . $where,
+                updated_at,
+                top_eighty,
+                IF(top_eighty = 1, '" . view('components.top-eighty-star')->render() . "', '') AS top_eighty_star,
+                counted
+             FROM " . $this->tableName . " " . $where,
             $params
         );
 

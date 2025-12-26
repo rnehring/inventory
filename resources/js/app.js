@@ -50,7 +50,7 @@ export function formatToTwoDigits(value){
 export function makeCell(value, classes){
     let cell = document.createElement('td');
     cell.innerHTML = value;
-    cell.classList = 'text-gray-400 px-4 border-b ';
+    cell.classList = 'text-gray-400 px-4 border-b py-1 ';
     if(classes){
         classes = classes.split(' ');
         classes.forEach((className) => {
@@ -65,12 +65,12 @@ export function makeRow(part){
     console.log(part);
     let row = document.createElement('tr');
     row.id = `row${part['id']}`;
-    var classes = "";
+    let classes = "";
     if(part['top_eighty'] == '1' && part['counted'] == '1') {
         classes += ' bg-green-300';
     }
     if(part['top_eighty'] == '1' && part['counted'] == '0') {
-        classes += 'bg-yellow-300';
+        classes += 'top-eighty-highlight';
     }
     if(part['top_eighty'] == '0' && part['counted'] == '1') {
         classes += 'bg-green-300';

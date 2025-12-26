@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class InventoryUploadPrecount
  *
- * @property int $id
  * @property string $tag
  * @property bool $tag_status
  * @property string $part

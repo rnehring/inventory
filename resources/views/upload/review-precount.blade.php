@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 <x-layout>
 
     <x-slot:header>
-        <x-header>Review CSV File</x-header>
+        <x-header>Review Precount CSV File</x-header>
     </x-slot:header>
 
     <x-layout-container class="max-w-9xl">
@@ -26,7 +26,7 @@ use App\Http\Controllers\Controller;
                 </div>
             </div>
 
-        <form method="post" action="/save-upload">
+        <form method="post" action="/save-precount-upload">
             @csrf
             <button type="submit" class="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" id="download_csv">
                 <svg fill="#ffffff" height="24" width="24" class="mx-4" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -135,52 +135,22 @@ use App\Http\Controllers\Controller;
             </button>
         </form>
 
-        <table id="partData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <th scope="col" class="px-2 py-3">Tag</th>
-            <th scope="col" class="px-2 py-3">Part</th>
-            <th scope="col" class="px-2 py-3 text-center">UOM</th>
-            <th scope="col" class="px-2 py-3 text-center">Count</th>
-            <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
-            <th scope="col" class="px-2 py-3 text-center">Lot Number</th>
-            <th scope="col" class="px-2 py-3 text-center">Serial Number</th>
-            <th scope="col" class="px-2 py-3 text-center">Expected Qty</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
-            <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
-            <th scope="col" class="px-2 py-3 text-center"></th>
-            </thead>
-            <tbody>
+        <div class="w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow">
 
-                @foreach($allParts as $row)
+            <div
+                class="block max-w-10xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mt-4">
+                <h5 class="text-xl font-bold text-white mb-2 "><x-ri-database-line class="w-6 h-6 inline-block mr-2"/>Uploaded Precount Data</h5>
+                <hr class="mb-4">
+            </div>
 
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="px-2 py-4">{{ $row->tag }}</td>
-                        <td class="px-2 py-4">{{ $row->part }}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->uom }}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->count }}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->by_weight == 0 ? 'No':'Yes' }}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->lot_number ? $row->lot_number : 'none'}}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->serial_number ? $row->serial_number : 'none'}}</td>
-                        <td class="px-2 py-4 text-center">{{ $row->expected_qty }}</td>
-                        <td class="px-2 py-4 text-right">{{ $row->standard_cost }}</td>
-                        <td class="px-2 py-4 text-right">${{ $row->cost_counted }} </td>
-                        <td class="px-2 py-4 text-right">${{ $row->cost_expected }}</td>
+            <div id="grid" class="w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 p-4"></div>
 
 
-                    </tr>
-
-                @endforeach
-
-
-            </tbody>
-        </table>
-
-
-        {{ $allParts->links() }}
-
+        </div>
 
     </x-layout-container>
 </x-layout>
+
+
 
 

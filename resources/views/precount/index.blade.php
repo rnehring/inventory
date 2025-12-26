@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 </script>
 
 <x-layout>
-
+    <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
         <x-header>Inventory Pre-Count</x-header>
     </x-slot:header>
@@ -32,10 +32,11 @@ use App\Http\Controllers\Controller;
 
         </x-search-form>
 
-        <table id="partData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table id="partData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <th scope="col" class="px-2 py-3 text-center"></th>
             <th scope="col" class="px-2 py-3">Tag</th>
-            <th scope="col" class="px-2 py-3">Tag Status</th>
+            <th scope="col" class="px-2 py-3">Tag Printed</th>
             <th scope="col" class="px-2 py-3">Part</th>
             <th scope="col" class="px-2 py-3">Warehouse</th>
             <th scope="col" class="px-2 py-3">Bin</th>
@@ -43,8 +44,8 @@ use App\Http\Controllers\Controller;
             <th scope="col" class="px-2 py-3 text-center">Count</th>
             <th scope="col" class="px-2 py-3 text-center">Bin Verified</th>
             <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
-            <th scope="col" class="px-2 py-3">Lot Number</th>
-            <th scope="col" class="px-2 py-3">Serial Number</th>
+            <th scope="col" class="px-2 py-3">Lot</th>
+            <th scope="col" class="px-2 py-3">Serial</th>
             <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
             @if( Auth::user()->user_type == 2 )
                 <th scope="col" class="px-2 py-3 text-right">Cost</th>

@@ -34,15 +34,19 @@ function getParts(event) {
             let parts = response.data;
 
             parts.forEach((part) => {
+                if(`${part['top_eighty']}` == 1){
+                    let top_eighty_star = makeCell(`${part['top_eighty_star']}`);
+                } else{
+                    let top_eighty_star = makeCell('');
+                }
                 let tag = makeCell(`${part['tag']}`);
-                let tag_status = makeCell(`${part['tag_status']}`);
+                let tag_printed = makeCell(`${part['tag_printed']}`);
                 let part_number = makeCell(`${part['part']}`);
                 let part_warehouse = makeCell(`${part['warehouse']}`);
                 let bin = makeCell(`${part['bin']}`, 'text-center');
                 let uom = makeCell(`${part['uom']}`, 'text-center');
-                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' value='${part['count']}' />`);
+                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' style="width:80px;" value='${part['count']}' onfocus="this.value=''" />`);
                 let by_weight = makeCell(`<input type='checkbox' class='mx-auto block px-2' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
-
                 let lot_number = makeCell(`${part['lot_number']}`);
                 let serial_number = makeCell(`${part['serial_number']}`);
                 let expected_qty = makeCell(`${formatToTwoDigits(part['expected_qty'])}`, 'text-right');
@@ -62,8 +66,9 @@ function getParts(event) {
                             let row = document.getElementById('row'+part['id']);
                             row.classList = ('bg-green-300');
                             updateTextColors();
-                            row.cells[11].textContent = '$'+response.data[0]['cost_counted'];
-                            row.cells[13].textContent = '$'+response.data[0]['plus_minus'];
+                            row.cells[2].textContent = 'Printed';
+                            row.cells[13].textContent = formatterUSD.format(response.data[0]['cost_counted']);
+                            row.cells[15].textContent = formatterUSD.format(response.data[0]['plus_minus']);
                             showToast('Part Count Updated!');
 
                         });

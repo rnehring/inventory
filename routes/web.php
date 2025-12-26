@@ -103,14 +103,18 @@ Route::post('/notag/update', [NoTagController::class, 'update'])->name('notag.up
 // CSV ROUTES
 Route::post('/download-data', [DataController::class, 'downloadData']);
 Route::get('/upload', [UploadController::class, 'index']);
+
+// UPLOAD INVENTORY ROUTES
 Route::post('/upload', [UploadController::class, 'processUpload']);
-Route::get('/review', [UploadController::class, 'reviewUpload']);
+Route::get('/review-upload', [UploadController::class, 'reviewUpload']);
 Route::post('/save-upload', [UploadController::class, 'saveUpload']);
 
-Route::post('/uploadpre', [UploadController::class, 'processPrecountUpload']);
-Route::get('/reviewpre', [UploadController::class, 'reviewPrecountUpload']);
-Route::post('/saveuploadpre', [UploadController::class, 'savePrecountUpload']);
+//UPLOAD PRECOUNT ROUTES
+Route::post('/upload-precount', [UploadController::class, 'processPrecountUpload']);
+Route::get('/review-precount', [UploadController::class, 'reviewPrecountUpload']);
+Route::post('/save-precount-upload', [UploadController::class, 'savePrecountUpload']);
 
 
 
-
+Route::get('/get-uploaded-precount-data', [UploadController::class, 'getUploadedPrecountDataForReview']);
+Route::get('/get-uploaded-data', [UploadController::class, 'getUploadedDataForReview']);

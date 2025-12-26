@@ -134,6 +134,17 @@ function renderGrid(data) {
                 formatter: (cell) => html(`<span style="font-family: monospace">${formatterUSD.format(cell)}</span>`),
                 width: '4%'
             },
+            {
+                id: 'top_eighty',
+                formatter: (cell) => {
+                    if (cell == 1) {
+                        return html('<x-tni-star-circle />');
+                    }
+                    return html('<span></span>');
+                },
+                name: '',
+                width: '4%'
+            },
         ],
         data: data, // Use client-side data
         sort: true,

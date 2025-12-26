@@ -59,6 +59,12 @@
     @if(request()->is('users'))
         @vite(['resources/js/users.js'])
     @endif
+    @if(request()->is('review-precount'))
+        @vite(['resources/js/precount-upload.js'])
+    @endif
+    @if(request()->is('review-upload'))
+        @vite(['resources/js/inventory-upload.js'])
+    @endif
 </head>
 <body class="h-full">
 

@@ -23,8 +23,8 @@ class LocationPreController extends FunctionController
     public function index(){
         return view('location.index',
             [
-                'warehouses' => parent::getWarehouses(),
-                'bins' => parent::getBins(),
+                'warehouses' => parent::getWarehouses($this->tableName),
+                'bins' => parent::getBins($this->tableName),
             ]);
     }
 
@@ -43,7 +43,7 @@ class LocationPreController extends FunctionController
             $warehouse = $request->warehouse . "%";
         }
 
-        $partData = DB::select('
+        $partData = DB::select("
             SELECT
                 id,
                 tag,
@@ -58,20 +58,19 @@ class LocationPreController extends FunctionController
                 count,
                 by_weight,
                 uom,
-                lot,
-                serial,
+                lot_number,
+                serial_number,
                 `user`,
                 expected_qty,
                 standard_cost,
                 cost_counted,
                 cost_expected,
-                date_counted,
-                time_counted,
                 plus_minus,
-                created_at,
-                updated_at
-             FROM ' . $this->tableName . '
-            WHERE bin LIKE ? AND warehouse LIKE ?',
+                counted,
+                top_eighty,
+                IF(top_eighty = 1, '" . view('components.top-eighty-star')->render() . "', '') AS top_eighty_star
+             FROM " . $this->tableName . "
+            WHERE bin LIKE ? AND warehouse LIKE ?",
             [$bin, $warehouse]);
         return json_encode($partData);
     }

@@ -38,35 +38,29 @@ class CountController extends FunctionController
             $params = [$request->bin];
         }
 
-        $partData = DB::select('
+        $partData = DB::select("
             SELECT
                 id,
-                tag,
-                tag_status,
+                IFNULL(tag, '') AS tag,
+                IFNULL(tag_printed, '') AS tag_printed,
                 part,
-                part_description,
                 bin,
                 warehouse,
-                bin_description,
-                lot_number,
-                serial_number,
+                IFNULL(lot_number, '') AS lot_number,
+                IFNULL(serial_number, '') AS serial_number,
                 count,
                 by_weight,
                 uom,
                 `user`,
-                date_counted,
-                time_counted,
-                note,
                 expected_qty,
                 standard_cost,
                 cost_counted,
                 cost_expected,
                 plus_minus,
                 top_eighty,
-                created_at,
-                updated_at,
-                counted
-            FROM ' . $this->tableName . ' ' . $where,
+                counted,
+                IF(top_eighty = 1, '" . view('components.top-eighty-star')->render() . "', '') AS top_eighty_star
+            FROM " . $this->tableName . " " . $where,
                 $params
             );
 

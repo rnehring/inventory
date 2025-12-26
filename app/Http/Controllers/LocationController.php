@@ -23,8 +23,8 @@ class LocationController extends FunctionController
     public function index(){
         return view('location.index',
             [
-                'warehouses' => parent::getWarehouses(),
-                'bins' => parent::getBins(),
+                'warehouses' => parent::getWarehouses($this->tableName),
+                'bins' => parent::getBins($this->tableName),
             ]);
     }
 
@@ -43,33 +43,29 @@ class LocationController extends FunctionController
             $warehouse = $request->warehouse . "%";
         }
 
-        $partData = DB::select('
+        $partData = DB::select("
             SELECT
                 id,
-                tag,
+                IFNULL(tag, '') AS tag,
+                IFNULL(tag_printed, '') AS tag_printed,
                 part,
-                part_description,
                 bin,
-                description,
-                company,
-                lot_number,
-                serial_number,
+                warehouse,
+                IFNULL(lot_number, '') AS lot_number,
+                IFNULL(serial_number, '') AS serial_number,
                 count,
-                user,
-                uom,
                 by_weight,
+                uom,
+                `user`,
                 expected_qty,
                 standard_cost,
-                date_counted,
-                time_counted,
-                cost_expected,
                 cost_counted,
-                warehouse,
+                cost_expected,
                 plus_minus,
+                top_eighty,
                 counted,
-                top_eighty
-            FROM ' . $this->tableName . '
-            WHERE bin LIKE ? AND warehouse LIKE ?',
+                IF(top_eighty = 1, '" . view('components.top-eighty-star')->render() . "', '') AS top_eighty_star
+            FROM " . $this->tableName . " WHERE bin LIKE ? AND warehouse LIKE ?",
             [$bin, $warehouse]);
         return json_encode($partData);
     }

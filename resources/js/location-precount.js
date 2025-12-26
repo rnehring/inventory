@@ -1,7 +1,4 @@
-
-// file: resources/js/location-count.js
 import {
-    epicorCodeToCompanyName,
     updateTextColors,
     formatToTwoDigits,
     makeCell,
@@ -14,9 +11,9 @@ setCells();
 
 const submitButton = document.getElementById("get-part");
 submitButton.addEventListener("click", getParts);
-
 updateTextColors();
 
+let verified = 0;
 function getParts(event) {
     event.preventDefault();
 
@@ -36,13 +33,18 @@ function getParts(event) {
             let parts = response.data;
 
             parts.forEach((part) => {
+                if(`${part['top_eighty']}` == 1){
+                    let top_eighty_star = makeCell(`${part['top_eighty_star']}`);
+                } else{
+                    let top_eighty_star = makeCell('');
+                }
                 let tag = makeCell(`${part['tag']}`);
                 let tag_status = makeCell(`${part['tag_status']}`);
                 let part_number = makeCell(`${part['part']}`);
                 let part_warehouse = makeCell(`${part['warehouse']}`);
                 let bin = makeCell(`${part['bin']}`, 'text-center');
                 let uom = makeCell(`${part['uom']}`, 'text-center');
-                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' value='${part['count']}' />`);
+                let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='text-right px-2 py-0 mx-auto block rounded-sm border-gray-600' value='${part['count']}' onfocus="this.value=''"/>`);
                 let bin_verified = makeCell(`<input type='checkbox' class='mx-auto block px-2' id='bin_verified' ${part['bin_verified'] === 1 ? 'checked />' : '/>'}`);
                 let by_weight = makeCell(`<input type='checkbox' class='mx-auto block px-2' id='by_weight' ${part['by_weight'] === 1 ? 'checked />' : '/>'}`);
                 let lot_number = makeCell(`${part['lot_number']}`);
@@ -64,8 +66,9 @@ function getParts(event) {
                             let row = document.getElementById('row'+part['id']);
                             row.classList = ('bg-green-300');
                             updateTextColors();
-                            row.cells[11].textContent = '$'+response.data[0]['cost_counted'];
-                            row.cells[13].textContent = '$'+response.data[0]['plus_minus'];
+                            row.cells[2].textContent = 'Printed';
+                            row.cells[14].textContent = formatterUSD.format(response.data[0]['cost_counted']);
+                            row.cells[16].textContent = formatterUSD.format(response.data[0]['plus_minus']);
                             showToast('Part Count Updated!');
 
                         });

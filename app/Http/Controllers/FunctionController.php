@@ -40,14 +40,17 @@ class FunctionController extends Controller
         $updatePart = DB::update('
             UPDATE ' . $countTable . '
             SET count = ?,
-            user = ?
+            user = ?,
+            tag_printed = 1,
+            counted = 1
             WHERE id = ?',
             [$request->count, $userId, $request->part]);
 
         $costs = DB::select('
             SELECT
                 cost_counted,
-                plus_minus
+                plus_minus,
+                tag_printed
             FROM ' . $this->tableName . '
                 WHERE id = ?',[$request->part]
         );
@@ -55,16 +58,18 @@ class FunctionController extends Controller
     }
 
     public function updatePreCount(Request $request){
+        $userId = Auth::id();
         $updatePart = DB::update('
             UPDATE ' . $this->tableNamePre . '
-            SET count = ?, bin_verified = ?, tag_status = 1, counted = 1
+            SET count = ?, bin_verified = ?, user = ?, tag_status = 1, counted = 1
             WHERE id = ?',
-            [$request->count, $request->bin_verified, $request->part]);
+            [$request->count, $request->bin_verified, $userId, $request->part]);
 
         $costs = DB::select('
             SELECT
                 cost_counted,
-                plus_minus
+                plus_minus,
+                tag_status
             FROM ' . $this->tableNamePre . '
             WHERE id = ?',[$request->part]
         );
