@@ -15,13 +15,21 @@
             <form method="post" action="/employee-login" id="loginForm" class="w-4/6 mx-auto">
                 @csrf
 
-                <select id="plant" name="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                    <option value="logo-white.png" selected data-cc="">Choose Your Plant/Warehouse</option>
-                    <option value="9000-P1" selected data-cc="9000-P1">Plant 1</option>
-                    <option value="9000-P2" selected data-cc="9000-P2">Plant 2</option>
-                    <option value="9000-P3" selected data-cc="9000-P3">Plant 3</option>
-                </select>
+{{--                <select id="plant" name="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">--}}
+{{--                    <option value="logo-white.png" selected data-cc="">Choose Your Plant/Warehouse</option>--}}
+{{--                    <option value="9000-P1" selected data-cc="9000-P1">Plant 1</option>--}}
+{{--                    <option value="9000-P2" selected data-cc="9000-P2">Plant 2</option>--}}
+{{--                    <option value="9000-P3" selected data-cc="9000-P3">Plant 3</option>--}}
+{{--                </select>--}}
 
+                <select id="plant" name="plant" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Choose Your Plant</option>
+                    @php
+                        foreach($plants as $plant){
+                            echo "<option value='" . $plant->id . "'>" . $plant->display_name . "</option>";
+                        }
+                    @endphp
+                </select>
                 <input type="hidden" name="location" value="Kentwood" />
                 <x-form-field name="initials" id="initials" fieldName="initials" labelText="Initials" required minlength="3" />
                 <x-form-submit id="login">Login</x-form-submit>

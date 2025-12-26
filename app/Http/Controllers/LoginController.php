@@ -24,7 +24,8 @@ class LoginController extends FunctionController
 
     public function employeeLogin()
     {
-        return view('auth.employee-login');
+        //return view('auth.employee-login');
+        return view('auth.employee-login', ['plants' => parent::getWarehouses('inventory')]);
     }
 
     public function managerLogin()

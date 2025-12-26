@@ -32,11 +32,11 @@ class NoTagController extends FunctionController
     }
 
     public function index(){
-        return view('notag.index',['warehouses' => FunctionController::getWarehouses($this->tableName), 'noTagParts' => NoTagPart::all()]);
+        return view('notag.index',['plants' => FunctionController::getWarehouses($this->tableName), 'noTagParts' => NoTagPart::all()]);
     }
 
     public function editNoTag(Request $request){
-        return view('notag.edit',['warehouses' => FunctionController::getWarehouses($this->tableName), 'noTagPart' => NoTagPart::findOrFail($request->id)]);
+        return view('notag.edit',['plants' => FunctionController::getWarehouses($this->tableName), 'noTagPart' => NoTagPart::findOrFail($request->id)]);
     }
 
     public function update(Request $request){

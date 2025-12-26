@@ -88,10 +88,13 @@ class FunctionController extends Controller
 
     public function getWarehouses($table){
         $warehouses = DB::select('
-            SELECT DISTINCT
-                warehouse
-            FROM ' . $table . '
-            ORDER BY warehouse ASC');
+            SELECT
+                id,
+                plant,
+                display_name
+            FROM plants
+            WHERE active = 1
+            ORDER BY plant ASC');
         return $warehouses;
     }
 

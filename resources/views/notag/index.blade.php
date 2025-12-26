@@ -41,11 +41,11 @@ use App\Http\Controllers\FunctionController;
 
                 <x-form-label class="mt-4">Plant</x-form-label>
 
-                <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-2 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
-                    <option value="">Choose a Warehouse</option>
+                <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-0 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
+                    <option value="">Plant</option>
                     @php
-                        foreach($warehouses as $warehouse){
-                            echo "<option class='text-gray-800 px-2' value='" . $warehouse->warehouse . "'>" . $warehouse->warehouse . "</option>";
+                        foreach($plants as $plant){
+                            echo "<option value='" . $plant->id . "'>" . $plant->display_name . "</option>";
                         }
                     @endphp
                 </select>
