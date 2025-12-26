@@ -39,20 +39,10 @@ use App\Http\Controllers\FunctionController;
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 
-                <x-form-label class="mt-4">Plant</x-form-label>
-
-                <select id="warehouse" name="warehouse" class="block mb-3 py-2.5 px-2 w-full text-sm text-gray-300 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer" required>
-                    <option value="">Choose a Warehouse</option>
-                    @php
-                        foreach($warehouses as $warehouse){
-                            echo "<option class='text-gray-800 px-2' value='" . $warehouse->warehouse . "' @if( $noTagPart->warehouse == $warehouse->warehouse) selected @endif>" . $warehouse->warehouse . "</option>";
-                        }
-                    @endphp
-                </select>
-
                 <x-form-field fieldName="lot_number" labelText="Lot Number" value="{{ $noTagPart->lot_number }}"/>
                 <x-form-field fieldName="serial_number" labelText="Serial Number" value="{{ $noTagPart->serial_number }}" />
 
+                <input type="hidden" id="warehouse" name="warehouse" value="{{ session('plant') }}" />
                 <x-form-submit id="update-notag">Update Part</x-form-submit>
             </form>
 
