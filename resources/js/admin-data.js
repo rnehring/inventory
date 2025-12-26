@@ -71,21 +71,9 @@ function renderGrid(data) {
             },
             { id: 'id', name: 'ID', hidden: true},
             { id: 'tag', name: 'Tag', width: '5%'},
+            { id: 'tag_printed', name: 'Tag', width: '5%'},
             { id: 'part', name: 'Part', width: '10%'},
-            {
-                id: 'part_description',
-                name: 'Part Description',
-                width: '14%',
-                formatter: (cell) => truncateString(`${cell}`, 40)
-            },
             { id: 'bin', name: 'Bin', width: '5%'},
-            { id: 'description', name: 'Location', width: '9%'},
-            {
-                id: 'company',
-                name: 'Company',
-                width: '6%',
-            },
-            { id: 'company_code', name: 'Company Code', hidden: true},
             { id: 'lot_number', name: 'Lot #', width: '5%'},
             { id: 'serial_number', name: 'Serial #', width: '5%'},
             { id: 'count', name: 'Count', width: '4%'},
@@ -133,18 +121,7 @@ function renderGrid(data) {
                 name: '+/-',
                 formatter: (cell) => html(`<span style="font-family: monospace">${formatterUSD.format(cell)}</span>`),
                 width: '4%'
-            },
-            {
-                id: 'top_eighty',
-                formatter: (cell) => {
-                    if (cell == 1) {
-                        return html('<x-tni-star-circle />');
-                    }
-                    return html('<span></span>');
-                },
-                name: '',
-                width: '4%'
-            },
+            }
         ],
         data: data, // Use client-side data
         sort: true,
