@@ -1,37 +1,10 @@
 import './bootstrap';
 import 'flowbite';
-
 import ApexCharts from 'apexcharts';
+
 
 export function setCells(){
     window.cells = [];
-}
-
-export function epicorCodeToCompanyName($code){
-    switch($code){
-        case "00":
-            return "Andronaco Industries";
-        case "10":
-            return "PureFlex";
-        case "20":
-            return "Nil-Cor";
-        case "30":
-            return "Ethylene";
-        case "40":
-            return "Hills-McCanna";
-        case "50":
-            return "Ramparts Pumps";
-        case "CC0":
-            return "Conley Composites";
-        case "FC0":
-            return "FlowCor";
-        case "GS0":
-            return "Endurance Composites";
-        case "GWS":
-            return "Great Western Supply";
-        case "PV0":
-            return "PolyValve";
-    }
 }
 
 export function updateTextColors(){

@@ -121,3 +121,7 @@ Route::post('/save-precount-upload', [UploadController::class, 'savePrecountUplo
 
 Route::get('/get-uploaded-precount-data', [UploadController::class, 'getUploadedPrecountDataForReview']);
 Route::get('/get-uploaded-data', [UploadController::class, 'getUploadedDataForReview']);
+
+Route::get('/get-bins', [FunctionController::class, 'getAutocompleteBins']);
+
+Route::post('/get-part-uom', [FunctionController::class, 'getPartUom']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -81,11 +82,31 @@ class FunctionController extends Controller
         $bins = DB::select('
             SELECT DISTINCT
                 bin
-            FROM ' . $table . '
+            FROM valid_bins
             WHERE warehouse = "' . session('plant') . '"
             ORDER BY bin ASC');
 
         return $bins;
+    }
+
+    public function getAutocompleteBins(){
+        $bins = json_encode(Bin::pluck('bin')->toArray());
+        return $bins;
+    }
+
+    public function getAutocompleteParts(){
+        $parts = json_encode(Inventory::pluck('part')->toArray());
+        return $parts;
+    }
+
+    public function getPartUom(Request $request){
+        $uomQuery = DB::select('
+            SELECT
+                uom
+            FROM part_uom
+            WHERE part = "' . $request->part . '"');
+
+        return $uomQuery[0];
     }
 
     public function getWarehouses($table){

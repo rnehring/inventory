@@ -1,18 +1,99 @@
+
 import {
-    epicorCodeToCompanyName,
     updateTextColors,
-    formatToTwoDigits,
     makeCell,
     makeRow,
     setCells,
     formatterUSD,
     showToast
 } from './app';
+
 setCells();
 
 const submitButton = document.getElementById("add-notag");
 submitButton.addEventListener("click", addNoTag);
+
 updateTextColors();
+
+window.onload = function () {
+
+    const autoCompleteBins = new autoComplete({
+        selector: "#bins",
+        placeHolder: "Search Bins...",
+        searchEngine: "strict",
+        data: {
+            src: acBins,
+            filter: (list) => {
+                const query = autoCompleteBins.input.value.toLowerCase();
+
+                return list.sort((a, b) => {
+                    const aVal = a.value.toLowerCase();
+                    const bVal = b.value.toLowerCase();
+
+                    const aStarts = aVal.startsWith(query);
+                    const bStarts = bVal.startsWith(query);
+
+                    if (aStarts && !bStarts) return -1; // "a" comes first
+                    if (!aStarts && bStarts) return 1;  // "b" comes first
+
+                    // Otherwise, sort alphabetically
+                    return aVal.localeCompare(bVal);
+                });
+            }
+        },
+        resultItem: {
+            highlight: true,
+        }
+    });
+
+    const autoCompleteParts = new autoComplete({
+        selector: "#part",
+        placeHolder: "Search Parts...",
+        searchEngine: "strict",
+        data: {
+            src: acParts,
+            filter: (list) => {
+                const query = autoCompleteParts.input.value.toLowerCase();
+
+                return list.sort((a, b) => {
+                    const aVal = a.value.toLowerCase();
+                    const bVal = b.value.toLowerCase();
+
+                    const aStarts = aVal.startsWith(query);
+                    const bStarts = bVal.startsWith(query);
+
+                    if (aStarts && !bStarts) return -1; // "a" comes first
+                    if (!aStarts && bStarts) return 1;  // "b" comes first
+
+                    // Otherwise, sort alphabetically
+                    return aVal.localeCompare(bVal);
+                });
+            }
+        },
+        resultItem: {
+            highlight: true,
+        }
+    });
+
+
+    document.querySelector("#part").addEventListener("selection", function (event) {
+        // "event.detail" carries the autoComplete.js "feedback" object
+        document.querySelector("#part").value = event.detail.selection.value;
+        axios.post('/get-part-uom',{
+            part: document.getElementById('part').value
+        })
+        .then(function (response) {
+            console.log(response);
+            document.getElementById('uom').value = response.data.uom;
+        });
+    });
+
+    document.querySelector("#bins").addEventListener("selection", function (event) {
+        // "event.detail" carries the autoComplete.js "feedback" object
+        document.querySelector("#bins").value = event.detail.selection.value;
+    });
+}
+
 
 
 

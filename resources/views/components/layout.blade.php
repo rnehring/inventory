@@ -65,6 +65,9 @@
     @if(request()->is('review-upload'))
         @vite(['resources/js/inventory-upload.js'])
     @endif
+    @if(request()->is('upload'))
+        @vite(['resources/js/upload.js'])
+    @endif
 </head>
 <body class="h-full">
 

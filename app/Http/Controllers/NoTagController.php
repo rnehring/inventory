@@ -35,7 +35,9 @@ class NoTagController extends FunctionController
         return view('notag.index',
             [
                 'plants' => FunctionController::getWarehouses($this->tableName),
-                'noTagParts' => NoTagPart::all()
+                'noTagParts' => NoTagPart::all(),
+                'bins' => FunctionController::getAutocompleteBins(),
+                'parts' => FunctionController::getAutocompleteParts(),
             ]);
     }
 

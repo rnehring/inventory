@@ -1,6 +1,6 @@
 import { Grid } from "gridjs";
 import { html } from "gridjs";
-import { formatterUSD, epicorCodeToCompanyName, csvButton } from './app';
+import { formatterUSD, csvButton } from './app';
 
 let allData = []; // Store all data
 let currentData = [];
@@ -41,12 +41,10 @@ fetch('/get-all-data')
     .then(res => res.json())
     .then(data => {
         allData = data.map(row => ({
-            ...row,
-            company_code: row.company, // Store original code
-            company: epicorCodeToCompanyName(row.company) // Replace with full name
+            ...row
         }));
         currentData = allData;
-        createCompanyFilters(allData);
+        createPlantFilters(allData);
         renderGrid(allData);
         const gridHead = document.getElementsByClassName('gridjs-head');
         const label = document.createElement('label');
@@ -152,50 +150,50 @@ function renderGrid(data) {
 }
 
 // Create checkboxes based on unique company values
-function createCompanyFilters(data) {
-    const companySet = new Set();
+function createPlantFilters(data) {
+    const warehouseSet = new Set();
 
     data.forEach(row => {
-        if (row.company) {
-            companySet.add(row.company);
+        if (row.warehouse) {
+            warehouseSet.add(row.warehouse);
         }
     });
 
-    const filterContainer = document.getElementById('company-filters');
+    const filterContainer = document.getElementById('plant-filters');
     filterContainer.innerHTML = ''; // Clear existing
 
-    companySet.forEach(company => {
+    warehouseSet.forEach(warehouse => {
         const li = document.createElement('li');
         li.className = 'w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600';
         li.innerHTML = `
 <div class="flex items-center ps-3">
-<input id="companies" name="companies[]" type="checkbox" value="${company}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500  company-filter">
-<label for="companies" class="w-full py-3 ms-2 text-sm font-bold text-gray-900 dark:text-gray-300">${company}</label>
+<input id="plants" name="plants[]" type="checkbox" value="${company}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500  plant-filter">
+<label for="plants" class="w-full py-3 ms-2 text-sm font-bold text-gray-900 dark:text-gray-300">${warehouse}</label>
 </div>`;
         filterContainer.appendChild(li);
     });
 
     // Add event listeners
-    document.querySelectorAll('.company-filter').forEach(checkbox => {
+    document.querySelectorAll('.plant-filter').forEach(checkbox => {
         checkbox.addEventListener('change', filterGrid);
     });
 }
 
 // Filter the grid based on selected checkboxes
 function filterGrid() {
-    const checkedCompanies = Array.from(
-        document.querySelectorAll('.company-filter:checked')
+    const checkedPlants = Array.from(
+        document.querySelectorAll('.plant-filter:checked')
     ).map(cb => cb.value);
 
     let filteredData;
 
-    if (checkedCompanies.length === 0) {
+    if (checkedPlants.length === 0) {
         // No filters selected, show all
         filteredData = allData;
     } else {
         // Filter data
         filteredData = allData.filter(row =>
-            checkedCompanies.includes(row.company)
+            checkedPlants.includes(row.warehouse)
         );
     }
 
@@ -251,22 +249,20 @@ function exportToCSV() {
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    let filenamecompanies = '';
+    let filenameplants = '';
 
-    let checkedCompanies = Array.from(
-        document.querySelectorAll('.company-filter:checked')
+    let checkedPlants = Array.from(
+        document.querySelectorAll('.plant-filter:checked')
     )
 
-    checkedCompanies.forEach( function(company){
-        filenamecompanies += epicorCodeToCompanyName(company.value).toLowerCase() + '_';
-    })
 
-    if( checkedCompanies.length == 6 || checkedCompanies.length == 0){
-        filenamecompanies = '';
+
+    if( checkedPlants.length == 3 || checkedPlants.length == 0){
+        filenameplants = '';
     }
 
     const date = new Date().toISOString().split('T')[0];
-    link.download = filenamecompanies + `inventory-export-${date}.csv`;
+    link.download = filenameplants + `inventory-export-${date}.csv`;
     link.href = url;
     link.click();
 

@@ -48,7 +48,9 @@ class LoginController extends FunctionController
 
         $userAttributes['user_type'] = 1;
         $userAttributes['plant'] = $request->plant;
-
+        $userAttributes['email'] = "user@andronaco.com";
+        $userAttributes['first_name'] = "Inventory";
+        $userAttributes['last_name'] = "Employee";
         session()->put('location', $request->location);
         session()->put('plant', Plant::find($request->plant)->plant);
         $user = User::firstOrCreate($userAttributes);
@@ -67,7 +69,6 @@ class LoginController extends FunctionController
 
         $userAttributes['user_type'] = 2;
         session()->put('location', $request->location);
-
         if(!Auth::attempt($userAttributes)){
             throw ValidationException::withMessages([
                 'email' => 'Sorry, these credentials do not match our records.'
@@ -77,6 +78,7 @@ class LoginController extends FunctionController
         Auth::attempt($userAttributes);
 
         request()->session()->regenerate();
+        session()->put('plant', Plant::find(Auth::user()->plant)->plant);
 
         return redirect('/dashboard');
     }

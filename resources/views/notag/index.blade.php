@@ -1,9 +1,17 @@
 <?php
 use App\Http\Controllers\FunctionController;
 ?>
+
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
 <script>
+
     const userType = {{ Auth::user()->user_type ?? 0 }};
+    const acBins = @php echo $bins; @endphp;
+    const acParts = @php echo $parts; @endphp;
 </script>
+
+
+
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
@@ -12,12 +20,14 @@ use App\Http\Controllers\FunctionController;
 
     <x-layout-container class="max-w-9xl">
 
-        <x-search-form formTitle="Add Inventory Without a Tag Number" imageName="/images/notagsidebar.jpg" class="max-w-6xl">
+        <x-search-form formTitle="Add Inventory Without a Tag Number" imageName="/images/notagsidebar.jpg" class="max-w-6xl self-start mt-8">
 
             <form method="post" action="/notag/save" class="w-4/6 mx-auto" name="NoTagForm" id="NoTagForm">
                 @csrf
                 <x-form-field id="part" fieldName="part" labelText="Part Number" />
-                <x-form-field fieldName="bin" labelText="Bin" />
+
+                <x-form-field id="bins" fieldName="bins" labelText="Bin" />
+
                 <x-form-field fieldName="count" labelText="Count" />
 
                 <x-form-label>Unit of Measure</x-form-label>

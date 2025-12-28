@@ -254,20 +254,7 @@ class DataController extends FunctionController
 
         $timestamp = date('YmdHis');
 
-        if(!isset($request->companies)){
-            $filename = "inventory_" . $timestamp . ".csv";
-        }
-        elseif(count($request->companies) > 1){
-            $companyString = "";
-            foreach($request->companies AS $company){
-                $companyString .= parent::epicorCodeToCompanyName($company) . "_";
-            }
-            $companyString = strtolower(substr($companyString, 0, -1));
-            $filename = $companyString . "_inventory_" . $timestamp . ".csv";
-        }
-        else{
-            $filename = strtolower(parent::epicorCodeToCompanyName($request->companies[0])) . "_inventory_" . $timestamp . ".csv";
-        }
+        $filename = "inventory_" . $timestamp . ".csv";
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Description: File Transfer');
@@ -280,8 +267,6 @@ class DataController extends FunctionController
 
     public function currentData(Request $request) {
 
-        $where = $this->buildWhereClause($request);
-        $this->functionController->setCurrentCompanies($request->companies);
 
         $allData = DB::select('
             SELECT
@@ -322,35 +307,12 @@ class DataController extends FunctionController
                 'allData' => $allData,
                 'total' => $total,
                 'noTagTotal' => $noTagTotal,
-                'currentCompanies' => $this->functionController->getCurrentCompanies(),
+
                 'totalPlusMinus' => $totalPlusMinus,
             ]);
     }
 
-    public function buildWhereClause(Request $request) {
-        if( is_array($request->companies) ){
-            if( count($request->companies) == 1){
-                if($request->companies[0] == "all"){
-                    $where = "";
-                }
-                else{
-                    $where = "WHERE company = '" . $request->companies[0] . "'";
-                }
-            }
-            else{
-                $where = "WHERE company IN(";
-                foreach($request->companies AS $company){
-                    $where .= "'" . $company . "',";
-                }
-                $where = substr($where, 0, -1);
-                $where .= ")";
-            }
-        }
-        else{
-            $where = "";
-        }
-        return $where;
-    }
+
 }
 
 

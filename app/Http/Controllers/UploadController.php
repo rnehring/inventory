@@ -88,7 +88,7 @@ class UploadController extends FunctionController
     public function processUpload(Request $request){
         InventoryUpload::query()->delete();
         $mapping = config('csv_mappings.inventory');
-        $path = $request->file('upload-csv')->getRealPath();
+        $path = $request->file('upload-inventory-csv')->getRealPath();
         $countProcessor = new ProcessInventoryImport($path, $mapping);
         if( $countProcessor->handle() ){
             return redirect('/review-upload');
