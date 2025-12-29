@@ -130,7 +130,14 @@ function getPart(event) {
 
                 save_button.addEventListener('click', function(event){
                     const countValue = document.getElementById('count'+part['id']).value;
-                    const byWeightValue = document.getElementById('by_weight'+part['id']).value;
+                    const byWeight = document.getElementById('by_weight'+part['id']);
+                    let byWeightValue;
+                    if (byWeight.checked) {
+                        byWeightValue = 1;
+                    } else {
+                        byWeightValue = 0;
+                    }
+
                     // Client-side validation
                     if (!countValue || isNaN(countValue) || parseFloat(countValue) < 0) {
                         showToast('Please enter a valid count (positive number)', 'error');
