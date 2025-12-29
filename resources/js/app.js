@@ -7,6 +7,26 @@ export function setCells(){
     window.cells = [];
 }
 
+export function plantCodeToName(plantCode){
+    switch(plantCode) {
+        case "P1-RAW":
+            return "Plant 1";
+            break;
+        case "P2-RAW":
+            return "Plant 2";
+            break;
+        case "P3-RAW":
+            return "Plant 3";
+            break;
+        case "P4-RAW":
+            return "Plant 4";
+            break;
+        default:
+            "Plant 1";
+            break;
+    }
+}
+
 export function updateTextColors(){
     document.querySelectorAll('tr:not([class=""])').forEach(tr => {
         tr.querySelectorAll('td').forEach(td => {

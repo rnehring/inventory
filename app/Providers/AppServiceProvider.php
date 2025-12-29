@@ -3,10 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use romanzipp\ModelDoc\Services\DocumentationGenerator;
+use App\Models\Inventory;
+use App\Models\User;
+use App\Policies\InventoryPolicy;
+use App\Policies\UserPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
+    protected $policies = [
+        Inventory::class => InventoryPolicy::class,
+        User::class => UserPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */

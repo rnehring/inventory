@@ -12,6 +12,7 @@
         "php": "^8.2",
         "andreiio/blade-remix-icon": "^3.7",
         "blade-ui-kit/blade-icons": "^1.8",
+        "blade-ui-kit/blade-zondicons": "^1.6",
         "codeat3/blade-teeny-icons": "^1.11",
         "giacomomasseron/laravel-models-generator": "^1.2",
         "itsgoingd/clockwork": "^5.3",
@@ -39,8 +40,10 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "App\\Enums\\": "app/Enums/",
+            "App\\Helpers\\": "app/Helpers/",
+            "App\\Services\\": "app/Services/",
+            "App\\Traits\\": "app/Traits/"
         }
     },
     "autoload-dev": {

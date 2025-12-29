@@ -10,7 +10,12 @@ use App\Http\Controllers\FunctionController;
 
     <x-layout-container class="max-w-9xl">
 
-        <x-search-form formTitle="Update No Tag Part" imageName="/images/notagsidebar.jpg" class="max-w-6xl">
+        <x-search-form
+            formTitle="Update No Tag Part"
+            imageName="/images/notagsidebar.jpg"
+            imageHeight="840"
+            titleTopMargin="mt-8"
+            class="max-w-6xl">
 
             <form method="post" action="{{ route('notag.update') }}" class="w-4/6 mx-auto" name="NoTagForm" id="NoTagForm">
                 @csrf
@@ -21,7 +26,7 @@ use App\Http\Controllers\FunctionController;
                 <x-form-field fieldName="count" labelText="Count" value="{{ $noTagPart->count }}"/>
 
                 <x-form-label>Unit of Measure</x-form-label>
-                <select id="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                     <option value="EA" @if( $noTagPart->uom  == "EA" ) selected @endif>EA</option>
                     <option value="FT" @if( $noTagPart->uom  == "FT" ) selected @endif>FT</option>
@@ -34,8 +39,9 @@ use App\Http\Controllers\FunctionController;
                     <option value="QT" @if( $noTagPart->uom  == "QT" ) selected @endif>QT</option>
                 </select>
 
-                <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700 mt-4">
-                    <input id="by_weight" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" @if( $noTagPart->by_weight  == 1 ) checked @endif>
+                <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700 mt-4 mb-4">
+                    <input type="hidden" name="by_weight" value="0">
+                    <input id="by_weight" name="by_weight" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" @if( $noTagPart->by_weight  == 1 ) checked @endif>
                     <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
                 </div>
 

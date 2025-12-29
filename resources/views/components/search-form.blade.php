@@ -1,9 +1,9 @@
-@props(['formTitle', 'imageName'])
+@props(['formTitle', 'imageName', 'imageHeight', 'titleTopMargin'])
 
 <div {{ $attributes->merge(['class' => 'mt-4 mx-auto flex flex-row items-center bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 ']) }}>
-    <x-search-form-image imageName="{{ $imageName }}" />
+    <x-search-form-image imageHeight="{{ $imageHeight ?? '&nbsp;' }}" imageName="{{ $imageName }}" />
     <div class="flex flex-col leading-normal w-4/6" style="align-self:flex-start;">
-        <h5 class="mb-4 mt-4 mx-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $formTitle }}</h5>
+        <h5 class="mb-4 mt-4 {{ $titleTopMargin ?? ''}} mx-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $formTitle }}</h5>
         {{ $slot }}
     </div>
 </div>

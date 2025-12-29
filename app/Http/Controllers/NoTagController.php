@@ -3,118 +3,142 @@
 namespace App\Http\Controllers;
 
 use App\Models\NoTagPart;
-use App\Models\NoTagPartHouston;
+use App\Models\Inventory;
+use App\Traits\UsesLocationTables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NoTagController extends FunctionController
 {
-    public $tableName;
+    use UsesLocationTables;
+
     public $ntTableName;
-    public $ntPreTableName;
-    public $className;
+
     public function __construct()
     {
         parent::__construct();
-        if(session()->get('location') == "Kentwood"){
-            $this->ntTableName = "no_tag_parts";
-            $this->ntPreTableName = "no_tag_part_precount";
-            $this->tableName = "inventory";
-            $this->className = "NoTagPart";
-        }
-        else{
-            $this->ntTableName = "no_tag_parts_houston";
-            $this->ntPreTableName = "no_tag_part_houston_precount";
-            $this->tableName = "inventory_houston";
-            $this->className = "NoTagPartHouston";
-        }
+        $this->ntTableName = $this->getTableName('notag');
+        $this->tableName = $this->getTableName('inventory');
     }
 
-    public function index(){
-        return view('notag.index',
-            [
-                'plants' => FunctionController::getWarehouses($this->tableName),
-                'noTagParts' => NoTagPart::all(),
-                'bins' => FunctionController::getAutocompleteBins(),
-                'parts' => FunctionController::getAutocompleteParts(),
-            ]);
+    /**
+     * Display the no-tag parts index
+     */
+    public function index()
+    {
+        $noTagParts = NoTagPart::with('counter')
+            ->latest()
+            ->get();
+
+        return view('notag.index', [
+            'plants' => $this->getWarehouses($this->tableName),
+            'noTagParts' => $noTagParts,
+            'bins' => json_encode($this->getAutocompleteBinsData()),
+            'parts' => json_encode($this->getAutocompletePartsData()),
+        ]);
     }
 
-    public function editNoTag(Request $request){
-        return view('notag.edit',['plants' => FunctionController::getWarehouses($this->tableName), 'noTagPart' => NoTagPart::findOrFail($request->id)]);
-    }
-
-    public function update(Request $request){
+    /**
+     * Show edit form for no-tag part
+     */
+    public function editNoTag(Request $request)
+    {
         $noTagPart = NoTagPart::findOrFail($request->id);
 
-        $noTagPart->fill($request->all());
-        $noTagPart->save();
-
-        return redirect()->route('notag.index')->with('success', 'Part updated successfully');
+        return view('notag.edit', [
+            'plants' => $this->getWarehouses($this->tableName),
+            'noTagPart' => $noTagPart,
+        ]);
     }
-    public function saveNoTagPart(Request $request){
 
-        $dateNow = date("Y-m-d");
-        $timeNow = date("H:i:s");
-        $userId = Auth::id();
-        $partPrice = DB::select('SELECT standard_cost FROM inventory WHERE part = ?', [$request->part]);
+    /**
+     * Update no-tag part
+     */
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:no_tag_parts,id',
+            'tag' => 'nullable|string|max:255',
+            'part' => 'required|string|max:255',
+            'bin' => 'required|string|max:50',
+            'count' => 'required|numeric|min:0',
+            'uom' => 'required|string|max:50',
+            'by_weight' => 'nullable|boolean',
+            'lot_number' => 'nullable|string|max:100',
+            'serial_number' => 'nullable|string|max:100',
+        ]);
 
-        $costCounted = $partPrice[0]->standard_cost * $request->count;
+        $noTagPart = NoTagPart::findOrFail($validated['id']);
+        
+        // Get standard cost from inventory
+        $standardCost = Inventory::where('part', $validated['part'])
+            ->value('standard_cost') ?? 0;
 
-        DB::insert('
-            INSERT INTO ' . $this->ntTableName . '(
-                     part,
-                     bin,
-                     count,
-                     uom,
-                     by_weight,
-                     warehouse,
-                     lot_number,
-                     serial_number,
-                     user,
-                     date_counted,
-                     time_counted,
-                     standard_cost,
-                     cost_counted
-                     )
-            VALUES(
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?,
-                   ?)',
-            [
-                $request->part,
-                $request->bin,
-                $request->count,
-                $request->uom,
-                $request->by_weight,
-                $request->warehouse,
-                $request->lot_number,
-                $request->serial_number,
-                $userId,
-                $dateNow,
-                $timeNow,
-                $partPrice[0]->standard_cost,
-                $costCounted
-            ]);
+        // Prepare update data
+        $updateData = [
+            'tag' => $validated['tag'],
+            'part' => $validated['part'],
+            'bin' => $validated['bin'],
+            'count' => $validated['count'],
+            'uom' => $validated['uom'],
+            'by_weight' => $validated['by_weight'] ?? false,
+            'lot_number' => $validated['lot_number'],
+            'serial_number' => $validated['serial_number'],
+            'standard_cost' => $standardCost,
+            'cost_counted' => $standardCost * $validated['count'],
+        ];
 
-        if( session()->get('location') == "Kentwood"){
-            $lastRecord = NoTagPart::latest()->first();
-        }
-        else{
-            $lastRecord = NoTagPartHouston::latest()->first();
-        }
+        $noTagPart->update($updateData);
 
-        return $lastRecord;
+        return redirect()
+            ->route('notag.index')
+            ->with('success', 'Part updated successfully');
+    }
+
+    /**
+     * Save new no-tag part using validation and Eloquent
+     */
+    public function saveNoTagPart(Request $request)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'part' => 'required|string|max:255',
+            'bin' => 'required|string|max:50',
+            'count' => 'required|numeric|min:0',
+            'uom' => 'required|string|max:50',
+            'by_weight' => 'nullable|boolean',
+            'warehouse' => 'required|string|max:200',
+            'lot_number' => 'nullable|string|max:100',
+            'serial_number' => 'nullable|string|max:100',
+        ]);
+
+        // Get standard cost from inventory
+        $standardCost = Inventory::where('part', $validated['part'])
+            ->value('standard_cost') ?? 0;
+
+        $costCounted = $standardCost * $validated['count'];
+
+        // Create new no-tag part
+        $noTagPart = NoTagPart::create([
+            'part' => $validated['part'],
+            'bin' => $validated['bin'],
+            'count' => $validated['count'],
+            'uom' => $validated['uom'],
+            'by_weight' => $validated['by_weight'] ?? false,
+            'warehouse' => $validated['warehouse'],
+            'lot_number' => $validated['lot_number'] ?? null,
+            'serial_number' => $validated['serial_number'] ?? null,
+            'user' => Auth::id(),
+            'date_counted' => now()->format('Y-m-d'),
+            'time_counted' => now()->format('H:i:s'),
+            'standard_cost' => $standardCost,
+            'cost_counted' => $costCounted,
+        ]);
+
+        // Load the counter relationship for response
+        $noTagPart->load('counter');
+
+        return response()->json($noTagPart);
     }
 }

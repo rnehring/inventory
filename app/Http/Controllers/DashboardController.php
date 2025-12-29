@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DashboardStatsService;
+use App\Traits\UsesLocationTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends FunctionController
 {
+    use UsesLocationTables;
 
-    public function __construct()
+    protected $statsService;
+
+    public function __construct(DashboardStatsService $statsService)
     {
         parent::__construct();
-        if (session()->get('location') == "Kentwood") {
-            $this->tableName = "inventory";
-            $this->tableNamePre = "precount";
-            $this->ntTableName = "no_tag_parts";
-        } else {
-            $this->tableName = "inventory_houston";
-            $this->tableNamePre = "precount_houston";
-            $this->ntTableName = "no_tag_parts_houston";
-        }
+        $this->statsService = $statsService;
+        
+        $location = session()->get('location', 'Kentwood');
+        $this->tableName = $location === "Kentwood" ? "inventory" : "inventory_houston";
+        $this->tableNamePre = $location === "Kentwood" ? "inventory_precount" : "inventory_precount_houston";
+        $this->ntTableName = $location === "Kentwood" ? "no_tag_parts" : "no_tag_parts_houston";
     }
 
     /**
@@ -27,108 +29,23 @@ class DashboardController extends FunctionController
      */
     public function index()
     {
-        // Get overall statistics
-        $stats = $this->getOverallStats();
-
-        // Get warehouse breakdown
-        $warehouseData = $this->getWarehouseBreakdown();
-
-        // Calculate reliability score
-        $reliabilityScore = $this->calculateReliabilityScore($stats);
+        $stats = $this->statsService->getOverallStats();
+        $warehouseData = $this->statsService->getWarehouseBreakdown();
+        $reliabilityScore = $this->statsService->calculateReliabilityScore($stats);
 
         return view('dashboard', compact('stats', 'warehouseData', 'reliabilityScore'));
     }
 
     /**
-     * Get overall expected quantity reliability statistics
-     */
-    private function getOverallStats()
-    {
-        $result = DB::table('inventory')
-            ->selectRaw('
-                -- Expected was zero scenarios
-                SUM(CASE WHEN expected_qty = 0 AND count = 0 THEN 1 ELSE 0 END) AS expectedZeroCountedZero,
-                SUM(CASE WHEN expected_qty = 0 AND count > 0 THEN 1 ELSE 0 END) AS expectedZeroCountedNonZero,
-
-                -- Expected was non-zero scenarios
-                SUM(CASE WHEN expected_qty > 0 AND count = 0 THEN 1 ELSE 0 END) AS expectedNonZeroCountedZero,
-                SUM(CASE WHEN expected_qty > 0 AND count = expected_qty THEN 1 ELSE 0 END) AS expectedNonZeroCountedCorrect,
-                SUM(CASE WHEN expected_qty > 0 AND count > 0 AND count != expected_qty THEN 1 ELSE 0 END) AS expectedNonZeroCountedWrong,
-
-                -- Totals
-                COUNT(*) AS totalItems,
-                SUM(CASE WHEN expected_qty = 0 THEN 1 ELSE 0 END) AS expectedZero,
-                SUM(CASE WHEN expected_qty > 0 THEN 1 ELSE 0 END) AS expectedNonZero
-            ')
-            ->first();
-
-        return [
-            'expectedZeroCountedZero' => $result->expectedZeroCountedZero ?? 0,
-            'expectedZeroCountedNonZero' => $result->expectedZeroCountedNonZero ?? 0,
-            'expectedNonZeroCountedZero' => $result->expectedNonZeroCountedZero ?? 0,
-            'expectedNonZeroCountedCorrect' => $result->expectedNonZeroCountedCorrect ?? 0,
-            'expectedNonZeroCountedWrong' => $result->expectedNonZeroCountedWrong ?? 0,
-            'totalItems' => $result->totalItems ?? 0,
-            'expectedZero' => $result->expectedZero ?? 0,
-            'expectedNonZero' => $result->expectedNonZero ?? 0,
-        ];
-    }
-
-    /**
-     * Get warehouse-by-warehouse breakdown
-     */
-    private function getWarehouseBreakdown()
-    {
-        $results = DB::table('inventory')
-            ->select('warehouse')
-            ->selectRaw('
-                COUNT(*) AS total,
-                SUM(CASE WHEN expected_qty = 0 AND count > 0 THEN 1 ELSE 0 END) AS surpriseFinds,
-                SUM(CASE WHEN expected_qty > 0 AND count = 0 THEN 1 ELSE 0 END) AS unexpectedEmpty,
-                SUM(CASE WHEN (expected_qty = 0 AND count = 0) OR (expected_qty > 0 AND count > 0) THEN 1 ELSE 0 END) AS accurate
-            ')
-            ->groupBy('warehouse')
-            ->orderByDesc('total')
-            ->get();
-
-        return $results->map(function ($item) {
-            return [
-                'warehouse' => $item->warehouse,
-                'total' => $item->total ?? 0,
-                'surpriseFinds' => $item->surpriseFinds ?? 0,
-                'unexpectedEmpty' => $item->unexpectedEmpty ?? 0,
-                'accurate' => $item->accurate ?? 0,
-            ];
-        })->toArray();
-    }
-
-    /**
-     * Calculate overall reliability score
-     */
-    private function calculateReliabilityScore($stats)
-    {
-        if ($stats['totalItems'] == 0) {
-            return 0;
-        }
-
-        $accurateItems = $stats['expectedZeroCountedZero'] +
-            ($stats['expectedNonZero'] - $stats['expectedNonZeroCountedZero']);
-
-        return ($accurateItems / $stats['totalItems']) * 100;
-    }
-
-    /**
      * Get surprise finds (items found where expected_qty = 0)
-     * This can be used for a detailed drill-down page
      */
     public function surpriseFinds()
     {
-        $items = DB::table('inventory')
+        $items = DB::table($this->tableName)
             ->where('expected_qty', 0)
             ->where('count', '>', 0)
             ->select(
                 'part',
-                'part_description',
                 'bin',
                 'warehouse',
                 'expected_qty',
@@ -140,21 +57,19 @@ class DashboardController extends FunctionController
             ->orderByDesc('cost_counted')
             ->paginate(50);
 
-        return view('dashboardalt.surprise-finds', compact('items'));
+        return view('dashboard.surprise-finds', compact('items'));
     }
 
     /**
      * Get missing stock (items expected but count = 0)
-     * This can be used for a detailed drill-down page
      */
     public function missingStock()
     {
-        $items = DB::table('inventory')
+        $items = DB::table($this->tableName)
             ->where('expected_qty', '>', 0)
             ->where('count', 0)
             ->select(
                 'part',
-                'part_description',
                 'bin',
                 'warehouse',
                 'expected_qty',
@@ -166,18 +81,17 @@ class DashboardController extends FunctionController
             ->orderByDesc('cost_expected')
             ->paginate(50);
 
-        return view('dashboardalt.missing-stock', compact('items'));
+        return view('dashboard.missing-stock', compact('items'));
     }
 
     /**
      * API endpoint for getting dashboard data in JSON format
-     * Useful for AJAX refreshes or chart updates
      */
     public function getData()
     {
-        $stats = $this->getOverallStats();
-        $warehouseData = $this->getWarehouseBreakdown();
-        $reliabilityScore = $this->calculateReliabilityScore($stats);
+        $stats = $this->statsService->getOverallStats();
+        $warehouseData = $this->statsService->getWarehouseBreakdown();
+        $reliabilityScore = $this->statsService->calculateReliabilityScore($stats);
 
         return response()->json([
             'stats' => $stats,
@@ -186,67 +100,209 @@ class DashboardController extends FunctionController
         ]);
     }
 
+    /**
+     * Get all-time counts by user
+     */
     public function allTimeCounts()
     {
-        $allTimeCounts = DB::select('
-            SELECT
-                ih.user,
-                COUNT(user) as counts,
-                u.id,
-                u.first_name as first_name,
-                u.last_name as last_name
-            FROM ' . $this->tableName . ' ih
-            JOIN users u ON u.id = ih.user
-            WHERE ih.user != ?
-            GROUP BY user
-            ORDER BY counts DESC',
-            ['']);
-
-        return json_encode($allTimeCounts);
+        $counts = $this->statsService->getAllTimeCountsByUser();
+        return response()->json($counts);
     }
 
-
+    /**
+     * Get percentage by company
+     */
     public function percentageByCompany()
     {
-        $percentageByCompany = DB::select('
-            SELECT
-                SUM(counted = ? )*100/count(*) AS percentage,
-                company
-            FROM ' . $this->tableName . '
-            GROUP BY company',
-            ['1']);
-
-        $percentageByCompany = json_decode(json_encode($percentageByCompany), true);
-        for ($i = 0; $i < count($percentageByCompany); $i++) {
-            $percentageByCompany[$i]['company'] = $this->epicorCodeToCompanyName($percentageByCompany[$i]['company']);
-        }
-
-        return json_encode($percentageByCompany);
-    }
-
-
-    public function warehouseValue()
-    {
-        $results = DB::table('inventory')
-            ->select('warehouse')
-            ->selectRaw('
-                COUNT(*) AS item_count,
-                SUM(cost_counted) AS total_value,
-                SUM(cost_expected) AS expected_value,
-                ROUND((SUM(cost_counted) / (SELECT SUM(cost_counted) FROM inventory)) * 100, 2) AS pct_of_total
-            ')
-            ->groupBy('warehouse')
-            ->orderByDesc('total_value')
+        $percentageByCompany = DB::table($this->tableName)
+            ->select('company')
+            ->selectRaw('SUM(counted = 1) * 100 / COUNT(*) AS percentage')
+            ->groupBy('company')
             ->get();
 
-        return $results->map(function ($item) {
+        $results = $percentageByCompany->map(function($item) {
             return [
-                'warehouse' => $item->warehouse,
-                'total' => $item->total_value ?? 0,
-                'expected' => $item->expected_value ?? 0,
-                'pct' => $item->pct_of_total ?? 0,
+                'company' => $this->epicorCodeToCompanyName($item->company),
+                'percentage' => $item->percentage,
             ];
-        })->toArray();
+        });
+
+        return response()->json($results);
     }
 
+    /**
+     * Get warehouse value breakdown
+     */
+    public function warehouseValue()
+    {
+        $results = $this->statsService->getWarehouseValue();
+        return response()->json($results);
+    }
+    
+    /**
+     * ABC Analysis / Pareto Chart
+     * Top 20% of PARTS (by count) should represent ~80% of VALUE
+     */
+    public function abcAnalysis()
+    {
+        // Get all parts ordered by value descending
+        $allParts = DB::table($this->tableName)
+            ->where('cost_expected', '>', 0)
+            ->orderByDesc('cost_expected')
+            ->get(['id', 'cost_expected', 'plus_minus', 'counted']);
+        
+        $totalParts = $allParts->count();
+        $cutoffIndex = (int)($totalParts * 0.2); // Top 20% of parts
+        
+        // Split: Top 20% of parts = A Items, Bottom 80% = B/C Items
+        $aItems = $allParts->take($cutoffIndex);
+        $bcItems = $allParts->skip($cutoffIndex);
+        
+        // Calculate stats for A items
+        $aStats = [
+            'category' => 'A Items (Top 20%)',
+            'part_count' => $aItems->count(),
+            'total_value' => $aItems->sum('cost_expected'),
+            'total_variance' => $aItems->sum(fn($p) => abs($p->plus_minus ?? 0)),
+            'percent_counted' => $aItems->count() > 0 
+                ? round($aItems->where('counted', 1)->count() / $aItems->count() * 100, 1)
+                : 0
+        ];
+        
+        // Calculate stats for B/C items
+        $bcStats = [
+            'category' => 'B/C Items (Bottom 80%)',
+            'part_count' => $bcItems->count(),
+            'total_value' => $bcItems->sum('cost_expected'),
+            'total_variance' => $bcItems->sum(fn($p) => abs($p->plus_minus ?? 0)),
+            'percent_counted' => $bcItems->count() > 0
+                ? round($bcItems->where('counted', 1)->count() / $bcItems->count() * 100, 1)
+                : 0
+        ];
+        
+        return response()->json([$aStats, $bcStats]);
+    }
+    
+    /**
+     * Variance Distribution Chart
+     * Shows count accuracy in color-coded zones
+     */
+    public function varianceDistribution()
+    {
+        $data = DB::table($this->tableName)
+            ->selectRaw("
+                CASE 
+                    WHEN counted = 0 THEN 'Not Counted'
+                    WHEN ABS(plus_minus / NULLIF(cost_expected, 0)) < 0.05 THEN 'Excellent (±0-5%)'
+                    WHEN ABS(plus_minus / NULLIF(cost_expected, 0)) < 0.10 THEN 'Good (±5-10%)'
+                    WHEN ABS(plus_minus / NULLIF(cost_expected, 0)) < 0.25 THEN 'Fair (±10-25%)'
+                    ELSE 'Poor (±25%+)'
+                END as accuracy_range,
+                COUNT(*) as count,
+                SUM(cost_expected) as total_value,
+                SUM(ABS(plus_minus)) as total_variance
+            ")
+            ->where('expected_qty', '>', 0)
+            ->groupBy(DB::raw('accuracy_range'))
+            ->orderByRaw("
+                CASE accuracy_range
+                    WHEN 'Excellent (±0-5%)' THEN 1
+                    WHEN 'Good (±5-10%)' THEN 2
+                    WHEN 'Fair (±10-25%)' THEN 3
+                    WHEN 'Poor (±25%+)' THEN 4
+                    WHEN 'Not Counted' THEN 5
+                END
+            ")
+            ->get();
+        
+        return response()->json($data);
+    }
+    
+    /**
+     * Count Velocity Timeline
+     * Shows parts counted per day over last 30 days
+     */
+    public function countVelocity()
+    {
+        $data = DB::table($this->tableName)
+            ->selectRaw("
+                DATE(date_counted) as count_date,
+                COUNT(*) as parts_counted,
+                SUM(cost_counted) as value_counted,
+                COUNT(DISTINCT user) as active_counters
+            ")
+            ->whereRaw('date_counted >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)')
+            ->where('counted', 1)
+            ->groupBy(DB::raw('DATE(date_counted)'))
+            ->orderBy('count_date', 'ASC')
+            ->get();
+        
+        return response()->json($data);
+    }
+    
+    /**
+     * Top Bins by Value
+     * Shows the 15 most valuable bin locations
+     */
+    public function topBinsByValue()
+    {
+        $data = DB::table($this->tableName)
+            ->select('bin', 'warehouse')
+            ->selectRaw('SUM(cost_expected) as total_value')
+            ->selectRaw('SUM(cost_counted) as counted_value')
+            ->selectRaw('COUNT(*) as part_count')
+            ->selectRaw('SUM(CASE WHEN counted = 1 THEN 1 ELSE 0 END) as counted_parts')
+            ->where('cost_expected', '>', 0)
+            ->groupBy('bin', 'warehouse')
+            ->orderByDesc('total_value')
+            ->limit(15)
+            ->get();
+        
+        return response()->json($data);
+    }
+    
+    /**
+     * Warehouse Progress Comparison
+     * Shows completion status by warehouse with multiple metrics
+     */
+    public function warehouseProgress()
+    {
+        $data = DB::table($this->tableName)
+            ->select('warehouse')
+            ->selectRaw('COUNT(*) as total_parts')
+            ->selectRaw('SUM(CASE WHEN counted = 1 THEN 1 ELSE 0 END) as counted_parts')
+            ->selectRaw('SUM(cost_expected) as total_value')
+            ->selectRaw('SUM(cost_counted) as counted_value')
+            ->selectRaw('SUM(ABS(plus_minus)) as total_variance')
+            ->selectRaw('ROUND(SUM(CASE WHEN counted = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as completion_percent')
+            ->groupBy('warehouse')
+            ->orderByDesc('completion_percent')
+            ->get();
+        
+        return response()->json($data);
+    }
+    
+    /**
+     * Counter Leaderboard
+     * Shows top performing users by parts counted and value
+     */
+    public function counterLeaderboard()
+    {
+        $data = DB::table($this->tableName)
+            ->join('users', $this->tableName . '.user', '=', 'users.id')
+            ->selectRaw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.last_name, '')) as name")
+            ->selectRaw('COUNT(*) as parts_counted')
+            ->selectRaw('SUM(' . $this->tableName . '.cost_counted) as value_counted')
+            ->selectRaw('SUM(ABS(' . $this->tableName . '.plus_minus)) as total_variance')
+            ->selectRaw('ROUND(AVG(ABS(' . $this->tableName . '.plus_minus / NULLIF(' . $this->tableName . '.cost_expected, 0))) * 100, 1) as avg_variance_percent')
+            ->selectRaw('COUNT(DISTINCT DATE(' . $this->tableName . '.date_counted)) as days_active')
+            ->where($this->tableName . '.counted', 1)
+            ->whereNotNull($this->tableName . '.user')
+            ->groupBy('users.id', 'users.first_name', 'users.last_name')
+            ->orderByDesc('parts_counted')
+            ->limit(10)
+            ->get();
+        
+        return response()->json($data);
+    }
 }

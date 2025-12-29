@@ -20,7 +20,10 @@ class CountController extends FunctionController
     }
 
     public function index(){
-        return view('count.index',['bins' => parent::getBins('inventory') ]);
+        return view('count.index',[
+            'bins' => json_encode($this->getAutocompleteBinsData()),
+            'parts' => json_encode($this->getAutocompletePartsData()),
+        ]);
     }
 
     public function getPart(Request $request){

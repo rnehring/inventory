@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
  * Class User
  *
  * @property int $id
- * @property int $user_type
+ * @property UserType $user_type
  * @property string $email
  * @property string $first_name
  * @property string $last_name
@@ -25,9 +26,9 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-	protected $table = 'users';
+    use Notifiable;
 
-	protected $casts = [];
+	protected $table = 'users';
 
 	protected $hidden = [
 		'password',
@@ -49,7 +50,51 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'user_type' => UserType::class,
         ];
     }
 
+    /**
+     * Relationships
+     */
+    public function inventoryCounts()
+    {
+        return $this->hasMany(Inventory::class, 'user');
+    }
+
+    public function precounts()
+    {
+        return $this->hasMany(PreCount::class, 'user');
+    }
+
+    public function noTagParts()
+    {
+        return $this->hasMany(NoTagPart::class, 'user');
+    }
+
+    /**
+     * Scopes
+     */
+    public function scopeManagers($query)
+    {
+        return $query->where('user_type', UserType::MANAGER->value);
+    }
+
+    public function scopeEmployees($query)
+    {
+        return $query->where('user_type', UserType::EMPLOYEE->value);
+    }
+
+    public function scopeByPlant($query, string $plant)
+    {
+        return $query->where('plant', $plant);
+    }
+
+    /**
+     * Accessors
+     */
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

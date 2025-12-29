@@ -86,6 +86,21 @@ class UploadController extends FunctionController
     }
 
     public function processUpload(Request $request){
+        // Validate the upload
+        $request->validate([
+            'upload-inventory-csv' => 'required|file|mimes:csv,txt|max:10240' // 10MB max
+        ]);
+        
+        // Check if file exists
+        if (!$request->hasFile('upload-inventory-csv')) {
+            return back()->withErrors(['upload-inventory-csv' => 'No file was uploaded']);
+        }
+        
+        // Check if file is valid
+        if (!$request->file('upload-inventory-csv')->isValid()) {
+            return back()->withErrors(['upload-inventory-csv' => 'The uploaded file is invalid']);
+        }
+        
         InventoryUpload::query()->delete();
         $mapping = config('csv_mappings.inventory');
         $path = $request->file('upload-inventory-csv')->getRealPath();
@@ -93,7 +108,7 @@ class UploadController extends FunctionController
         if( $countProcessor->handle() ){
             return redirect('/review-upload');
         }
-        return false;
+        return back()->withErrors(['upload-inventory-csv' => 'Failed to process the CSV file']);
     }
 
     public function reviewUpload(Request $request){
