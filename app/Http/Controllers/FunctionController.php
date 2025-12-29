@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Bin;
 use App\Models\Inventory;
+use App\Models\NoTagPart;
+use App\Models\PartUom;
 use App\Models\PreCount;
 use App\Traits\UsesLocationTables;
 use Illuminate\Http\Request;
@@ -185,6 +187,24 @@ class FunctionController extends Controller
         return response()->json($partNumbers);
     }
 
+    public function getAllPossibleAutocompleteParts()
+    {
+        return response()->json($this->getAllPossiblePartNumbers());
+    }
+
+    /**
+     * Get part numbers with caching
+     */
+    public function getAllPossiblePartNumbers(): array
+    {
+        return Cache::remember("all_possible_part_numbers", 3600, function() {
+            return PartUom::pluck('part')
+                ->toArray();
+        });
+
+    }
+
+
     public static function getPlantNameFromCode(string $plantCode){
         return match($plantCode){
             'P1-RAW' => 'Plant 1',
@@ -193,5 +213,36 @@ class FunctionController extends Controller
             'P4-RAW' => 'Plan 4',
             default => 'Plant 1',
         };
+    }
+
+    /**
+     * Get part UOM using Eloquent
+     */
+    public function checkTracking(Request $request)
+    {
+        $request->validate([
+            'part' => 'required|string|max:255',
+        ]);
+
+        return DB::table('part_uom')
+            ->where('part', "=", $request->part)
+            ->get(['track_serial', 'track_lot'])
+            ->toArray();
+    }
+
+    public function checkSerial(Request $request)
+    {
+        $request->validate([
+            'serial' => 'required|string|max:255',
+        ]);
+
+        $exists = Inventory::where('serial_number', $request->serial)->exists()
+            || NoTagPart::where('serial_number', $request->serial)->exists();
+
+        if(!$exists){
+            return json_encode(["false"]);
+        } else{
+            return json_encode(["true"]);
+        }
     }
 }

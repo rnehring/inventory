@@ -35,7 +35,7 @@ class NoTagController extends FunctionController
             'plants' => $this->getWarehouses($this->tableName),
             'noTagParts' => $noTagParts,
             'bins' => json_encode($this->getAutocompleteBinsData()),
-            'parts' => json_encode($this->getAutocompletePartsData()),
+            'parts' => json_encode($this->getAllPossiblePartNumbers()),
         ]);
     }
 
@@ -70,7 +70,7 @@ class NoTagController extends FunctionController
         ]);
 
         $noTagPart = NoTagPart::findOrFail($validated['id']);
-        
+
         // Get standard cost from inventory
         $standardCost = Inventory::where('part', $validated['part'])
             ->value('standard_cost') ?? 0;

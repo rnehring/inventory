@@ -15,69 +15,69 @@ updateTextColors();
 
 // Initialize Autocomplete for Part and Bin fields
 window.onload = function () {
-    const autoCompleteBins = new autoComplete({
-        selector: "#bin",
-        placeHolder: "Search Bins...",
-        searchEngine: "strict",
-        data: {
-            src: acBins,
-            filter: (list) => {
-                const query = autoCompleteBins.input.value.toLowerCase();
+    // const autoCompleteBins = new autoComplete({
+    //     selector: "#bin",
+    //     placeHolder: "Search Bins...",
+    //     searchEngine: "strict",
+    //     data: {
+    //         src: acBins,
+    //         filter: (list) => {
+    //             const query = autoCompleteBins.input.value.toLowerCase();
+    //
+    //             return list.sort((a, b) => {
+    //                 const aVal = a.value.toLowerCase();
+    //                 const bVal = b.value.toLowerCase();
+    //
+    //                 const aStarts = aVal.startsWith(query);
+    //                 const bStarts = bVal.startsWith(query);
+    //
+    //                 if (aStarts && !bStarts) return -1;
+    //                 if (!aStarts && bStarts) return 1;
+    //
+    //                 return aVal.localeCompare(bVal);
+    //             });
+    //         }
+    //     },
+    //     resultItem: {
+    //         highlight: true,
+    //     }
+    // });
 
-                return list.sort((a, b) => {
-                    const aVal = a.value.toLowerCase();
-                    const bVal = b.value.toLowerCase();
-
-                    const aStarts = aVal.startsWith(query);
-                    const bStarts = bVal.startsWith(query);
-
-                    if (aStarts && !bStarts) return -1;
-                    if (!aStarts && bStarts) return 1;
-
-                    return aVal.localeCompare(bVal);
-                });
-            }
-        },
-        resultItem: {
-            highlight: true,
-        }
-    });
-
-    const autoCompleteParts = new autoComplete({
-        selector: "#part",
-        placeHolder: "Search Parts...",
-        searchEngine: "strict",
-        data: {
-            src: acParts,
-            filter: (list) => {
-                const query = autoCompleteParts.input.value.toLowerCase();
-
-                return list.sort((a, b) => {
-                    const aVal = a.value.toLowerCase();
-                    const bVal = b.value.toLowerCase();
-
-                    const aStarts = aVal.startsWith(query);
-                    const bStarts = bVal.startsWith(query);
-
-                    if (aStarts && !bStarts) return -1;
-                    if (!aStarts && bStarts) return 1;
-
-                    return aVal.localeCompare(bVal);
-                });
-            }
-        },
-        resultItem: {
-            highlight: true,
-        }
-    });
-
-    document.querySelector("#part").addEventListener("selection", function (event) {
-        document.querySelector("#part").value = event.detail.selection.value;
-    });
-
-    document.querySelector("#bin").addEventListener("selection", function (event) {
-        document.querySelector("#bin").value = event.detail.selection.value;
-    });
+    // const autoCompleteParts = new autoComplete({
+    //     selector: "#part",
+    //     placeHolder: "Search Parts...",
+    //     searchEngine: "strict",
+    //     data: {
+    //         src: acParts,
+    //         filter: (list) => {
+    //             const query = autoCompleteParts.input.value.toLowerCase();
+    //
+    //             return list.sort((a, b) => {
+    //                 const aVal = a.value.toLowerCase();
+    //                 const bVal = b.value.toLowerCase();
+    //
+    //                 const aStarts = aVal.startsWith(query);
+    //                 const bStarts = bVal.startsWith(query);
+    //
+    //                 if (aStarts && !bStarts) return -1;
+    //                 if (!aStarts && bStarts) return 1;
+    //
+    //                 return aVal.localeCompare(bVal);
+    //             });
+    //         }
+    //     },
+    //     resultItem: {
+    //         highlight: true,
+    //     }
+    // });
+    //
+    // document.querySelector("#part").addEventListener("selection", function (event) {
+    //     document.querySelector("#part").value = event.detail.selection.value;
+    // });
+    //
+    // document.querySelector("#bin").addEventListener("selection", function (event) {
+    //     document.querySelector("#bin").value = event.detail.selection.value;
+    // });
 }
 
 function getPart(event) {

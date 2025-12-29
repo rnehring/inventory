@@ -10,8 +10,6 @@ use App\Http\Controllers\FunctionController;
     const acParts = @php echo $parts; @endphp;
 </script>
 
-
-
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
     <x-slot:header>
@@ -65,8 +63,8 @@ use App\Http\Controllers\FunctionController;
 
                 <x-form-field fieldName="count" labelText="Count" />
 
-                <x-form-label>Unit of Measure</x-form-label>
-                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <x-form-label hidden>Unit of Measure</x-form-label>
+                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" hidden>
 
                     <option value="EA">EA</option>
                     <option value="FT">FT</option>

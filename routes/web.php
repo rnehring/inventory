@@ -25,10 +25,10 @@ Route::get('/', [LoginController::class, 'index'])->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
-    
+
     Route::get('/employee-login', [LoginController::class, 'employeeLogin'])->name('employee.login');
     Route::post('/employee-login', [LoginController::class, 'loginEmployee']);
-    
+
     Route::get('/manager-login', [LoginController::class, 'managerLogin'])->name('manager.login');
     Route::post('/manager-login', [LoginController::class, 'loginManager']);
 });
@@ -45,42 +45,42 @@ Route::prefix('admin')->name('admin.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    
+
     // Logout
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Employee & Manager Routes (All Authenticated Users)
     |--------------------------------------------------------------------------
     */
-    
+
     // Inventory Counting
     Route::prefix('count')->name('count.')->group(function () {
         Route::get('/', [CountController::class, 'index'])->name('index');
         Route::post('/search', [CountController::class, 'getPart'])->name('search');
         Route::post('/update', [FunctionController::class, 'updateCount'])->name('update');
     });
-    
+
     // Pre-Counting
     Route::prefix('pre-count')->name('precount.')->group(function () {
         Route::get('/', [PreCountController::class, 'index'])->name('index');
         Route::post('/search', [PreCountController::class, 'getPart'])->name('search');
         Route::post('/update', [FunctionController::class, 'updatePreCount'])->name('update');
     });
-    
+
     // Location Counting
     Route::prefix('location')->name('location.')->group(function () {
         Route::get('/', [LocationController::class, 'index'])->name('index');
         Route::post('/search', [LocationController::class, 'getPartsByLocation'])->name('search');
     });
-    
+
     // Location Pre-Counting
     Route::prefix('locationpre')->name('locationpre.')->group(function () {
         Route::get('/', [LocationPreController::class, 'index'])->name('index');
         Route::post('/search', [LocationPreController::class, 'getPartsByLocation'])->name('search');
     });
-    
+
     // No Tag Parts
     Route::prefix('notag')->name('notag.')->group(function () {
         Route::get('/', [NoTagController::class, 'index'])->name('index');
@@ -88,21 +88,21 @@ Route::middleware('auth')->group(function () {
         Route::post('/save', [NoTagController::class, 'saveNoTagPart'])->name('save');
         Route::post('/update', [NoTagController::class, 'update'])->name('update');
     });
-    
+
     // Shared API endpoints
     Route::prefix('api')->name('api.')->group(function () {
         Route::get('/part-numbers', [FunctionController::class, 'getPartNumbers'])->name('part-numbers');
         Route::get('/bins', [FunctionController::class, 'getAutocompleteBins'])->name('bins');
         Route::post('/part-uom', [FunctionController::class, 'getPartUom'])->name('part-uom');
     });
-    
+
     /*
     |--------------------------------------------------------------------------
     | Manager-Only Routes
     |--------------------------------------------------------------------------
     */
     Route::middleware('manager')->group(function () {
-        
+
         // Dashboard
         Route::prefix('dashboard')->name('dashboard.')->group(function () {
             Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -111,7 +111,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/all-time-counts', [DashboardController::class, 'allTimeCounts'])->name('all-time-counts');
             Route::get('/brand-progress', [DashboardController::class, 'percentageByCompany'])->name('brand-progress');
             Route::get('/warehouse-value', [DashboardController::class, 'warehouseValue'])->name('warehouse-value');
-            
+
             // New charts
             Route::get('/abc-analysis', [DashboardController::class, 'abcAnalysis'])->name('abc-analysis');
             Route::get('/variance-distribution', [DashboardController::class, 'varianceDistribution'])->name('variance-distribution');
@@ -119,11 +119,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/top-bins', [DashboardController::class, 'topBinsByValue'])->name('top-bins');
             Route::get('/warehouse-progress', [DashboardController::class, 'warehouseProgress'])->name('warehouse-progress');
             Route::get('/counter-leaderboard', [DashboardController::class, 'counterLeaderboard'])->name('counter-leaderboard');
-            
+
             // API endpoint for AJAX data refresh
             Route::get('/data', [DashboardController::class, 'getData'])->name('data');
         });
-        
+
         // Data Management
         Route::prefix('data')->name('data.')->group(function () {
             Route::get('/', [DataController::class, 'index'])->name('index');
@@ -133,7 +133,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/export-inventory', [DataController::class, 'exportInventory'])->name('export-inventory');
             Route::get('/export-notag', [DataController::class, 'exportNoTagData'])->name('export-notag');
         });
-        
+
         // User Management
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -143,17 +143,17 @@ Route::middleware('auth')->group(function () {
             Route::post('/update', [UserController::class, 'update'])->name('update');
             Route::get('/delete/{id}', [UserController::class, 'deleteUser'])->name('delete');
         });
-        
+
         // File Uploads
         Route::prefix('upload')->name('upload.')->group(function () {
             Route::get('/', [UploadController::class, 'index'])->name('index');
-            
+
             // Inventory Upload
             Route::post('/inventory', [UploadController::class, 'processUpload'])->name('inventory.process');
             Route::get('/inventory/review', [UploadController::class, 'reviewUpload'])->name('inventory.review');
             Route::post('/inventory/save', [UploadController::class, 'saveUpload'])->name('inventory.save');
             Route::get('/inventory/data', [UploadController::class, 'getUploadedDataForReview'])->name('inventory.data');
-            
+
             // Pre-count Upload
             Route::post('/precount', [UploadController::class, 'processPrecountUpload'])->name('precount.process');
             Route::get('/precount/review', [UploadController::class, 'reviewPrecountUpload'])->name('precount.review');
@@ -175,6 +175,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-part-numbers', [FunctionController::class, 'getPartNumbers']);
     Route::get('/get-bins', [FunctionController::class, 'getAutocompleteBins']);
     Route::post('/get-part-uom', [FunctionController::class, 'getPartUom']);
+    Route::post('/check-tracking', [FunctionController::class, 'checkTracking']);
+    Route::post('/check-serial', [FunctionController::class, 'checkSerial']);
 });
 
 Route::middleware(['auth', 'manager'])->group(function () {
@@ -182,7 +184,7 @@ Route::middleware(['auth', 'manager'])->group(function () {
     Route::get('/all-time-counts', [DashboardController::class, 'allTimeCounts']);
     Route::get('/brand-progress', [DashboardController::class, 'percentageByCompany']);
     Route::get('/warehouse-value', [DashboardController::class, 'warehouseValue']);
-    
+
     // New chart endpoints
     Route::get('/abc-analysis', [DashboardController::class, 'abcAnalysis']);
     Route::get('/variance-distribution', [DashboardController::class, 'varianceDistribution']);
@@ -190,7 +192,7 @@ Route::middleware(['auth', 'manager'])->group(function () {
     Route::get('/top-bins', [DashboardController::class, 'topBinsByValue']);
     Route::get('/warehouse-progress', [DashboardController::class, 'warehouseProgress']);
     Route::get('/counter-leaderboard', [DashboardController::class, 'counterLeaderboard']);
-    
+
     Route::get('/data', [DataController::class, 'index']);
     Route::get('/get-all-data', [DataController::class, 'getAllData']);
     Route::post('/download-data', [DataController::class, 'downloadData']);

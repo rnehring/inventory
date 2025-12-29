@@ -41,8 +41,8 @@
             <th scope="col" class="px-2 py-3 text-center">By Weight?</th>
             <th scope="col" class="px-2 py-3">Lot Number</th>
             <th scope="col" class="px-2 py-3">Serial Number</th>
-            <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
-            @if( Auth::user()->user_type == 2 )
+            @if( Auth::user()->user_type->canManageUsers() )
+                <th scope="col" class="px-2 py-3 text-right">Expected Qty</th>
                 <th scope="col" class="px-2 py-3 text-right">Cost</th>
                 <th scope="col" class="px-2 py-3 text-right">Cost Counted</th>
                 <th scope="col" class="px-2 py-3 text-right">Cost Expected</th>
