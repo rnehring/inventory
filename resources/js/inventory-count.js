@@ -117,9 +117,9 @@ function getPart(event) {
                 let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight${part["id"]}' ${part['by_weight'] === 1 ? 'checked' : ''}/>`);
                 let lot_number = makeCell(part['lot_number']);
                 let serial_number = makeCell(part['serial_number']);
-                let expected_qty = makeCell(formatToTwoDigits(part['expected_qty']), 'text-right');
 
                 if(userType == 2){
+                    let expected_qty = makeCell(formatToTwoDigits(part['expected_qty']), 'text-right');
                     let standard_cost = makeCell(formatterUSD.format(part['standard_cost']), 'text-right');
                     let cost_counted = makeCell(formatterUSD.format(part['cost_counted']), 'text-right');
                     let cost_expected = makeCell(formatterUSD.format(part['cost_expected']), 'text-right');
