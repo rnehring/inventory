@@ -136,6 +136,8 @@ submitButton.addEventListener("click", function(event) {
 updateTextColors();
 
 window.onload = function () {
+    console.log(acParts);
+
     const autoCompleteBins = new autoComplete({
         selector: "#bins",
         placeHolder: "Search Bins...",
