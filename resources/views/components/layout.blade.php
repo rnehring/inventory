@@ -69,10 +69,6 @@
         @vite(['resources/js/upload.js'])
     @endif
 
-    @if(request()->is('notag/edit/*'))
-        @vite(['resources/js/notag-edit.js'])
-    @endif
-    
     {{-- Load ApexCharts for dashboard --}}
     @if(request()->is('dashboard'))
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -87,7 +83,7 @@
             {{ $slot }}
         </main>
     </div>
-    
+
     {{-- Scripts pushed from views --}}
     @stack('scripts')
 
