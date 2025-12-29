@@ -260,50 +260,46 @@ window.onload = function () {
 }
 
 
-axios.get('/get-part-numbers',)
-    .then(function (response) {
-        let partNumbers = response.data;
-        let partField = document.getElementById('part');
+let partField = document.getElementById('part');
 
-        partField.addEventListener('change', function(event){
-            const performSearch = (partNumbers, query) => {
-                if ( partNumbers.includes(query) ) {
-                    return true;
-                }
-                return false;
-            };
+partField.addEventListener('change', function(event){
+    const performSearch = (acParts, query) => {
+        if ( acParts.includes(query) ) {
+            return true;
+        }
+        return false;
+    };
 
-            let query = event.target.value;
-            let partExists = performSearch(partNumbers, query);
+    let query = event.target.value;
+    let partExists = performSearch(acParts, query);
 
-            if (partExists) {
-               partField.style.backgroundColor = "rgb(55, 65, 81)";
-               let partFieldError = document.getElementById('partError');
-               if( partFieldError ){
-                   let partFieldDiv = partFieldError.parentElement;
-                   partFieldDiv.removeChild(partFieldError);
-               }
-                var submitButton = document.getElementById('add-notag');
-                submitButton.disabled = false;
-            } else {
-                let partFieldDiv = partField.parentElement;
-                partField.style.backgroundColor = "#c40000";
-                let partFieldError = document.getElementById('partError');
-                if( partFieldError ){
-                    partFieldDiv.removeChild(partFieldError);
-                }
-                let error = document.createElement("p");
-                error.id = "partError";
-                error.style.color = "#c40000";
-                error.style.marginBottom = "4px";
-                error.style.fontWeight = "bold";
-                error.textContent = "Part Number Not Found.";
-                partFieldDiv.appendChild(error);
-                var submitButton = document.getElementById('add-notag');
-                submitButton.disabled = true;
-            }
-        });
-    })
+    if (partExists) {
+       partField.style.backgroundColor = "rgb(55, 65, 81)";
+       let partFieldError = document.getElementById('partError');
+       if( partFieldError ){
+           let partFieldDiv = partFieldError.parentElement;
+           partFieldDiv.removeChild(partFieldError);
+       }
+        var submitButton = document.getElementById('add-notag');
+        submitButton.disabled = false;
+    } else {
+        let partFieldDiv = partField.parentElement;
+        partField.style.backgroundColor = "#c40000";
+        let partFieldError = document.getElementById('partError');
+        if( partFieldError ){
+            partFieldDiv.removeChild(partFieldError);
+        }
+        let error = document.createElement("p");
+        error.id = "partError";
+        error.style.color = "#c40000";
+        error.style.marginBottom = "4px";
+        error.style.fontWeight = "bold";
+        error.textContent = "Part Number Not Found.";
+        partFieldDiv.appendChild(error);
+        var submitButton = document.getElementById('add-notag');
+        submitButton.disabled = true;
+    }
+});
 
 function addNoTag(event) {
     //event.preventDefault();
