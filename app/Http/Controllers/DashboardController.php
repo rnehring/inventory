@@ -269,12 +269,14 @@ class DashboardController extends FunctionController
     {
         $data = DB::table($this->tableName)
             ->select('warehouse')
+            ->join('plants', 'plants.plant', '=', $this->tableName . '.warehouse')
             ->selectRaw('COUNT(*) as total_parts')
             ->selectRaw('SUM(CASE WHEN counted = 1 THEN 1 ELSE 0 END) as counted_parts')
             ->selectRaw('SUM(cost_expected) as total_value')
             ->selectRaw('SUM(cost_counted) as counted_value')
             ->selectRaw('SUM(ABS(plus_minus)) as total_variance')
             ->selectRaw('ROUND(SUM(CASE WHEN counted = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as completion_percent')
+            ->where('plants.active', 1)
             ->groupBy('warehouse')
             ->orderByDesc('completion_percent')
             ->get();

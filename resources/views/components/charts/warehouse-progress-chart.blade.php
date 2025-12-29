@@ -22,16 +22,37 @@
 function plantCodeToName(plantCode){
     switch(plantCode) {
         case "P1-RAW":
-            return "Plant 1";
+            return "Plant 1 - Raw";
+            break;
+        case "P1-QUAL":
+            return "Plant 1 - Quality";
+            break;
+        case "P1-PROD":
+            return "Plant 1 - Prod";
             break;
         case "P2-RAW":
-            return "Plant 2";
+            return "Plant 2 - Raw";
+            break;
+        case "P2-QUAL":
+            return "Plant 2 - Quality";
+            break;
+        case "P2-PROD":
+            return "Plant 2 - Prod";
             break;
         case "P3-RAW":
-            return "Plant 3";
+            return "Plant 3 - Raw";
+            break;
+        case "P3-QUAL":
+            return "Plant 3 - Quality";
+            break;
+        case "P3-PROD":
+            return "Plant 3 - Prod";
             break;
         case "P4-RAW":
-            return "Plant 4";
+            return "Houston";
+            break;
+        case "P4-SHIP":
+            return "Houston - Shipping";
             break;
         default:
             "Plant 1";
