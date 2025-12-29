@@ -27,18 +27,19 @@ class CountController extends FunctionController
     }
 
     public function getPart(Request $request){
+        $warehouse = session('plant');
 
         if(isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE part = ? AND bin = ?';
-            $params = [$request->part, $request->bin];
+            $where = 'WHERE part = ? AND bin = ? AND warehouse = ?';
+            $params = [$request->part, $request->bin, $warehouse];
         }
         if(isset($request->part) && !isset($request->bin)) {
-            $where = 'WHERE part = ?';
-            $params = [$request->part];
+            $where = 'WHERE part = ? AND warehouse = ?';
+            $params = [$request->part, $warehouse];
         }
         if(!isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE bin = ?';
-            $params = [$request->bin];
+            $where = 'WHERE bin = ? AND warehouse = ?';
+            $params = [$request->bin, $warehouse];
         }
 
         $partData = DB::select("
