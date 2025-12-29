@@ -34,6 +34,7 @@ class FunctionController extends Controller
         $validated = $request->validate([
             'part' => 'required|exists:inventory,id',
             'count' => 'required|numeric|min:0',
+            'byweight' => 'boolean',
         ]);
 
         $inventory = Inventory::findOrFail($validated['part']);
@@ -41,6 +42,7 @@ class FunctionController extends Controller
         $inventory->update([
             'count' => $validated['count'],
             'user' => Auth::id(),
+            'by_weight' => $validated['byweight'],
             'tag_printed' => true,
             'counted' => true,
         ]);
