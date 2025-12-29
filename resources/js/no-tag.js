@@ -87,12 +87,18 @@ submitButton.addEventListener("click", function(event) {
                     serialFieldDiv.appendChild(error);
                     submittable = false;
                 }
-                if ( submittable ){
-                    addNoTag();
-                }
             })
         }
+        else{
+            submittable = true;
+        }
+    })
+    .finally(function (submittable) {
+        if ( submittable ){
+            addNoTag();
+        }
     });
+
 
 
         // console.log(submittable);
