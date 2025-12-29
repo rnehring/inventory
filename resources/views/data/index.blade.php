@@ -38,7 +38,7 @@
                 class="block max-w-10xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mt-4">
                 <h5 class="text-xl font-bold text-white mb-2 "><x-ri-database-line class="w-6 h-6 inline-block mr-2"/>Current Data</h5>
                 <hr class="mb-4">
-                <p class="mb-2 font-bold text-white">Choose all, any, or multiple brands below to view data for.</p>
+                <p class="mb-2 font-bold text-white">Choose all, any, or multiple plants below to view data for.</p>
 
                 <div  class="flex gap-4 mt-2">
                     <ul id="plant-filters" class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white mt-8">

@@ -130,6 +130,8 @@ Route::middleware('auth')->group(function () {
             Route::match(['get', 'post'], '/company-data', [DataController::class, 'currentData'])->name('company-data');
             Route::get('/all', [DataController::class, 'getAllData'])->name('all');
             Route::post('/download', [DataController::class, 'downloadData'])->name('download');
+            Route::get('/export-inventory', [DataController::class, 'exportInventory'])->name('export-inventory');
+            Route::get('/export-notag', [DataController::class, 'exportNoTagData'])->name('export-notag');
         });
         
         // User Management

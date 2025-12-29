@@ -92,23 +92,6 @@ class FunctionController extends Controller
     }
 
     /**
-     * Get bins with caching
-     */
-    public function getBins(string $table): array
-    {
-        $warehouse = session('plant');
-
-        return Cache::remember("bins_{$warehouse}", 3600, function() use ($warehouse) {
-            return DB::table('valid_bins')
-                ->where('warehouse', $warehouse)
-                ->distinct()
-                ->orderBy('bin')
-                ->pluck('bin')
-                ->toArray();
-        });
-    }
-
-    /**
      * Get autocomplete bins data (for views)
      */
     protected function getAutocompleteBinsData(): array

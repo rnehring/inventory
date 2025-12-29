@@ -8,6 +8,7 @@ let currentData = [];
 // Show loading spinner immediately
 showGridLoading('grid');
 
+
 /**
  * Add CSV export button to grid header
  */
@@ -140,19 +141,21 @@ function createPlantFilters(data) {
         }
     });
 
+    console.log(warehouseSet);
+
     const filterContainer = document.getElementById('plant-filters');
     if (!filterContainer) return;
-    
+
     filterContainer.innerHTML = '';
 
     warehouseSet.forEach(warehouse => {
         const li = document.createElement('li');
-        li.className = 'w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600';
+        li.className = 'w-48 border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600';
         li.innerHTML = `
             <div class="flex items-center ps-3">
-                <input id="plants" name="plants[]" type="checkbox" value="${warehouse}" 
+                <input id="plants" name="plants[]" type="checkbox" value="${warehouse}"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 plant-filter">
-                <label for="plants" class="w-full py-3 ms-2 text-sm font-bold text-gray-900 dark:text-gray-300">${warehouse}</label>
+                <label for="plants" class="w-48 py-3 ms-2 text-sm font-bold text-gray-900 dark:text-gray-300">${warehouse}</label>
             </div>
         `;
         filterContainer.appendChild(li);
@@ -174,7 +177,7 @@ function filterGrid() {
         setTimeout(filterGrid, 100);
         return;
     }
-    
+
     const checkedPlants = Array.from(
         document.querySelectorAll('.plant-filter:checked')
     ).map(cb => cb.value);
@@ -195,7 +198,7 @@ function filterGrid() {
     window.gridInstance.updateConfig({
         data: filteredData
     }).forceRender();
-    
+
     addExportButton();
 }
 
@@ -236,7 +239,7 @@ function exportToCSV() {
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    
+
     const date = new Date().toISOString().split('T')[0];
     link.download = `inventory-export-${date}.csv`;
     link.href = url;

@@ -3,30 +3,63 @@
         <x-header>Dashboard</x-header>
     </x-slot:header>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-9xl mx-auto sm:px-6 lg:px-8">
 
             {{-- Overall Health Score Card --}}
             <div class="max-w-10xl mb-8 dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-lg shadow">
-                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm opacity-90 mb-2">Overall Expected Reliability</p>
-                            <div class="flex items-baseline gap-4">
-                                <h1 class="text-6xl font-bold">{{ number_format($reliabilityScore, 1) }}%</h1>
-                                <span class="text-2xl opacity-75">/ 100</span>
-                            </div>
-                            <p class="text-sm mt-2 opacity-90">
-                                {{ number_format($stats['expectedZeroCountedZero'] + ($stats['expectedNonZero'] - $stats['expectedNonZeroCountedZero'])) }}
-                                of {{ number_format($stats['totalItems']) }} items matched expectations
-                            </p>
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+                    {{-- Quick Links Row --}}
+                    <div class="flex justify-end gap-3">
+                        <div class="flex items-center justify-between mr-4">
+                            <h5 class="text-xl font-bold text-gray-900 dark:text-white">
+                                <x-ri-remix-fill class="w-6 h-6 inline-block mr-2 text-blue-500"/>
+                                Quick Links
+                            </h5>
                         </div>
-                        <div class="text-right">
-                            <div class="text-7xl mb-2"><img class="max-w-80 max-h-48" src="{{URL::asset('/images/data.jpg')}}" alt="analytics"></div>
-                        </div>
+                        <a href="{{ route('data.export-inventory') }}"
+                           class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-sm font-medium transition-all duration-200 border border-white/30">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Export Inventory
+                        </a>
+                        <a href="{{ route('data.export-notag') }}"
+                           class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-sm font-medium transition-all duration-200 border border-white/30">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            Export No-Tag Data
+                        </a>
+                        <a href="{{ route('users.index') }}"
+                           class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-sm font-medium transition-all duration-200 border border-white/30">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            User Management
+                        </a>
                     </div>
+
+                    {{-- Main Score Display --}}
+{{--                    <div class="flex items-center justify-between">--}}
+{{--                        <div>--}}
+{{--                            <p class="text-sm opacity-90 mb-2">Overall Expected Reliability</p>--}}
+{{--                            <div class="flex items-baseline gap-4">--}}
+{{--                                <h1 class="text-6xl font-bold">{{ number_format($reliabilityScore, 1) }}%</h1>--}}
+{{--                                <span class="text-2xl opacity-75">/ 100</span>--}}
+{{--                            </div>--}}
+{{--                            <p class="text-sm mt-2 opacity-90">--}}
+{{--                                {{ number_format($stats['expectedZeroCountedZero'] + ($stats['expectedNonZero'] - $stats['expectedNonZeroCountedZero'])) }}--}}
+{{--                                of {{ number_format($stats['totalItems']) }} items matched expectations--}}
+{{--                            </p>--}}
+{{--                        </div>--}}
+{{--                        <div class="text-right">--}}
+{{--                            <div class="text-7xl mb-2"><img class="max-w-80 max-h-48" src="{{URL::asset('/images/data.jpg')}}" alt="analytics"></div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             </div>
+
 
             {{-- Business Intelligence Row --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
@@ -93,16 +126,19 @@
 {{--            </div>--}}
 
 
-            {{-- Category Breakdown --}}
-            <div class="mb-8 mt-8">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Count Accuracy Breakdown</h3>
-            </div>
 
-            <div class="mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mt-6">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="text-xl font-bold text-gray-900 dark:text-white">
+                            <x-ri-numbers-fill class="w-6 h-6 inline-block mr-2 text-blue-500"/>
+                            Count Accuracy Breakdown
+                        </h5>
+                    </div>
 
+                    <div class="flex p-2 flex-row">
                     {{-- Expected Items, Found 0 --}}
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-2 border-red-500">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-2 border-red-500 w-6/12 m-2">
                         <div class="p-6">
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex-1">
@@ -126,7 +162,7 @@
                     </div>
 
                     {{-- Expected Items, Found Items --}}
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-2 border-blue-500">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border-2 border-blue-500 w-6/12 m-2">
                         <div class="p-6">
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex-1">
@@ -148,18 +184,27 @@
                             </div>
                         </div>
                     </div>
-
+                    </div>
                 </div>
             </div>
 
+
             {{-- Warehouse Comparison Chart --}}
-            <div class="mb-8">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Warehouse-by-Warehouse Analysis</h3>
-                <div id="warehouseChart" class="w-full"></div>
+            <div class="mt-6">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="text-xl font-bold text-gray-900 dark:text-white">
+                            <x-ri-building-fill class="w-6 h-6 inline-block mr-2 text-orange-500"/>
+                            Warehouse-by-Warehouse Analysis
+                        </h5>
+                    </div>
+
+                    <div id="warehouseChart" class="w-11/12 mx-auto bg-transparent"></div>
+                </div>
             </div>
 
             {{-- Warehouse Details Table --}}
-            <div class="mb-8">
+            <div class="mt-6">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Detailed Warehouse Breakdown</h3>
@@ -234,8 +279,9 @@
                         type: 'bar',
                         height: 350,
                         stacked: true,
+                        background: 'transparent',
                         toolbar: {
-                            show: true
+                            show: false
                         },
                         zoom: {
                             enabled: true
@@ -303,7 +349,7 @@
                         }
                     },
                     theme: {
-                        mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+                        mode: 'dark'
                     }
                 };
 

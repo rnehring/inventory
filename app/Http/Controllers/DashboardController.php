@@ -17,7 +17,7 @@ class DashboardController extends FunctionController
     {
         parent::__construct();
         $this->statsService = $statsService;
-        
+
         $location = session()->get('location', 'Kentwood');
         $this->tableName = $location === "Kentwood" ? "inventory" : "inventory_houston";
         $this->tableNamePre = $location === "Kentwood" ? "inventory_precount" : "inventory_precount_houston";
@@ -138,7 +138,7 @@ class DashboardController extends FunctionController
         $results = $this->statsService->getWarehouseValue();
         return response()->json($results);
     }
-    
+
     /**
      * ABC Analysis / Pareto Chart
      * Top 20% of PARTS (by count) should represent ~80% of VALUE
@@ -150,25 +150,25 @@ class DashboardController extends FunctionController
             ->where('cost_expected', '>', 0)
             ->orderByDesc('cost_expected')
             ->get(['id', 'cost_expected', 'plus_minus', 'counted']);
-        
+
         $totalParts = $allParts->count();
         $cutoffIndex = (int)($totalParts * 0.2); // Top 20% of parts
-        
+
         // Split: Top 20% of parts = A Items, Bottom 80% = B/C Items
         $aItems = $allParts->take($cutoffIndex);
         $bcItems = $allParts->skip($cutoffIndex);
-        
+
         // Calculate stats for A items
         $aStats = [
             'category' => 'A Items (Top 20%)',
             'part_count' => $aItems->count(),
             'total_value' => $aItems->sum('cost_expected'),
             'total_variance' => $aItems->sum(fn($p) => abs($p->plus_minus ?? 0)),
-            'percent_counted' => $aItems->count() > 0 
+            'percent_counted' => $aItems->count() > 0
                 ? round($aItems->where('counted', 1)->count() / $aItems->count() * 100, 1)
                 : 0
         ];
-        
+
         // Calculate stats for B/C items
         $bcStats = [
             'category' => 'B/C Items (Bottom 80%)',
@@ -179,10 +179,10 @@ class DashboardController extends FunctionController
                 ? round($bcItems->where('counted', 1)->count() / $bcItems->count() * 100, 1)
                 : 0
         ];
-        
+
         return response()->json([$aStats, $bcStats]);
     }
-    
+
     /**
      * Variance Distribution Chart
      * Shows count accuracy in color-coded zones
@@ -191,7 +191,7 @@ class DashboardController extends FunctionController
     {
         $data = DB::table($this->tableName)
             ->selectRaw("
-                CASE 
+                CASE
                     WHEN counted = 0 THEN 'Not Counted'
                     WHEN ABS(plus_minus / NULLIF(cost_expected, 0)) < 0.05 THEN 'Excellent (±0-5%)'
                     WHEN ABS(plus_minus / NULLIF(cost_expected, 0)) < 0.10 THEN 'Good (±5-10%)'
@@ -214,10 +214,10 @@ class DashboardController extends FunctionController
                 END
             ")
             ->get();
-        
+
         return response()->json($data);
     }
-    
+
     /**
      * Count Velocity Timeline
      * Shows parts counted per day over last 30 days
@@ -236,10 +236,10 @@ class DashboardController extends FunctionController
             ->groupBy(DB::raw('DATE(date_counted)'))
             ->orderBy('count_date', 'ASC')
             ->get();
-        
+
         return response()->json($data);
     }
-    
+
     /**
      * Top Bins by Value
      * Shows the 15 most valuable bin locations
@@ -257,10 +257,10 @@ class DashboardController extends FunctionController
             ->orderByDesc('total_value')
             ->limit(15)
             ->get();
-        
+
         return response()->json($data);
     }
-    
+
     /**
      * Warehouse Progress Comparison
      * Shows completion status by warehouse with multiple metrics
@@ -278,10 +278,10 @@ class DashboardController extends FunctionController
             ->groupBy('warehouse')
             ->orderByDesc('completion_percent')
             ->get();
-        
+
         return response()->json($data);
     }
-    
+
     /**
      * Counter Leaderboard
      * Shows top performing users by parts counted and value
@@ -290,7 +290,8 @@ class DashboardController extends FunctionController
     {
         $data = DB::table($this->tableName)
             ->join('users', $this->tableName . '.user', '=', 'users.id')
-            ->selectRaw("CONCAT(COALESCE(users.first_name, ''), ' ', COALESCE(users.last_name, '')) as name")
+            ->join('plants', 'users.plant', '=', 'plants.id')
+            ->selectRaw("CONCAT(COALESCE(users.initials, ''), ' ', COALESCE(plants.display_name, '')) as name")
             ->selectRaw('COUNT(*) as parts_counted')
             ->selectRaw('SUM(' . $this->tableName . '.cost_counted) as value_counted')
             ->selectRaw('SUM(ABS(' . $this->tableName . '.plus_minus)) as total_variance')
@@ -302,7 +303,7 @@ class DashboardController extends FunctionController
             ->orderByDesc('parts_counted')
             ->limit(10)
             ->get();
-        
+
         return response()->json($data);
     }
 }

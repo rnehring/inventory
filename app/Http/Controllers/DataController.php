@@ -134,6 +134,7 @@ class DataController extends FunctionController
                 count,
                 user,
                 uom,
+                warehouse,
                 by_weight,
                 expected_qty,
                 standard_cost,
@@ -310,6 +311,146 @@ class DataController extends FunctionController
 
                 'totalPlusMinus' => $totalPlusMinus,
             ]);
+    }
+
+    /**
+     * Export current inventory to CSV
+     */
+    public function exportInventory()
+    {
+        $allData = DB::select('
+            SELECT
+                id,
+                tag,
+                tag_printed,
+                part,
+                bin,
+                warehouse,
+                lot_number,
+                serial_number,
+                count,
+                user,
+                uom,
+                by_weight,
+                expected_qty,
+                standard_cost,
+                date_counted,
+                time_counted,
+                cost_expected,
+                cost_counted,
+                plus_minus,
+                counted
+            FROM ' . $this->tableName);
+
+        $allDataArray = [];
+        foreach($allData as $data){
+            $record = json_decode(json_encode($data), true);
+            $allDataArray[] = $record;
+        }
+
+        $headers = [
+            'id',
+            'tag',
+            'tag_printed',
+            'part',
+            'bin',
+            'warehouse',
+            'lot_number',
+            'serial_number',
+            'count',
+            'user',
+            'uom',
+            'by_weight',
+            'expected_qty',
+            'standard_cost',
+            'date_counted',
+            'time_counted',
+            'cost_expected',
+            'cost_counted',
+            'plus_minus',
+            'counted'
+        ];
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'inventory_export_');
+        $csv = Writer::createFromPath($tempFile, 'w+');
+        $csv->insertOne($headers);
+        $csv->insertAll($allDataArray);
+
+        $timestamp = date('YmdHis');
+        $filename = "inventory_export_" . $timestamp . ".csv";
+
+        return response()->download($tempFile, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ])->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Export no-tag parts to CSV
+     */
+    public function exportNoTagData()
+    {
+        $allData = DB::select('
+            SELECT
+                id,
+                tag,
+                part,
+                bin,
+                warehouse,
+                count,
+                uom,
+                by_weight,
+                lot_number,
+                serial_number,
+                user,
+                note,
+                date_counted,
+                time_counted,
+                expected_qty,
+                standard_cost,
+                cost_counted,
+                plus_minus
+            FROM ' . $this->ntTableName);
+
+        $allDataArray = [];
+        foreach($allData as $data){
+            $record = json_decode(json_encode($data), true);
+            $allDataArray[] = $record;
+        }
+
+        $headers = [
+            'id',
+            'tag',
+            'part',
+            'bin',
+            'warehouse',
+            'count',
+            'uom',
+            'by_weight',
+            'lot_number',
+            'serial_number',
+            'user',
+            'note',
+            'date_counted',
+            'time_counted',
+            'expected_qty',
+            'standard_cost',
+            'cost_counted',
+            'plus_minus'
+        ];
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'notag_export_');
+        $csv = Writer::createFromPath($tempFile, 'w+');
+        $csv->insertOne($headers);
+        $csv->insertAll($allDataArray);
+
+        $timestamp = date('YmdHis');
+        $filename = "no_tag_parts_export_" . $timestamp . ".csv";
+
+        return response()->download($tempFile, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ])->deleteFileAfterSend(true);
     }
 
 
