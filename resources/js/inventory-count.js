@@ -114,7 +114,7 @@ function getPart(event) {
                 let bin = makeCell(part['bin'], 'text-center');
                 let uom = makeCell(part['uom'], 'text-center');
                 let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='count text-right px-2 py-0 mx-auto block rounded-sm border-gray-600 w-20' value='${part['count']}' onfocus="this.value=''"/>`);
-                let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight${part['by_weight']}' ${part['by_weight'] === 1 ? 'checked' : ''}/>`);
+                let by_weight = makeCell(`<input type='checkbox' class='mx-auto block' id='by_weight${part["id"]}' ${part['by_weight'] === 1 ? 'checked' : ''}/>`);
                 let lot_number = makeCell(part['lot_number']);
                 let serial_number = makeCell(part['serial_number']);
                 let expected_qty = makeCell(formatToTwoDigits(part['expected_qty']), 'text-right');
