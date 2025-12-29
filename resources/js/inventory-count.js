@@ -138,11 +138,11 @@ function getPart(event) {
                         byWeightValue = 0;
                     }
 
-                    // Client-side validation
-                    if (!countValue || isNaN(countValue) || parseFloat(countValue) < 0) {
-                        showToast('Please enter a valid count (positive number)', 'error');
-                        return;
-                    }
+                    // // Client-side validation
+                    // if (!countValue || isNaN(countValue) || parseFloat(countValue) < 0) {
+                    //     showToast('Please enter a valid count (positive number)', 'error');
+                    //     return;
+                    // }
 
                     axios.post('/update-count', {
                         count: countValue,
