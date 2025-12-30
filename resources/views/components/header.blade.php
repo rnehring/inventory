@@ -13,11 +13,13 @@
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">Kentwood {{ $slot }}</h1>
     </div>
 
-    @if(request()->is('data'))
+    @if(request()->is('dashboard'))
 
     @endif
 
     </div>
 </header>
 
-    @endif
+@endif
+
+
