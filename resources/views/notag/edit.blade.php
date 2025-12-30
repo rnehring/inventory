@@ -25,19 +25,19 @@ use App\Http\Controllers\FunctionController;
                 <x-form-field fieldName="bin" labelText="Bin" value="{{ $noTagPart->bin }}"/>
                 <x-form-field fieldName="count" labelText="Count" value="{{ $noTagPart->count }}"/>
 
-                <x-form-label>Unit of Measure</x-form-label>
-                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+{{--                <x-form-label>Unit of Measure</x-form-label>--}}
+{{--                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">--}}
 
-                    <option value="EA" @if( $noTagPart->uom  == "EA" ) selected @endif>EA</option>
-                    <option value="FT" @if( $noTagPart->uom  == "FT" ) selected @endif>FT</option>
-                    <option value="GA" @if( $noTagPart->uom  == "GA" ) selected @endif>GA</option>
-                    <option value="IN" @if( $noTagPart->uom  == "IN" ) selected @endif>IN</option>
-                    <option value="KG" @if( $noTagPart->uom  == "KG" ) selected @endif>KG</option>
-                    <option value="LB" @if( $noTagPart->uom  == "LB" ) selected @endif>LB</option>
-                    <option value="OZ" @if( $noTagPart->uom  == "OZ" ) selected @endif>OZ</option>
-                    <option value="PC" @if( $noTagPart->uom  == "PC" ) selected @endif>PC</option>
-                    <option value="QT" @if( $noTagPart->uom  == "QT" ) selected @endif>QT</option>
-                </select>
+{{--                    <option value="EA" @if( $noTagPart->uom  == "EA" ) selected @endif>EA</option>--}}
+{{--                    <option value="FT" @if( $noTagPart->uom  == "FT" ) selected @endif>FT</option>--}}
+{{--                    <option value="GA" @if( $noTagPart->uom  == "GA" ) selected @endif>GA</option>--}}
+{{--                    <option value="IN" @if( $noTagPart->uom  == "IN" ) selected @endif>IN</option>--}}
+{{--                    <option value="KG" @if( $noTagPart->uom  == "KG" ) selected @endif>KG</option>--}}
+{{--                    <option value="LB" @if( $noTagPart->uom  == "LB" ) selected @endif>LB</option>--}}
+{{--                    <option value="OZ" @if( $noTagPart->uom  == "OZ" ) selected @endif>OZ</option>--}}
+{{--                    <option value="PC" @if( $noTagPart->uom  == "PC" ) selected @endif>PC</option>--}}
+{{--                    <option value="QT" @if( $noTagPart->uom  == "QT" ) selected @endif>QT</option>--}}
+{{--                </select>--}}
 
                 <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700 mt-4 mb-4">
                     <input type="hidden" name="by_weight" value="0">
