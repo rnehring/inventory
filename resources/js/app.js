@@ -59,15 +59,22 @@ export function makeRow(part){
     let row = document.createElement('tr');
     row.id = `row${part['id']}`;
     let classes = "";
-    if(part['top_eighty'] == '1' && part['counted'] == '1') {
-        classes += ' bg-green-300';
+    if(userType == 2) {
+        if (part['top_eighty'] == '1' && part['counted'] == '1') {
+            classes += ' bg-green-300';
+        }
+        if (part['top_eighty'] == '1' && part['counted'] == '0') {
+            classes += 'top-eighty-highlight';
+        }
+        if (part['top_eighty'] == '0' && part['counted'] == '1') {
+            classes += 'bg-green-300';
+        }
+    } else {
+        if (part['counted'] == '1') {
+            classes += ' bg-green-300';
+        }
     }
-    if(part['top_eighty'] == '1' && part['counted'] == '0') {
-        classes += 'top-eighty-highlight';
-    }
-    if(part['top_eighty'] == '0' && part['counted'] == '1') {
-        classes += 'bg-green-300';
-    }
+
     row.classList = `${classes}`;
     row.dataset.lot_number = `${part['lot_number']}`;
     row.dataset.serial_number = `${part['serial_number']}`;

@@ -100,9 +100,11 @@ function getPart(event) {
             }
 
             parts.forEach((part) => {
-                let top_eighty_star = part['top_eighty'] == 1 ?
-                    makeCell(part['top_eighty_star']) :
-                    makeCell('');
+                if(userType == 2){
+                    let top_eighty_star = part['top_eighty'] == 1 ?
+                        makeCell(part['top_eighty_star']) :
+                        makeCell('');
+                }
 
                 let tag = makeCell(part['tag']);
                 let tag_printed = part['tag_printed'] == 1 ?
