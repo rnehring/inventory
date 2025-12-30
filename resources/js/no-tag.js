@@ -125,7 +125,7 @@ function checkIsValid(field, list){
         }
         let errMsg = errorMsgStart + "Not Found.";
         buildError(field, errMsg);
-        submitButton.disabled = false;
+        submitButton.disabled = true;
         return false;
     }
 }
