@@ -165,7 +165,7 @@ function getPart(event) {
                     })
                     .catch(function (error) {
                         const message = error.response?.data?.message || 'Failed to update count';
-                        showToast(message, '3000');
+                        showToast(message);
                         console.error('Error updating count:', error);
                     });
                 });
@@ -178,7 +178,7 @@ function getPart(event) {
         })
         .catch(function (error) {
             const message = error.response?.data?.message || 'Error searching for parts';
-            showToast(message, '3000');
+            showToast(message);
             console.error('Error searching parts:', error);
         });
 }
