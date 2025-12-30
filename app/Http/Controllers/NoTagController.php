@@ -36,6 +36,7 @@ class NoTagController extends FunctionController
             'noTagParts' => $noTagParts,
             'bins' => json_encode($this->getAutocompleteBinsData()),
             'parts' => json_encode($this->getAllPossiblePartNumbers()),
+            'uoms' => $this->getAllPossiblePartUoms(),
         ]);
     }
 

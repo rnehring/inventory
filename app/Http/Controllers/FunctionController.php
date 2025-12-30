@@ -201,9 +201,19 @@ class FunctionController extends Controller
             return PartUom::pluck('part')
                 ->toArray();
         });
-
     }
 
+    /**
+     * Get all uom values with caching
+     */
+    public function getAllPossiblePartUoms(): array
+    {
+        return Cache::remember("all_possible_part_uoms", 3600, function() {
+            return PartUom::groupBy('uom')
+                ->pluck('uom', 'uom')
+                ->toArray();
+        });
+    }
 
     public static function getPlantNameFromCode(string $plantCode){
         return match($plantCode){
@@ -232,8 +242,12 @@ class FunctionController extends Controller
 
     public function checkSerial(Request $request)
     {
+        if ( $request->serial == "" ){
+            return json_encode(["false"]);
+        }
+
         $request->validate([
-            'serial' => 'required|string|max:255',
+            'serial' => 'string|max:255',
         ]);
 
         $exists = Inventory::where('serial_number', $request->serial)->exists()
