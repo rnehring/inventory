@@ -66,6 +66,8 @@ function canSubmit() {
 
             if( tracking.data[0].track_lot == 1 && lot.length > 0 ) {
                 canSubmit = true;
+            } else if( tracking.data[0].track_lot == 0) {
+                canSubmit = true;
             } else {
                 buildError(lotField, "This Part Requires a Lot Number");
                 submitButton.disabled = false;
