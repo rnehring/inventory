@@ -85,7 +85,6 @@ export function showToast(message, duration = 3000) {
     // Set message
     messageElement.textContent = message;
 
-
     toast.classList.remove('hidden');
     toast.classList.add('flex');
 
