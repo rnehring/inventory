@@ -39,24 +39,6 @@
                             User Management
                         </a>
                     </div>
-
-                    {{-- Main Score Display --}}
-{{--                    <div class="flex items-center justify-between">--}}
-{{--                        <div>--}}
-{{--                            <p class="text-sm opacity-90 mb-2">Overall Expected Reliability</p>--}}
-{{--                            <div class="flex items-baseline gap-4">--}}
-{{--                                <h1 class="text-6xl font-bold">{{ number_format($reliabilityScore, 1) }}%</h1>--}}
-{{--                                <span class="text-2xl opacity-75">/ 100</span>--}}
-{{--                            </div>--}}
-{{--                            <p class="text-sm mt-2 opacity-90">--}}
-{{--                                {{ number_format($stats['expectedZeroCountedZero'] + ($stats['expectedNonZero'] - $stats['expectedNonZeroCountedZero'])) }}--}}
-{{--                                of {{ number_format($stats['totalItems']) }} items matched expectations--}}
-{{--                            </p>--}}
-{{--                        </div>--}}
-{{--                        <div class="text-right">--}}
-{{--                            <div class="text-7xl mb-2"><img class="max-w-80 max-h-48" src="{{URL::asset('/images/data.jpg')}}" alt="analytics"></div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
                 </div>
             </div>
 
@@ -200,12 +182,6 @@
                     </div>
 
                     <div id="warehouseChart" class="w-11/12 mx-auto bg-transparent"></div>
-                </div>
-            </div>
-
-            {{-- Warehouse Details Table --}}
-            <div class="mt-6">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Detailed Warehouse Breakdown</h3>
                         <div class="relative overflow-x-auto">
@@ -253,6 +229,13 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {{-- Warehouse Details Table --}}
+            <div class="mt-6">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
                 </div>
             </div>
 
