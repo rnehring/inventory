@@ -23,7 +23,7 @@ use App\Http\Controllers\FunctionController;
                 <x-form-field fieldName="tag" labelText="Tag" value="{{ $noTagPart->tag }}"/>
                 <x-form-field fieldName="part" labelText="Part Number" value="{{ $noTagPart->part }}"/>
                 <x-form-field fieldName="bin" labelText="Bin" value="{{ $noTagPart->bin }}"/>
-                <x-form-field fieldName="count" labelText="Count" value="{{ $noTagPart->count }}"/>
+                <x-form-field fieldName="count" labelText="Count" value="{{ $noTagPart->count }}" />
 
                 <x-form-label>Unit of Measure</x-form-label>
                 <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>

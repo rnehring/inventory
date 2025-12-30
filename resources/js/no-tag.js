@@ -163,6 +163,14 @@ function getPartUom(partField){
         })
         .then(function (response) {
             document.getElementById('uom').value = response.data.uom;
+            if (response.data.uom == "EA"){
+                let countField = document.getElementById("count");
+                countField.addEventListener("keydown", function(event){
+                    if (event.key === '.' || event.key === ',') {
+                        event.preventDefault();
+                    }
+                });
+            }
         });
     }
 }
