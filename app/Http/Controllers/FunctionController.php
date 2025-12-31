@@ -159,15 +159,17 @@ class FunctionController extends Controller
     /**
      * Get warehouses using Eloquent
      */
-    public function getWarehouses(string $table): array
+    public function getWarehouses()
     {
-        return Cache::remember('warehouses_active', 3600, function() {
+        $plants = Cache::remember('warehouses_active', 3600, function() {
             return DB::table('plants')
                 ->where('active', 1)
                 ->orderBy('plant')
                 ->get(['id', 'plant', 'display_name'])
                 ->toArray();
         });
+
+        return response()->json($plants);
     }
 
     /**

@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 },
-                colors:  ['#cbd7a5', '#a4dbcc', '#009add', '#848254', '#eaeae1'],
+                colors:                                        ,
                 dataLabels: {
                     enabled: true,
                     formatter: function(val) {

@@ -11,3 +11,13 @@
 .top-eighty-highlight{
     background-color: #ffe870;
 }
+
+.apexcharts-legend-text {
+    padding-left: 15px;
+    margin-left: -15px;
+    color: #FFFFFF !important;
+}
+
+.dark .apexcharts-canvas .apexcharts-legend-text {
+    color: #FFFFFF !important;
+}

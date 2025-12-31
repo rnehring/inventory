@@ -76,11 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Color mapping for warehouses
             const colorMap = {
-                'Plant 1': '#06b6d4',       // Cyan
-                'Plant 2': '#00408a',     // Cyan
-                'Plant 3': '#8b5cf6',      // Purple
-                'Plant 4': '#10b981',       // Green
-                'Default': '#f59e0b'       // Orange
+                'Plant 1 - Raw': '#7BCFDB',       // Cyan
+                'Plant 2 - Raw': '#aec1f3',     // Cyan
+                'Plant 3 - Raw': '#be4a4d',      // Purple
+                'Houston': '#826970',       // Green
+                'Default': '#d8edf1'       // Orange
             };
 
             const colors = warehouses.map(w => colorMap[w] || colorMap['Default']);

@@ -94,6 +94,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/part-numbers', [FunctionController::class, 'getPartNumbers'])->name('part-numbers');
         Route::get('/bins', [FunctionController::class, 'getAutocompleteBins'])->name('bins');
         Route::post('/part-uom', [FunctionController::class, 'getPartUom'])->name('part-uom');
+
     });
 
     /*
@@ -177,6 +178,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/get-part-uom', [FunctionController::class, 'getPartUom']);
     Route::post('/check-tracking', [FunctionController::class, 'checkTracking']);
     Route::post('/check-serial', [FunctionController::class, 'checkSerial']);
+    Route::get('/get-plants', [FunctionController::class, 'getWarehouses']);
 });
 
 Route::middleware(['auth', 'manager'])->group(function () {

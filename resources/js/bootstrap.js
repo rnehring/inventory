@@ -15,17 +15,21 @@ if (token) {
 window.axios.interceptors.response.use(
     response => response,
     error => {
-        // Handle session expiration
-        if (error.response?.status === 419) {
-            alert('Your session has expired. Please refresh the page.');
-            window.location.reload();
+        // Handle session expiration - but only for axios requests, not navigation
+        if (error.response?.status === 419 && error.config) {
+            console.warn('CSRF token mismatch detected');
+            // Only reload if this was an actual AJAX request that failed
+            if (error.config.headers['X-Requested-With'] === 'XMLHttpRequest') {
+                alert('Your session has expired. Please refresh the page.');
+                window.location.reload();
+            }
             return Promise.reject(error);
         }
 
         // Handle validation errors
         if (error.response?.status === 422) {
             console.error('Validation failed:', error.response.data.errors);
-            
+
             // If there's a custom error handler in the catch block, let it handle it
             // Otherwise show the first validation error
             if (!error.config?.skipDefaultErrorHandler) {

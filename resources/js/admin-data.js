@@ -129,11 +129,17 @@ function renderGrid(data) {
     createInventoryGrid('grid', columns, data);
 }
 
+function getPlants(){
+    axios.get('/get-plants')
+        .then( function(response){
+            console.log(response);
+        })
+}
 /**
  * Create plant filter checkboxes
  */
 function createPlantFilters(data) {
-    const warehouseSet = new Set();
+    const warehouseSet = getPlants();
 
     data.forEach(row => {
         if (row.warehouse) {
