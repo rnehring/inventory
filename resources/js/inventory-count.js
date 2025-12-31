@@ -114,7 +114,7 @@ function getPart(event) {
                 let part_number = makeCell(part['part']);
                 let part_warehouse = makeCell(part['warehouse']);
                 let bin = makeCell(part['bin'], 'text-center');
-                let uom = makeCell(part['uom'], 'text-center');
+                let uom = makeCell(`<span id="uom${part['id']}">${part['uom']}<span>`, 'text-center');
 
                 if(part['uom'] == "EA"){
                     let count = makeCell(`<input type='text' name='count' id='count${part['id']}' class='count text-right px-2 py-0 mx-auto block rounded-sm border-gray-600 w-20' value='${part['count']}' onfocus="this.value=''" onkeydown="return event.key !== '.' && event.key !== 'e' && event.key !== '-';" />`);
@@ -138,7 +138,10 @@ function getPart(event) {
 
                 save_button.addEventListener('click', function(event){
                     let countValue = document.getElementById('count'+part['id']).value;
-                    countValue = countValue.replace(/\D/g, '');
+                    let uomValue = document.getElementById('uom'+part['id']).innerText;
+                    if(uomValue == "EA"){
+                        countValue = countValue.replace(/\D/g, '');
+                    }
                     const byWeight = document.getElementById('by_weight'+part['id']);
                     let byWeightValue;
                     if (byWeight.checked) {
