@@ -27,9 +27,8 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
-import ApexCharts from 'apexcharts';
-
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/abc-analysis')
         .then(res => res.json())
@@ -146,3 +145,4 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error loading ABC chart:', error));
 });
 </script>
+@endpush

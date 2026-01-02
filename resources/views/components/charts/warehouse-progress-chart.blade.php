@@ -13,14 +13,13 @@
 
     <div id="warehouse-progress-chart"></div>
 
-    <div class="mt-4 space-y-2" id="warehouse-details">
+    <div class="mt-4 space-y-2 flex flex-row flex-wrap justify-stretch items-end gap-2" id="warehouse-details">
         <!-- Warehouse details populated by JS -->
     </div>
 </div>
 
+ @push('scripts')
 <script>
-import ApexCharts from 'apexcharts';
-
 function plantCodeToName(plantCode){
     switch(plantCode) {
         case "P1-RAW":
@@ -78,11 +77,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Color mapping for warehouses
             const colorMap = {
-                'Plant 1': '#06b6d4',       // Cyan
-                'Plant 2': '#00408a',     // Cyan
-                'Plant 3': '#8b5cf6',      // Purple
-                'Plant 4': '#10b981',       // Green
-                'Default': '#f59e0b'       // Orange
+                'Plant 1 - Raw': '#06b6d4',
+                'Plant 2 - Raw': '#be4a4d',
+                'Plant 3 - Raw': '#8b5cf6',
+                'Houston': '#10b981',
+                'Default': '#f59e0b'
             };
 
             const colors = warehouses.map(w => colorMap[w] || colorMap['Default']);
@@ -173,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const detailsContainer = document.getElementById('warehouse-details');
             data.forEach((warehouse, idx) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg';
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg w-49';
                 div.innerHTML = `
                     <div class="flex items-center">
                         <div class="w-3 h-3 rounded-full mr-3" style="background-color: ${colors[idx]}"></div>
@@ -199,3 +198,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 });
 </script>
+@endpush

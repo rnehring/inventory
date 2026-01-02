@@ -66,4 +66,106 @@
     </div>
 </div>
 
-@push()
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Warehouse Comparison Chart
+            var warehouseOptions = {
+                series: [{
+                    name: 'Surprise Finds',
+                    data: @json(array_column($warehouseData, 'surpriseFinds'))
+                }, {
+                    name: 'Missing Stock',
+                    data: @json(array_column($warehouseData, 'unexpectedEmpty'))
+                }, {
+                    name: 'Accurate',
+                    data: @json(array_column($warehouseData, 'accurate'))
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    stacked: true,
+                    background: 'transparent',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: true
+                    }
+                },
+                colors: ['#F59E0B', '#EF4444', '#10B981'],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            offsetX: -10,
+                            offsetY: 0
+                        }
+                    }
+                }],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        borderRadius: 8,
+                        dataLabels: {
+                            total: {
+                                enabled: true,
+                                style: {
+                                    fontSize: '13px',
+                                    fontWeight: 900
+                                }
+                            }
+                        }
+                    },
+                },
+                xaxis: {
+                    categories: @json(array_column($warehouseData, 'warehouse')),
+                    labels: {
+                        style: {
+                            colors: '#ffffff'
+                        }
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Number of Items',
+                        style: {
+                            color: '#ffffff'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            colors: '#ffffff'
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    offsetY: 0,
+                    labels: {
+                        colors: '#ffffff'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    theme: 'light',
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Inter, sans-serif'
+                    },
+                    y: {
+                        formatter: function (val) {
+                            return val + " items"
+                        }
+                    }
+                }
+            };
+
+            var warehouseChart = new ApexCharts(document.querySelector("#warehouseChart"), warehouseOptions);
+            warehouseChart.render();
+        });
+    </script>
+@endpush

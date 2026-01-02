@@ -93,9 +93,9 @@ function getPart(event) {
             tableBody.parentNode.replaceChild(newTbody, tableBody);
 
             let parts = response.data;
-
-            if (parts.length === 0) {
-                showToast('No parts found matching your search', 'info');
+            let bin = document.getElementById('bin').value;
+            if (parts.length === 0  && bin !== '') {
+                showToast('That Bin is in another plant. Logout and log back in under that plant to count this bin.', 7000, true);
                 return;
             }
 
@@ -176,7 +176,7 @@ function getPart(event) {
                     })
                     .catch(function (error) {
                         const message = error.response?.data?.message || 'Failed to update count';
-                        showToast(message);
+                        showToast(message, 5000);
                         console.error('Error updating count:', error);
                     });
                 });
@@ -189,7 +189,7 @@ function getPart(event) {
         })
         .catch(function (error) {
             const message = error.response?.data?.message || 'Error searching for parts';
-            showToast(message);
+            showToast(message, 5000);
             console.error('Error searching parts:', error);
         });
 }

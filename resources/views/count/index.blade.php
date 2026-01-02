@@ -2,15 +2,13 @@
    use App\Http\Controllers\Controller;
 ?>
 
-<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
 <script>
     const userType = {{ Auth::user()->user_type ?? 0 }};
-    const acBins = @php echo $bins; @endphp;
-    const acParts = @php echo $parts; @endphp;
 </script>
 
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
+    <x-toast-error id="toast-error"></x-toast-error>
     <x-slot:header>
         <x-header>Inventory Count</x-header>
     </x-slot:header>

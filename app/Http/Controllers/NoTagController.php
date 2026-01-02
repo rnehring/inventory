@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NoTagPart;
-use App\Models\Inventory;
+use App\Models\PartCost;
 use App\Traits\UsesLocationTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +29,7 @@ class NoTagController extends FunctionController
     {
         $noTagParts = NoTagPart::with('counter')
             ->latest()
+            ->limit(100)
             ->get();
 
         return view('notag.index', [
@@ -71,9 +72,9 @@ class NoTagController extends FunctionController
 
         $noTagPart = NoTagPart::findOrFail($validated['id']);
 
-        // Get standard cost from inventory
-        $standardCost = Inventory::where('part', $validated['part'])
-            ->value('standard_cost') ?? 0;
+        // Get standard cost from part_price table
+        $standardCost = PartCost::where('part', $validated['part'])
+            ->value('price') ?? 0;
 
         // Prepare update data
         $updateData = [
@@ -112,9 +113,9 @@ class NoTagController extends FunctionController
             'serial_number' => 'nullable|string|max:100',
         ]);
 
-        // Get standard cost from inventory
-        $standardCost = Inventory::where('part', $validated['part'])
-            ->value('standard_cost') ?? 0;
+        // Get standard cost from part_price table
+        $standardCost = PartCost::where('part', $validated['part'])
+            ->value('price') ?? 0;
 
         $costCounted = $standardCost * $validated['count'];
 

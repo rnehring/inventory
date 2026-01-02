@@ -164,6 +164,7 @@ class FunctionController extends Controller
         return Cache::remember('warehouses_active', 3600, function() {
             return DB::table('plants')
                 ->where('active', 1)
+                ->where('plant', '!=', 'All')
                 ->orderBy('plant')
                 ->get(['id', 'plant', 'display_name'])
                 ->toArray();
@@ -274,6 +275,7 @@ class FunctionController extends Controller
             return DB::table('plants')
             ->select('plant','display_name')
                 ->where('active', 1)
+                ->where('plant', '!=', 'All')
                 ->get()
                 ->toArray();
         });

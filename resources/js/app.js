@@ -85,23 +85,37 @@ export function makeRow(part){
     return row;
 }
 
-export function showToast(message, duration = 3000) {
-    const toast = document.getElementById('toast-success');
-    const messageElement = document.getElementById('toast-message');
+// Store timeout ID to clear previous toasts
+let toastTimeout = null;
+let toastFadeTimeout = null;
+
+export function showToast(message, duration = 3000, error=false) {
+    let toast = document.getElementById('toast-success');
+    let messageElement = document.getElementById('toast-message');
+    if (error !== false){
+        toast = document.getElementById('toast-error');
+        messageElement = document.getElementById('toast-error-message');
+    }
+
+
+    // Clear any existing timeouts
+    if (toastTimeout) clearTimeout(toastTimeout);
+    if (toastFadeTimeout) clearTimeout(toastFadeTimeout);
+
+    // Reset opacity and remove hidden class
+    toast.classList.remove('hidden', 'opacity-0', 'transition-opacity', 'duration-500');
+    toast.classList.add('flex');
 
     // Set message
     messageElement.textContent = message;
 
-    toast.classList.remove('hidden');
-    toast.classList.add('flex');
-
     // Auto hide after duration
-    setTimeout(() => {
+    toastTimeout = setTimeout(() => {
         toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
 
-        setTimeout(() => {
+        toastFadeTimeout = setTimeout(() => {
             toast.classList.add('hidden');
-            toast.classList.remove('flex', 'opacity-0');
+            toast.classList.remove('flex', 'opacity-0', 'transition-opacity', 'duration-500');
         }, 500);
     }, duration);
 }

@@ -1,7 +1,7 @@
 <header class="bg-white shadow mx-auto px-4 py-4 sm:px-6 lg:px-8">
     <div class="flex justify-between max-w-9xl mx-auto">
     <div class="w-full dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-lg shadow">
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-4 text-white">
+        <div class="dark:bg-gray-800 rounded-lg shadow-lg p-4 text-white">
             {{-- Quick Links Row --}}
             <div class="flex justify-end gap-3">
                 <div class="flex items-center justify-between mr-4">

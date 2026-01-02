@@ -11,7 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
+
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -69,49 +69,9 @@
         @vite(['resources/js/upload.js'])
     @endif
 
-    {{-- Load ApexCharts for dashboard --}}
-    @if(request()->is('dashboard'))
 
-        <script>
-            // Set global ApexCharts defaults for dark mode
-            window.Apex = {
-                chart: {
-                    foreColor: '#ffffff',
-                    fontFamily: 'Inter, sans-serif'
-                },
-                tooltip: {
-                    style: {
-                        fontSize: '12px',
-                        fontFamily: 'Inter, sans-serif'
-                        backgroundColor: 'white';
-                    },
-                    x: {
-                        show: true
-                    }
-                },
-                legend: {
-                    labels: {
-                        colors: '#ffffff'
-                    }
-                },
-                xaxis: {
-                    labels: {
-                        style: {
-                            colors: '#ffffff'
-                        }
-                    }
-                },
-                yaxis: {
-                    labels: {
-                        style: {
-                            colors: '#ffffff'
-                        }
-                    }
-                }
-            };
-        </script>
-    @endif
 </head>
+
 <body class="h-full">
 
     <div class="min-h-full">

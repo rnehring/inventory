@@ -29,8 +29,8 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
-    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/count-velocity')
         .then(res => res.json())
@@ -136,3 +136,4 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error loading velocity chart:', error));
 });
 </script>
+@endpush

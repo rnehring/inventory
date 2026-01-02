@@ -13,7 +13,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['sans-serif', ...defaultTheme.fontFamily.sans],
             },
             maxWidth: {
                 '8xl': '96rem',
@@ -23,6 +23,6 @@ export default {
         },
     },
     plugins: [
-        require('flowbite/plugin')
+
     ],
 };

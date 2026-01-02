@@ -1,5 +1,43 @@
 import axios from 'axios';
+import ApexCharts from 'apexcharts';
 
+window.Apex = {
+    chart: {
+        foreColor: '#ffffff',
+        fontFamily: 'Inter, sans-serif'
+    },
+    tooltip: {
+        style: {
+            fontSize: '12px',
+            fontFamily: 'Inter, sans-serif',
+            backgroundColor: 'white'
+        },
+        x: {
+            show: true
+        }
+    },
+    legend: {
+        labels: {
+            colors: '#ffffff'
+        }
+    },
+    xaxis: {
+        labels: {
+            style: {
+                colors: '#ffffff'
+            }
+        }
+    },
+    yaxis: {
+        labels: {
+            style: {
+                colors: '#ffffff'
+            }
+        }
+    }
+};
+
+window.ApexCharts = ApexCharts;
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -25,7 +63,7 @@ window.axios.interceptors.response.use(
         // Handle validation errors
         if (error.response?.status === 422) {
             console.error('Validation failed:', error.response.data.errors);
-            
+
             // If there's a custom error handler in the catch block, let it handle it
             // Otherwise show the first validation error
             if (!error.config?.skipDefaultErrorHandler) {

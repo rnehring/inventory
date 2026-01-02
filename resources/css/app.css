@@ -1,27 +1,32 @@
 @import "grid.css";
 @import "autocomplete.css";
-@plugin "flowbite/plugin";
-@source "../node_modules/flowbite";
+/*@plugin "flowbite/plugin";*/
+/*@source "../node_modules/flowbite";*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root{
+--color-body: #ffffff;
+--color-neutral-secondary-medium: #ffffffb0;
+--color-neutral-tertiary-medium: rgba(255, 255, 255, 0.8);
+}
 .top-eighty-highlight{
     background-color: #ffe870;
 }
 
 .dark\:cb-filters>label{
     font-family: sans-serif !important;
-    font-weight: 800 !important;
+    /*font-weight: 800 !important;*/
     color: #ffffffb0 !important;
     cursor: pointer !important;
 }
 
 .cb-filters>label{
     font-family: sans-serif !important;
-    font-weight: bold !important;
+    /*font-weight: bold !important;*/
     color: #ffffffb0 !important;
     cursor: pointer !important;
 }
@@ -88,7 +93,7 @@
 }
 
 /* Tooltip - white background with dark text */
-.apexcharts-tooltip {
+.apexcharts-tooltip, .dark.apexcharts-tooltip {
     background: #ffffff !important;
     border: 1px solid #e5e7eb !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
@@ -127,3 +132,19 @@
 .apexcharts-datalabels text {
     fill: #ffffff !important;
 }
+
+.w-49{
+    width: 49%;
+}
+
+.lh-2{
+    line-height: 2rem;
+}
+
+.plumbg, .dark\:plumbg{ background-color: #672c4e80;}
+.jungle-greenbg, .dark\:jungle-greenbg{ background-color: #00b98680; }
+.vegas-goldbg, .dark\:vegas-goldbg{ background-color: #bea70080; }
+
+.plum, .dark\:plum{ color: #672c4e;}
+.jungle-green, .dark\:jungle-green{ color: #00b986; }
+.vegas-gold, .dark\:vegas-gold{ color: #bea700; }

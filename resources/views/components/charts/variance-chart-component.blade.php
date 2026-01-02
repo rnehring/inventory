@@ -13,24 +13,24 @@
 
     <div id="variance-chart"></div>
 
-    <div class="grid grid-cols-3 gap-2 mt-4 text-xs">
-        <div class="bg-green-50 dark:bg-green-900/20 p-2 rounded text-center">
-            <div class="text-green-600 dark:text-green-400 font-bold" id="excellent-count">0</div>
-            <div class="text-gray-600 dark:text-gray-400">Excellent</div>
+    <div class="grid grid-cols-3 gap-2 mt-16 text-xs lh-2">
+        <div class="jungle-greenbg dark:jungle-green p-2 rounded text-center">
+            <div class="text-green-600 jungle-green font-bold text-lg" id="excellent-count">0</div>
+            <div class="font-bold text-gray-600 dark:text-gray-800 text-base">Excellent</div>
         </div>
-        <div class="bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-center">
-            <div class="text-yellow-600 dark:text-yellow-400 font-bold" id="good-count">0</div>
-            <div class="text-gray-600 dark:text-gray-400">Good</div>
+        <div class="vegas-goldbg dark:vegas-gold p-2 rounded text-center">
+            <div class="text-yellow-600 vegas-gold font-bold text-lg" id="good-count">0</div>
+            <div class="font-bold text-gray-600 dark:text-gray-800 text-base">Good</div>
         </div>
-        <div class="bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
-            <div class="text-red-600 dark:text-red-400 font-bold" id="poor-count">0</div>
-            <div class="text-gray-600 dark:text-gray-400">Needs Recount</div>
+        <div class="plumbg dark:plum p-2 rounded text-center">
+            <div class="text-red-600bg plum font-bold text-lg" id="poor-count">0</div>
+            <div class="font-bold text-gray-600 dark:text-gray-200 text-base">Needs Recount</div>
         </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
-    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/variance-distribution')
         .then(res => res.json())
@@ -138,3 +138,4 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error loading variance chart:', error));
 });
 </script>
+@endpush

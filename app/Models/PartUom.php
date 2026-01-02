@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Inventory
+ * Class PartUom
  *
  * @property int $id
  * @property string $part

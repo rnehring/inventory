@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CountController extends FunctionController
@@ -20,26 +21,35 @@ class CountController extends FunctionController
     }
 
     public function index(){
-        return view('count.index',[
-            'bins' => json_encode($this->getAutocompleteBinsData()),
-            'parts' => json_encode($this->getAutocompletePartsData()),
-        ]);
+        return view('count.index');
     }
 
     public function getPart(Request $request){
         $warehouse = session('plant');
 
         if(isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE part = ? AND bin = ? AND warehouse = ?';
-            $params = [$request->part, $request->bin, $warehouse];
+            $where = 'WHERE part = ? AND bin = ?';
+            $params = [$request->part, $request->bin];
+            if( !Auth::user()->user_type->canManageUsers()) {
+                $where .= ' AND warehouse = ?';
+                $params = [$request->part, $request->bin, $warehouse];
+            }
         }
         if(isset($request->part) && !isset($request->bin)) {
-            $where = 'WHERE part = ? AND warehouse = ?';
-            $params = [$request->part, $warehouse];
+            $where = 'WHERE part = ?';
+            $params = [$request->part];
+            if( !Auth::user()->user_type->canManageUsers()) {
+                $where .= ' AND warehouse = ?';
+                $params = [$request->part,  $warehouse];
+            };
         }
         if(!isset($request->part) && isset($request->bin)) {
-            $where = 'WHERE bin = ? AND warehouse = ?';
-            $params = [$request->bin, $warehouse];
+            $where = 'WHERE bin = ?';
+            $params = [$request->bin];
+            if( !Auth::user()->user_type->canManageUsers()) {
+                $where .= ' AND warehouse = ?';
+                $params = [$request->bin, $warehouse];
+            }
         }
 
         $partData = DB::select("

@@ -35,8 +35,8 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
-    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/counter-leaderboard')
         .then(res => res.json())
@@ -177,3 +177,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 });
 </script>
+@endpush

@@ -90,7 +90,7 @@ class LoginController extends FunctionController
         ]);
 
         $userAttributes['user_type'] = 2;
-        $userAttributes['company'] = "00";
+        $userAttributes['plant'] = 10;
 
         User::create($userAttributes);
         return redirect('/admin');
