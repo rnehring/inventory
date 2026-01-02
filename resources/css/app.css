@@ -148,3 +148,8 @@
 .plum, .dark\:plum{ color: #672c4e;}
 .jungle-green, .dark\:jungle-green{ color: #00b986; }
 .vegas-gold, .dark\:vegas-gold{ color: #bea700; }
+
+#logout-btn{
+    margin-top: 1rem;
+    margin-bottom: 0px;
+}

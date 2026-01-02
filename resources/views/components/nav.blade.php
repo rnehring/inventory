@@ -54,7 +54,7 @@
                     @auth
                         <form method="POST" action="/logout">
                             @csrf
-                            <x-form-submit class="mt-4">Logout</x-form-submit>
+                            <x-form-submit id="logout-btn" class="mt-4">Logout</x-form-submit>
                         </form>
                         <x-avatar>{{ Auth::user()->initials }}</x-avatar>
                     @endauth
