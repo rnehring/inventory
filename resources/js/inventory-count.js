@@ -165,7 +165,7 @@ function getPart(event) {
                         let row = document.getElementById('row'+part['id']);
                         row.classList = ('bg-green-300');
                         updateTextColors();
-                        row.cells[2].textContent = 'Printed';
+                        row.cells[1].textContent = 'Printed';
 
                         if (userType == 2) {
                             row.cells[13].textContent = formatterUSD.format(response.data[0]['cost_counted']);
