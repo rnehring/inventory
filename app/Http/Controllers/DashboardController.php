@@ -293,7 +293,7 @@ class DashboardController extends FunctionController
         $data = DB::table($this->tableName)
             ->join('users', $this->tableName . '.user', '=', 'users.id')
             ->join('plants', 'users.plant', '=', 'plants.id')
-            ->selectRaw("CONCAT(COALESCE(users.initials, ''), ' ', COALESCE(plants.display_name, '')) as name")
+            ->selectRaw("CONCAT(COALESCE(UPPER(users.initials), ''), ' ', COALESCE(plants.display_name, '')) as name")
             ->selectRaw('COUNT(*) as parts_counted')
             ->selectRaw('SUM(' . $this->tableName . '.cost_counted) as value_counted')
             ->selectRaw('SUM(ABS(' . $this->tableName . '.plus_minus)) as total_variance')
