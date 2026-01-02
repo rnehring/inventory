@@ -1,13 +1,129 @@
 @import "grid.css";
 @import "autocomplete.css";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@plugin "flowbite/plugin";
-@source "../node_modules/flowbite";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 .top-eighty-highlight{
     background-color: #ffe870;
+}
+
+.dark\:cb-filters>label{
+    font-family: sans-serif !important;
+    font-weight: 800 !important;
+    color: #ffffffb0 !important;
+    cursor: pointer !important;
+}
+
+.cb-filters>label{
+    font-family: sans-serif !important;
+    font-weight: bold !important;
+    color: #ffffffb0 !important;
+    cursor: pointer !important;
+}
+
+/*.dark\:cb-filters>select, .dark\:cb-filters>select>option{*/
+/*    font-family: sans-serif !important;*/
+/*    font-weight: 800 !important;*/
+/*    color: #ffffffb0 !important;*/
+/*    cursor: pointer !important;*/
+/*}*/
+
+/*.dark\:cb-filters>select, .dark\:cb-filters>select>option{*/
+/*    font-family: sans-serif !important;*/
+/*    font-weight: 800 !important;*/
+/*    color: #000000 !important;*/
+/*    cursor: pointer !important;*/
+/*}*/
+
+#users > option.dark\:cb-filters{
+    font-family: sans-serif !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    cursor: pointer !important;
+}
+#users > option.dark\:cb-filters:nth-child(1){
+    font-family: sans-serif !important;
+    color: #ffffffb0 !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+}
+
+ #data-container p{
+     font-family: sans-serif !important;
+     font-weight: bold !important;
+     color: #ffffffb0 !important;
+     font-size: 16px !important;
+ }
+
+/* ============================================ */
+/* ApexCharts Dark Mode Fixes - COMPREHENSIVE */
+/* ============================================ */
+
+/* Force ALL legend text to be white */
+.apexcharts-legend-text {
+    color: #ffffff !important;
+}
+
+/* Force ALL axis labels to be white */
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label {
+    fill: #ffffff !important;
+}
+
+/* Force axis titles to be white */
+.apexcharts-yaxis-title-text,
+.apexcharts-xaxis-title-text {
+    fill: #ffffff !important;
+}
+
+/* Force donut/radial chart labels to be white */
+.apexcharts-datalabel-label,
+.apexcharts-datalabel-value {
+    fill: #ffffff !important;
+}
+
+/* Tooltip - white background with dark text */
+.apexcharts-tooltip {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.apexcharts-tooltip-title {
+    background: #f3f4f6 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.apexcharts-tooltip-text,
+.apexcharts-tooltip-text-y-label,
+.apexcharts-tooltip-text-y-value,
+.apexcharts-tooltip-text-z-label,
+.apexcharts-tooltip-text-z-value {
+    color: #111827 !important;
+}
+
+/* Custom tooltip content */
+.apexcharts-tooltip .apexcharts-tooltip-custom {
+    color: #111827 !important;
+}
+
+/* Radial/Donut total label in center */
+.apexcharts-datalabels-group text {
+    fill: #ffffff !important;
+}
+
+/* Tooltip arrow */
+.apexcharts-tooltip .apexcharts-tooltip-arrow {
+    border-bottom-color: #ffffff !important;
+}
+
+/* Data labels on bars/columns */
+.apexcharts-datalabels text {
+    fill: #ffffff !important;
 }

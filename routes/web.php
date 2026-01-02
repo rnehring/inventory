@@ -205,3 +205,6 @@ Route::middleware(['auth', 'manager'])->group(function () {
     Route::get('/get-uploaded-precount-data', [UploadController::class, 'getUploadedPrecountDataForReview']);
     Route::get('/get-uploaded-data', [UploadController::class, 'getUploadedDataForReview']);
 });
+
+Route::get('/get-plants', [FunctionController::class, 'getAllActivePlantsForFilters']);
+Route::get('/get-users', [FunctionController::class, 'getAllUsersForFilters']);

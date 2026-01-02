@@ -259,4 +259,44 @@ class FunctionController extends Controller
             return json_encode(["true"]);
         }
     }
+
+    public function getAllActivePlantsForFilters()
+    {
+        return response()->json($this->getAllActivePlants());
+    }
+
+    /**
+     * Get part numbers with caching
+     */
+    public function getAllActivePlants(): array
+    {
+        return Cache::remember("all_active_plants", 3600, function() {
+            return DB::table('plants')
+            ->select('plant','display_name')
+                ->where('active', 1)
+                ->get()
+                ->toArray();
+        });
+    }
+
+    public function getAllUsersForFilters()
+    {
+        return response()->json($this->getAllUsers());
+    }
+
+    /**
+     * Get all users for filters with caching
+     */
+    public function getAllUsers(): array
+    {
+        return Cache::remember("users_for_filters", 3600, function() {
+            return DB::table('users')
+                ->join('plants', 'users.plant', '=', 'plants.id')
+                ->select('users.id', 'users.initials', 'users.first_name', 'users.last_name', 'plants.plant as plant')
+                ->where('plants.active', 1)
+                ->orderBy('users.initials')
+                ->get()
+                ->toArray();
+        });
+    }
 }

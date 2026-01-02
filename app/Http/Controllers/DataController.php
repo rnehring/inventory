@@ -124,27 +124,29 @@ class DataController extends FunctionController
     public function getAllData(Request $request) {
         $allData = DB::select('
             SELECT
-                id,
-                tag,
-                tag_printed,
-                part,
-                bin,
-                lot_number,
-                serial_number,
-                count,
-                user,
-                uom,
-                warehouse,
-                by_weight,
-                expected_qty,
-                standard_cost,
-                date_counted,
-                time_counted,
-                cost_expected,
-                cost_counted,
-                plus_minus,
-                counted
-            FROM '. $this->tableName);
+                i.id,
+                i.tag,
+                i.tag_printed,
+                i.part,
+                i.bin,
+                i.lot_number,
+                i.serial_number,
+                i.count,
+                i.user,
+                i.uom,
+                i.warehouse,
+                i.by_weight,
+                i.expected_qty,
+                i.standard_cost,
+                i.date_counted,
+                i.time_counted,
+                i.cost_expected,
+                i.cost_counted,
+                i.plus_minus,
+                i.counted,
+                u.initials
+            FROM '. $this->tableName . ' i
+            LEFT JOIN users u ON i.user = u.id');
 
             $allData = json_decode(json_encode($allData), true);
             return json_encode($allData);

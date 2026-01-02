@@ -36,6 +36,7 @@
 </div>
 
 <script>
+    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/counter-leaderboard')
         .then(res => res.json())
@@ -126,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     categories: names,
                     labels: {
                         style: {
-                            colors: '#9ca3af',
+                            colors: '#ffffff',
                             fontSize: '11px'
                         }
                     }
@@ -149,11 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 },
-                theme: {
-                    mode: 'dark'
-                },
                 tooltip: {
-                    theme: 'dark',
+                    theme: 'light',
                     custom: function({ series, seriesIndex, dataPointIndex, w }) {
                         const counter = data[dataPointIndex];
                         return '<div class="p-3">' +

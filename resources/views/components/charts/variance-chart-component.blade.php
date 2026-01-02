@@ -6,13 +6,13 @@
             Count Accuracy Distribution
         </h5>
     </div>
-    
+
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
         Color-coded zones show count accuracy - Green is excellent, Red needs attention
     </p>
-    
+
     <div id="variance-chart"></div>
-    
+
     <div class="grid grid-cols-3 gap-2 mt-4 text-xs">
         <div class="bg-green-50 dark:bg-green-900/20 p-2 rounded text-center">
             <div class="text-green-600 dark:text-green-400 font-bold" id="excellent-count">0</div>
@@ -30,26 +30,27 @@
 </div>
 
 <script>
+    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/variance-distribution')
         .then(res => res.json())
         .then(data => {
             const labels = data.map(d => d.accuracy_range);
             const counts = data.map(d => parseInt(d.count) || 0);
-            
+
             // Update summary counts
             const excellent = data.find(d => d.accuracy_range === 'Excellent (±0-5%)');
             const good = data.find(d => d.accuracy_range === 'Good (±5-10%)');
             const fair = data.find(d => d.accuracy_range === 'Fair (±10-25%)');
             const poor = data.find(d => d.accuracy_range === 'Poor (±25%+)');
-            
+
             if (excellent) document.getElementById('excellent-count').textContent = excellent.count;
             if (good) document.getElementById('good-count').textContent = good.count;
             if (poor || fair) {
                 const poorCount = (poor ? parseInt(poor.count) : 0) + (fair ? parseInt(fair.count) : 0);
                 document.getElementById('poor-count').textContent = poorCount;
             }
-            
+
             // Color mapping
             const colors = labels.map(label => {
                 if (label.includes('Excellent')) return '#10b981'; // Green
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (label.includes('Poor')) return '#ef4444';      // Red
                 return '#6b7280'; // Gray for Not Counted
             });
-            
+
             const options = {
                 series: counts,
                 labels: labels,
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 name: {
                                     show: true,
                                     fontSize: '14px',
-                                    color: '#9ca3af'
+                                    color: '#ffffff'
                                 },
                                 value: {
                                     show: true,
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     show: true,
                                     label: 'Total Parts',
                                     fontSize: '14px',
-                                    color: '#9ca3af',
+                                    color: '#ffffff',
                                     formatter: function (w) {
                                         return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
                                     }
@@ -105,14 +106,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        colors: '#9ca3af'
+                        colors: '#ffffff'
                     }
                 },
-                theme: {
-                    mode: 'dark'
-                },
                 tooltip: {
-                    theme: 'dark',
+                    theme: 'light',
                     y: {
                         formatter: function(val) {
                             return val + ' parts';
@@ -133,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             };
-            
+
             const chart = new ApexCharts(document.querySelector("#variance-chart"), options);
             chart.render();
         })

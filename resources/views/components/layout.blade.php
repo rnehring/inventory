@@ -71,7 +71,45 @@
 
     {{-- Load ApexCharts for dashboard --}}
     @if(request()->is('dashboard'))
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <script>
+            // Set global ApexCharts defaults for dark mode
+            window.Apex = {
+                chart: {
+                    foreColor: '#ffffff',
+                    fontFamily: 'Inter, sans-serif'
+                },
+                tooltip: {
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Inter, sans-serif'
+                        backgroundColor: 'white';
+                    },
+                    x: {
+                        show: true
+                    }
+                },
+                legend: {
+                    labels: {
+                        colors: '#ffffff'
+                    }
+                },
+                xaxis: {
+                    labels: {
+                        style: {
+                            colors: '#ffffff'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: '#ffffff'
+                        }
+                    }
+                }
+            };
+        </script>
     @endif
 </head>
 <body class="h-full">

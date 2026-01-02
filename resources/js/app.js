@@ -113,7 +113,7 @@ export const formatterUSD = new Intl.NumberFormat('en-US', {
 });
 
 
-export const csvButton = `<button class='max-w-6xl w-[14rem] px-6 py-2 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+export const csvButton = `<button class='max-w-6xl w-[14rem] px-6 py-2 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 <svg fill='#ffffff' height='24' width='24' class='mx-4' version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512' xml:space='preserve'>
                     <g>
                         <g>

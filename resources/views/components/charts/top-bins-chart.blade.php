@@ -27,6 +27,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/top-bins')
@@ -107,14 +108,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             return '$' + val.toFixed(0);
                         },
                         style: {
-                            colors: '#9ca3af'
+                            colors: '#ffffff'
                         }
                     }
                 },
                 yaxis: {
                     labels: {
                         style: {
-                            colors: '#9ca3af',
+                            colors: '#ffffff',
                             fontSize: '11px'
                         },
                         maxWidth: 120
@@ -134,11 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 },
-                theme: {
-                    mode: 'dark'
-                },
                 tooltip: {
-                    theme: 'dark',
+                    theme: 'light',
                     custom: function({ series, seriesIndex, dataPointIndex, w }) {
                         const reversedIndex = data.length - 1 - dataPointIndex;
                         const item = data[reversedIndex];
@@ -164,3 +162,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 });
 </script>
+@endpush

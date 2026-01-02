@@ -4,10 +4,10 @@ import { html } from "gridjs";
 
 let allData = [];
 let currentData = [];
+let allUsers = [];
 
 // Show loading spinner immediately
 showGridLoading('grid');
-
 
 /**
  * Add CSV export button to grid header
@@ -24,6 +24,30 @@ function addExportButton(){
     }
 }
 
+function getPlants() {
+    return fetch('/get-plants')
+        .then((response) => {
+            return response.json().then((data) => {
+                console.log(data);
+                return data;
+            }).catch((err) => {
+                console.log(err);
+            })
+        });
+}
+
+function getUsers() {
+    return fetch('/get-users')
+        .then((response) => {
+            return response.json().then((data) => {
+                console.log(data);
+                return data;
+            }).catch((err) => {
+                console.log(err);
+            })
+        });
+}
+
 /**
  * Fetch and render grid data
  */
@@ -32,7 +56,7 @@ fetch('/get-all-data')
     .then(data => {
         allData = data.map(row => ({...row}));
         currentData = allData;
-        createPlantFilters(allData);
+        createFilters(allData);
         renderGrid(allData);
         addSearchLabel();
         addExportButton();
@@ -64,10 +88,10 @@ function renderGrid(data) {
         { id: 'id', name: 'ID', hidden: true},
         { id: 'tag', name: 'Tag', width: '5%'},
         {
-            id: 'tag_status',
+            id: 'tag_printed',
             formatter: (cell) => {
                 if (cell == 1) {
-                    return html('<span>Printed</span>');
+                    return html('<span class="flex w-3 h-3 bg-green-500 rounded-full mx-auto"></span>');
                 }
                 return html('<span></span>');
             },
@@ -130,47 +154,225 @@ function renderGrid(data) {
 }
 
 /**
- * Create plant filter checkboxes
+ * Create a checkbox filter
  */
-function createPlantFilters(data) {
-    const warehouseSet = new Set();
+function createFilter(value, name, column){
+    const span = document.createElement('span');
+    span.className = 'flex-1 min-w-0';
+    span.innerHTML = `
+        <div class="flex items-center ps-3 dark:bg-gray-800 border border-gray-200 rounded-sm shadow-sm dark:border-gray-800 px-3 dark:cb-filters dark:hover:bg-gray-700 h-full">
+            <input id="filter-${column}-${value}" type="checkbox" value="${value}" name="bordered-checkbox" data-column="${column}" class="bg-gray-600 w-4 h-4 border-2 border-gray-400 rounded-xs mr-2 filters shrink-0">
+            <label for="filter-${column}-${value}" class="select-none py-2 text-sm dark:font-sans dark:font-bold cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis">${name}</label>
+        </div>`;
+    return span;
+}
 
-    data.forEach(row => {
-        if (row.warehouse) {
-            warehouseSet.add(row.warehouse);
+/**
+ * Create user dropdown with checkboxes (filtered by selected plants)
+ */
+function createUserDropdown(users, selectedPlants = []) {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'flex-1 min-w-0 relative';
+    wrapper.id = 'user-dropdown-wrapper';
+
+    const selectDiv = document.createElement('div');
+    selectDiv.className = 'flex items-center ps-3 dark:bg-gray-800 border border-gray-200 rounded-sm shadow-sm dark:border-gray-800 px-3 dark:cb-filters dark:hover:bg-gray-700 h-full cursor-pointer';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'user-dropdown-button';
+    button.className = 'flex items-center justify-between w-full py-2 text-sm dark:font-sans dark:font-bold text-gray-300 min-w-0';
+    button.innerHTML = `
+        <span id="user-dropdown-label" class="whitespace-nowrap overflow-hidden text-ellipsis">Users <span class="text-blue-400" id="user-count"></span></span>
+        <svg class="w-4 h-4 transition-transform ml-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+    `;
+
+    const dropdown = document.createElement('div');
+    dropdown.id = 'user-dropdown-menu';
+    dropdown.className = 'hidden absolute z-50 mt-1 w-full max-h-64 overflow-y-auto bg-gray-800 border border-gray-700 rounded-sm shadow-lg';
+    dropdown.style.top = '100%';
+
+    // Filter users based on selected plants (if any)
+    let filteredUsers = users;
+    if (selectedPlants.length > 0) {
+        filteredUsers = users.filter(user => selectedPlants.includes(user.plant));
+    }
+
+    // Group users by plant
+    const usersByPlant = {};
+    filteredUsers.forEach(user => {
+        if (!usersByPlant[user.plant]) {
+            usersByPlant[user.plant] = [];
+        }
+        usersByPlant[user.plant].push(user);
+    });
+
+    // Create dropdown content grouped by plant
+    Object.keys(usersByPlant).sort().forEach(plant => {
+        // Plant header
+        const plantHeader = document.createElement('div');
+        plantHeader.className = 'px-4 py-2 text-xs font-bold text-gray-500 uppercase border-b border-gray-700 bg-gray-900';
+        plantHeader.textContent = plant;
+        dropdown.appendChild(plantHeader);
+
+        // User checkboxes for this plant
+        usersByPlant[plant].forEach(user => {
+            const userName = user.initials || `${user.first_name} ${user.last_name}`.trim();
+            const userItem = document.createElement('label');
+            userItem.className = 'flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer';
+            userItem.innerHTML = `
+                <input type="checkbox"
+                       value="${user.id}"
+                       data-column="user"
+                       class="bg-gray-600 w-4 h-4 border-2 border-gray-400 rounded-xs mr-2 user-filter">
+                <span class="text-sm text-gray-300">${userName}</span>
+            `;
+            dropdown.appendChild(userItem);
+        });
+    });
+
+    // If no users match the filter, show a message
+    if (filteredUsers.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'px-4 py-3 text-sm text-gray-500 text-center';
+        noResults.textContent = 'No users found for selected plants';
+        dropdown.appendChild(noResults);
+    }
+
+    selectDiv.appendChild(button);
+    wrapper.appendChild(selectDiv);
+    wrapper.appendChild(dropdown);
+
+    // Toggle dropdown
+    button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+        button.querySelector('svg').classList.toggle('rotate-180');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target)) {
+            dropdown.classList.add('hidden');
+            button.querySelector('svg').classList.remove('rotate-180');
         }
     });
 
-    console.log(warehouseSet);
+    return wrapper;
+}
 
-    const filterContainer = document.getElementById('plant-filters');
+/**
+ * Update user dropdown based on selected plants
+ */
+function updateUserDropdown(selectedPlants) {
+    const wrapper = document.getElementById('user-dropdown-wrapper');
+    if (!wrapper) return;
+
+    // Store currently selected users
+    const selectedUsers = Array.from(
+        document.querySelectorAll('.user-filter:checked')
+    ).map(cb => cb.value);
+
+    // Remove old dropdown
+    wrapper.remove();
+
+    // Create new dropdown with filtered users
+    const newDropdown = createUserDropdown(allUsers, selectedPlants);
+    const filterContainer = document.getElementById('filters');
+    filterContainer.appendChild(newDropdown);
+
+    // Re-check previously selected users (if they're still in the list)
+    selectedUsers.forEach(userId => {
+        const checkbox = document.querySelector(`.user-filter[value="${userId}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    });
+
+    // Add event listeners to new user checkboxes
+    document.querySelectorAll('.user-filter').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateUserCount();
+            filterGrid();
+        });
+    });
+
+    updateUserCount();
+}
+
+/**
+ * Update user count badge
+ */
+function updateUserCount() {
+    const count = document.querySelectorAll('.user-filter:checked').length;
+    const badge = document.getElementById('user-count');
+    if (badge) {
+        badge.textContent = count > 0 ? `(${count})` : '';
+    }
+}
+
+/**
+ * Create filter checkboxes and user dropdown
+ */
+async function createFilters(data) {
+    let plants = await getPlants();
+    let users = await getUsers();
+
+    const filterContainer = document.getElementById('filters');
     if (!filterContainer) return;
 
     filterContainer.innerHTML = '';
 
-    warehouseSet.forEach(warehouse => {
-        const li = document.createElement('li');
-        li.className = 'w-48 border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600';
-        li.innerHTML = `
-            <div class="flex items-center ps-3">
-                <input id="plants" name="plants[]" type="checkbox" value="${warehouse}"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 plant-filter">
-                <label for="plants" class="w-48 py-3 ms-2 text-sm font-bold text-gray-900 dark:text-gray-300">${warehouse}</label>
-            </div>
-        `;
-        filterContainer.appendChild(li);
+    // Store users globally
+    allUsers = users;
+
+    // Add plant filters
+    plants.forEach(plant => {
+        let span = createFilter(plant['plant'], plant['display_name'], 'warehouse');
+        filterContainer.appendChild(span);
     });
 
-    // Add event listeners
-    document.querySelectorAll('.plant-filter').forEach(checkbox => {
-        checkbox.addEventListener('change', filterGrid);
+    // Add counted filter
+    let countedSpan = createFilter('1', 'Counted', 'counted');
+    filterContainer.appendChild(countedSpan);
+
+    // Add user dropdown (initially shows all users grouped by plant)
+    const userDropdown = createUserDropdown(users);
+    filterContainer.appendChild(userDropdown);
+
+    // Add event listeners to plant and counted filters
+    document.querySelectorAll('.filters').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            // If it's a plant filter, update the user dropdown
+            if (checkbox.dataset.column === 'warehouse') {
+                const selectedPlants = Array.from(
+                    document.querySelectorAll('.filters[data-column="warehouse"]:checked')
+                ).map(cb => cb.value);
+
+                updateUserDropdown(selectedPlants);
+            }
+
+            filterGrid();
+        });
+    });
+
+    // Add event listeners to user filters
+    document.querySelectorAll('.user-filter').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateUserCount();
+            filterGrid();
+        });
     });
 }
 
 /**
- * Filter grid based on selected warehouses
+ * Filter grid based on selected filters
  */
 function filterGrid() {
+    console.log('filtering...');
+
     // Wait for grid to be ready if not yet available
     if (!window.gridInstance) {
         console.log('Grid not ready yet, waiting...');
@@ -178,20 +380,68 @@ function filterGrid() {
         return;
     }
 
-    const checkedPlants = Array.from(
-        document.querySelectorAll('.plant-filter:checked')
-    ).map(cb => cb.value);
+    // Get all checked filters (plants and counted status)
+    const checkedFilters = Array.from(
+        document.querySelectorAll('.filters:checked')
+    ).map(cb => ({
+        value: cb.value,
+        column: cb.dataset.column
+    }));
+
+    // Get selected users
+    const selectedUsers = Array.from(
+        document.querySelectorAll('.user-filter:checked')
+    ).map(cb => ({
+        value: cb.value,
+        column: 'user'
+    }));
+
+    // Combine all filters
+    const allFilters = [...checkedFilters, ...selectedUsers];
+
+    console.log('All filters:', allFilters);
 
     let filteredData;
 
-    if (checkedPlants.length === 0) {
+    if (allFilters.length === 0) {
+        // No filters selected - show all data
         filteredData = allData;
     } else {
-        filteredData = allData.filter(row =>
-            checkedPlants.includes(row.warehouse)
-        );
+        // Group filters by column
+        const filtersByColumn = {};
+        allFilters.forEach(filter => {
+            if (!filtersByColumn[filter.column]) {
+                filtersByColumn[filter.column] = [];
+            }
+            filtersByColumn[filter.column].push(filter.value);
+        });
+
+        console.log('Filters by column:', filtersByColumn);
+
+        // Filter data: row must match ALL columns (AND), but ANY value within a column (OR)
+        filteredData = allData.filter(row => {
+            // Check each column's filters
+            for (const [column, values] of Object.entries(filtersByColumn)) {
+                // Get the row's value for this column
+                const rowValue = String(row[column]);
+
+                // Check if row value matches ANY of the selected values for this column
+                const matchesColumn = values.some(filterValue => {
+                    return rowValue === filterValue;
+                });
+
+                // If doesn't match this column's filters, exclude the row
+                if (!matchesColumn) {
+                    return false;
+                }
+            }
+
+            // Row matched all column filters
+            return true;
+        });
     }
 
+    console.log(`Filtered ${filteredData.length} of ${allData.length} rows`);
     currentData = filteredData;
 
     // Update the grid

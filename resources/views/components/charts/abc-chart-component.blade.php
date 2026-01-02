@@ -6,13 +6,13 @@
             ABC Analysis (Pareto Principle)
         </h5>
     </div>
-    
+
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
         Shows that 20% of parts represent 80% of inventory value - validates prioritization strategy
     </p>
-    
+
     <div id="abc-chart"></div>
-    
+
     <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
         <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
             <div class="text-gray-600 dark:text-gray-400">A Items (Top 20%)</div>
@@ -28,6 +28,8 @@
 </div>
 
 <script>
+import ApexCharts from 'apexcharts';
+
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/abc-analysis')
         .then(res => res.json())
@@ -36,23 +38,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const values = data.map(d => parseFloat(d.total_value) || 0);
             const counts = data.map(d => parseInt(d.part_count) || 0);
             const percentCounted = data.map(d => parseFloat(d.percent_counted) || 0);
-            
+
             // Update summary cards
             const aData = data.find(d => d.category === 'A Items (Top 20%)');
             const bcData = data.find(d => d.category === 'B/C Items (Bottom 80%)');
-            
+
             if (aData) {
-                document.getElementById('a-items-value').textContent = 
+                document.getElementById('a-items-value').textContent =
                     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(aData.total_value);
                 document.getElementById('a-items-count').textContent = `${aData.part_count} parts`;
             }
-            
+
             if (bcData) {
-                document.getElementById('bc-items-value').textContent = 
+                document.getElementById('bc-items-value').textContent =
                     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(bcData.total_value);
                 document.getElementById('bc-items-count').textContent = `${bcData.part_count} parts`;
             }
-            
+
             // Create chart
             const options = {
                 series: [{
@@ -86,39 +88,40 @@ document.addEventListener('DOMContentLoaded', function () {
                     categories: categories,
                     labels: {
                         style: {
-                            colors: '#9ca3af'
+                            colors: '#ffffff'
                         }
                     }
                 },
                 yaxis: [{
                     title: {
                         text: 'Total Value ($)',
-                        style: { color: '#9ca3af' }
+                        style: { color: '#ffffff' }
                     },
                     labels: {
                         formatter: function(val) {
                             return '$' + (val / 1000).toFixed(0) + 'K';
                         },
-                        style: { colors: '#9ca3af' }
+                        style: { colors: ['#ffffff'] }
                     }
                 }, {
                     opposite: true,
                     title: {
                         text: 'Counted (%)',
-                        style: { color: '#9ca3af' }
+                        style: { color: '#ffffff' }
                     },
                     labels: {
                         formatter: function(val) {
                             return val.toFixed(0) + '%';
                         },
-                        style: { colors: '#9ca3af' }
+                        style: { colors: ['#ffffff'] }
                     }
                 }],
-                theme: {
-                    mode: 'dark'
-                },
                 tooltip: {
-                    theme: 'dark',
+                    theme: 'light',
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Inter, sans-serif'
+                    },
                     y: [{
                         formatter: function(val) {
                             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -132,11 +135,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 legend: {
                     position: 'top',
                     labels: {
-                        colors: '#9ca3af'
+                        colors: '#ffffff'
                     }
                 }
             };
-            
+
             const chart = new ApexCharts(document.querySelector("#abc-chart"), options);
             chart.render();
         })

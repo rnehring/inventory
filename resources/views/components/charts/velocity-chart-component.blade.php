@@ -6,13 +6,13 @@
             Count Velocity (Last 30 Days)
         </h5>
     </div>
-    
+
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
         Daily counting progress with trend line - shows momentum and predicts completion
     </p>
-    
+
     <div id="velocity-chart"></div>
-    
+
     <div class="grid grid-cols-3 gap-4 mt-4 text-sm">
         <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg text-center">
             <div class="text-gray-600 dark:text-gray-400 text-xs">Total Counted</div>
@@ -30,6 +30,7 @@
 </div>
 
 <script>
+    import ApexCharts from 'apexcharts';
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/count-velocity')
         .then(res => res.json())
@@ -40,20 +41,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('peak-day').textContent = '0';
                 return;
             }
-            
+
             const dates = data.map(d => d.count_date);
             const counts = data.map(d => parseInt(d.parts_counted) || 0);
-            
+
             // Calculate stats
             const totalCounted = counts.reduce((a, b) => a + b, 0);
             const avgPerDay = Math.round(totalCounted / counts.length);
             const peakDay = Math.max(...counts);
-            
+
             // Update summary cards
             document.getElementById('total-counted').textContent = totalCounted.toLocaleString();
             document.getElementById('avg-per-day').textContent = avgPerDay.toLocaleString();
             document.getElementById('peak-day').textContent = peakDay.toLocaleString();
-            
+
             // Create chart
             const options = {
                 series: [{
@@ -90,28 +91,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     labels: {
                         format: 'MMM dd',
                         style: {
-                            colors: '#9ca3af'
+                            colors: '#ffffff'
                         }
                     }
                 },
                 yaxis: {
                     title: {
                         text: 'Parts Counted',
-                        style: { color: '#9ca3af' }
+                        style: { color: '#ffffff' }
                     },
                     labels: {
-                        style: { colors: '#9ca3af' }
+                        style: { colors: '#ffffff' }
                     }
                 },
                 grid: {
                     borderColor: '#374151',
                     strokeDashArray: 4
                 },
-                theme: {
-                    mode: 'dark'
-                },
                 tooltip: {
-                    theme: 'dark',
+                    theme: 'light',
                     x: {
                         format: 'MMM dd, yyyy'
                     },
@@ -131,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             };
-            
+
             const chart = new ApexCharts(document.querySelector("#velocity-chart"), options);
             chart.render();
         })

@@ -19,6 +19,8 @@
 </div>
 
 <script>
+import ApexCharts from 'apexcharts';
+
 function plantCodeToName(plantCode){
     switch(plantCode) {
         case "P1-RAW":
@@ -108,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             name: {
                                 show: true,
                                 fontSize: '16px',
-                                color: '#9ca3af',
+                                color: '#ffffff',
                                 offsetY: -10
                             },
                             value: {
@@ -122,11 +124,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             total: {
-                                show: data.length > 1,  // Only show total if multiple warehouses
-                                label: 'Overall',
-                                fontSize: '14px',
-                                color: '#9ca3af',
-                                formatter: function (w) {
+                            show: data.length > 1,  // Only show total if multiple warehouses
+                            label: 'Overall',
+                            fontSize: '14px',
+                            color: '#ffffff',
+                            formatter: function (w) {
                                     const avg = w.globals.seriesTotals.reduce((a, b) => a + b, 0) / w.globals.seriesTotals.length;
                                     return avg.toFixed(1) + '%';
                                 }
@@ -144,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'bottom',
                     labels: {
-                        colors: '#9ca3af',
+                        colors: '#ffffff',
                         useSeriesColors: false
                     },
                     fontSize: '14px',
@@ -158,9 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         horizontal: 10,
                         vertical: 5
                     }
-                },
-                theme: {
-                    mode: 'dark'
                 },
                 stroke: {
                     lineCap: 'round'
