@@ -14,7 +14,7 @@
         @if(request()->is('notag'))
             @if( Auth::user()->user_type->canManageUsers() )
                 <div class="max-w-4xl dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-lg shadow float-right clear-both">
-                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-2 text-white">
+                    <div class="dark:bg-gray-800 rounded-lg shadow-lg p-4 text-white">
                         <div class="flex justify-end gap-3">
                             <div class="flex items-center justify-between mr-4">
                                 <h5 class="text-xl font-bold text-gray-900 dark:text-white">
