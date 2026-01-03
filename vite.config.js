@@ -22,8 +22,8 @@ export default defineConfig({
                 'resources/js/no-tag.js',
                 'resources/js/manager-login.js',
                 'resources/js/employee-login.js',
-                'resources/js/users.js'
-            ],
+                'resources/js/users.js',
+                'resources/js/no-tag-edit.js'            ],
             refresh: true,
         }),
     ],
