@@ -222,17 +222,36 @@ class DashboardController extends FunctionController
      * Count Velocity Timeline
      * Shows parts counted per day over last 30 days
      */
+//    public function countVelocity()
+//    {
+//        $data = DB::table($this->tableName)
+//            ->selectRaw("
+//                DATE(date_counted) as count_date,
+//                COUNT(*) as parts_counted,
+//                SUM(cost_counted) as value_counted,
+//                COUNT(DISTINCT user) as active_counters
+//            ")
+//            ->whereRaw('date_counted >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)')
+//            ->where('counted', 1)
+//            ->groupBy(DB::raw('DATE(date_counted)'))
+//            ->orderBy('count_date', 'ASC')
+//            ->get();
+//
+//        return response()->json($data);
+//    }
+
     public function countVelocity()
     {
         $data = DB::table($this->tableName)
             ->selectRaw("
-                DATE(date_counted) as count_date,
-                COUNT(*) as parts_counted,
-                SUM(cost_counted) as value_counted,
-                COUNT(DISTINCT user) as active_counters
-            ")
-            ->whereRaw('date_counted >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)')
+            DATE(date_counted) as count_date,
+            COUNT(*) as parts_counted,
+            SUM(cost_counted) as value_counted,
+            COUNT(DISTINCT user) as active_counters
+        ")
             ->where('counted', 1)
+            ->whereNotNull('date_counted')
+            ->whereRaw('DATE(date_counted) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)')
             ->groupBy(DB::raw('DATE(date_counted)'))
             ->orderBy('count_date', 'ASC')
             ->get();
