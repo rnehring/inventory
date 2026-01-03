@@ -68,7 +68,9 @@
     @if(request()->is('upload'))
         @vite(['resources/js/upload.js'])
     @endif
-
+    @if(request()->is('notag/edit-all'))
+        @vite(['resources/js/no-tag-edit.js'])
+    @endif
 
 </head>
 

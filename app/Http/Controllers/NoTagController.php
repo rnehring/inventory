@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NoTagPart;
 use App\Models\PartCost;
 use App\Traits\UsesLocationTables;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,18 @@ class NoTagController extends FunctionController
             'noTagPart' => $noTagPart,
         ]);
     }
+
+    public function editAll(Request $request)
+    {
+        $noTagParts = NoTagPart::with('counter')
+            ->latest()
+            ->get();
+
+        return view('notag.edit-all', [
+            'noTagParts' => $noTagParts,
+        ]);
+    }
+
 
     /**
      * Update no-tag part
@@ -119,26 +132,97 @@ class NoTagController extends FunctionController
 
         $costCounted = $standardCost * $validated['count'];
 
-        // Create new no-tag part
-        $noTagPart = NoTagPart::create([
-            'part' => $validated['part'],
-            'bin' => $validated['bin'],
-            'count' => $validated['count'],
-            'uom' => $validated['uom'],
-            'by_weight' => $validated['by_weight'] ?? false,
-            'warehouse' => $validated['warehouse'],
-            'lot_number' => $validated['lot_number'] ?? null,
-            'serial_number' => $validated['serial_number'] ?? null,
-            'user' => Auth::id(),
-            'date_counted' => now()->format('Y-m-d'),
-            'time_counted' => now()->format('H:i:s'),
-            'standard_cost' => $standardCost,
-            'cost_counted' => $costCounted,
-        ]);
+        $partExists = $this->checkIfNoTagPartExists($validated);
 
-        // Load the counter relationship for response
-        $noTagPart->load('counter');
+        if ($partExists == false) {
+            $noTagPart = NoTagPart::create([
+                'part' => $validated['part'],
+                'bin' => $validated['bin'],
+                'count' => $validated['count'],
+                'uom' => $validated['uom'],
+                'by_weight' => $validated['by_weight'] ?? false,
+                'warehouse' => $validated['warehouse'],
+                'lot_number' => $validated['lot_number'] ?? null,
+                'serial_number' => $validated['serial_number'] ?? null,
+                'user' => Auth::id(),
+                'date_counted' => now()->format('Y-m-d'),
+                'time_counted' => now()->format('H:i:s'),
+                'standard_cost' => $standardCost,
+                'cost_counted' => $costCounted,
+            ]);
 
-        return response()->json($noTagPart);
+            // Load the counter relationship for response
+            $noTagPart->load('counter');
+
+            return response()->json($noTagPart);
+        } else {
+            $error = [];
+            $error['type'] = 'Part Exists';
+            $error['message'] = 'This No Tag Part already exists. Record not saved.';
+
+            throw new HttpResponseException(
+                response()->json($error, 400)
+            );
+        }
+    }
+
+    function checkIfNoTagPartExists($partDetails){
+        if($partDetails['lot_number'] != null && $partDetails['lot_number'] != ''){
+            $lot_number = true;
+        } else {
+            $lot_number = false;
+        }
+        if($partDetails['serial_number'] != null && $partDetails['serial_number'] != ''){
+            $serial_number = true;
+            if ( FunctionController::checkSerial($partDetails['serial_number']) ){
+                $error = [];
+                $error['type'] = 'Serial Exists';
+                $error['message'] = 'This Serial Number already exists. Record not saved.';
+                throw new HttpResponseException(
+                    response()->json($error, 400)
+                );
+            }
+        } else {
+            $serial_number = false;
+        }
+
+        if( $lot_number && $serial_number ){
+            $exists = DB::table('no_tag_parts')
+                ->where('part', $partDetails['part'])
+                ->where('bin', $partDetails['bin'])
+                ->where('lot_number', $partDetails['lot_number'])
+                ->where('serial_number', $partDetails['serial_number'])
+                ->get();
+        } else if( $lot_number ){
+            $exists = DB::table('no_tag_parts')
+                ->where('part', $partDetails['part'])
+                ->where('bin', $partDetails['bin'])
+                ->where('lot_number', $partDetails['lot_number'])
+                ->get();
+        } else if( $serial_number ){
+            $exists = DB::table('no_tag_parts')
+                ->where('part', $partDetails['part'])
+                ->where('bin', $partDetails['bin'])
+                ->where('serial_number', $partDetails['serial_number'])
+                ->get();
+        } else {
+            $exists = DB::table('no_tag_parts')
+                ->where('part', $partDetails['part'])
+                ->where('bin', $partDetails['bin'])
+                ->get();
+        }
+
+        if($exists->isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+    public function deleteNoTag(Request $request){
+        $noTag = NoTagPart::findOrFail($request->id);
+        $noTag->delete();
+
+        // Return JSON instead of redirect
+        return response()->json(['success' => true, 'message' => 'Part deleted successfully']);
     }
 }

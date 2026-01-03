@@ -1,5 +1,4 @@
 import {
-    epicorCodeToCompanyName,
     updateTextColors,
     formatToTwoDigits,
     makeCell,

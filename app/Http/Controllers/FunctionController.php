@@ -159,7 +159,7 @@ class FunctionController extends Controller
     /**
      * Get warehouses using Eloquent
      */
-    public function getWarehouses(string $table): array
+    public function getWarehouses(): array
     {
         return Cache::remember('warehouses_active', 3600, function() {
             return DB::table('plants')

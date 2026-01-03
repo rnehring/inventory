@@ -1,72 +1,22 @@
 <?php
 use App\Http\Controllers\FunctionController;
 ?>
-
-<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
 <script>
-
     const userType = {{ Auth::user()->user_type ?? 0 }};
-    const acBins = @php echo $bins; @endphp;
-    const acParts = @php echo $parts; @endphp;
 </script>
 
 <x-layout>
     <x-toast-success id="toast-success"></x-toast-success>
     <x-toast-error id="toast-error"></x-toast-error>
     <x-slot:header>
-        <x-header>No Tag Parts</x-header>
+        <x-header>All No Tag Parts</x-header>
     </x-slot:header>
 
     <x-layout-container class="max-w-9xl">
 
+        <h5 class="text-xl font-bold text-black mb-2 mt-6 ">All No Tag Parts</h5>
 
-        <x-search-form
-            formTitle="Add Inventory Without a Tag Number"
-            imageName="/images/notagsidebar.jpg"
-            imageHeight="760"
-            titleTopMargin="mt-8"
-            class="max-w-6xl self-start mt-8 clear-both"
-        >
-
-            <form method="post" action="/notag/save" class="w-4/6 mx-auto" name="NoTagForm" id="NoTagForm">
-                @csrf
-                <x-form-field id="part" fieldName="part" labelText="Part Number" />
-
-                <x-form-field id="bins" fieldName="bins" labelText="Bin" />
-
-                <x-form-field fieldName="count" labelText="Count" />
-
-                <x-form-label>Unit of Measure</x-form-label>
-                <select id="uom" name="uom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>
-                    @foreach($uoms as $uom)
-                        <option value="{{ $uom }}">{{ $uom }}</option>
-                    @endforeach
-                </select>
-
-                <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700 mt-4">
-                    <input id="by_weight" name="by_weight" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">By Weight?</label>
-                </div>
-
-                <x-form-field fieldName="lot_number" labelText="Lot Number" />
-                <x-form-field fieldName="serial_number" labelText="Serial Number" />
-                <input type="hidden" id="warehouse" name="warehouse" value="{{ session('plant') }}" />
-                <x-form-submit id="add-notag">Add Part</x-form-submit>
-            </form>
-
-        </x-search-form>
-
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg py-4 px-6 flex justify-between mt-6 items-center">
-
-            <h5 class="text-xl font-bold dark:text-gray-200">All No Tag Parts</h5>
-            <div>
-                <a href='/notag/edit-all'>
-                    <button class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text'>Edit All No Tag Parts</button>
-                </a>
-            </div>
-
-        </div>
-        <table id="noTagData" class="mt-4 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table id="noTagData" class="mt-8 w-full border-b dark:bg-gray-800 dark:border-gray-700 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <th scope="col" class="px-4 py-3">Tag</th>
                 <th scope="col" class="px-4 py-3">Part</th>
@@ -83,6 +33,7 @@ use App\Http\Controllers\FunctionController;
                     <th scope="col" class="px-4 py-3 text-right">Cost Counted</th>
                 @endif
                 <th scope="col" class="px-4 py-3 text-center">Edit</th>
+                <th scope="col" class="px-4 py-3 text-center">Delete</th>
             </thead>
             <tbody class="text-gray-900 px-4 border-b">
             @foreach ($noTagParts as $row)
@@ -115,14 +66,39 @@ use App\Http\Controllers\FunctionController;
                             <x-notag-edit-button></x-notag-edit-button>
                         </a>
                     </td>
-
+                    <td class="text-center py-2 px-2">
+                        <x-notag-delete-button noTagId="{{ $row->id }}"></x-notag-delete-button>
+                    </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
 
-
+        <div id="deleteModal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="deleteModal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-4 md:p-5 text-center">
+                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this No Tag Part?</h3>
+                        <button id="yesDelete" data-modal-hide="deleteModal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                            Yes, I'm sure
+                        </button>
+                        <button id="noCancel" data-modal-hide="deleteModal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </x-layout-container>
 </x-layout>
+
+
 

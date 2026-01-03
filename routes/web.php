@@ -85,8 +85,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('notag')->name('notag.')->group(function () {
         Route::get('/', [NoTagController::class, 'index'])->name('index');
         Route::get('/edit/{id}', [NoTagController::class, 'editNoTag'])->name('edit');
+        Route::get('/edit-all', [NoTagController::class, 'editAll'])->name('edit-all');
         Route::post('/save', [NoTagController::class, 'saveNoTagPart'])->name('save');
         Route::post('/update', [NoTagController::class, 'update'])->name('update');
+        Route::post('/delete/{id}', [NoTagController::class, 'deleteNoTag'])->name('delete');
+
     });
 
     // Shared API endpoints
@@ -208,3 +211,11 @@ Route::middleware(['auth', 'manager'])->group(function () {
 
 Route::get('/get-plants', [FunctionController::class, 'getAllActivePlantsForFilters']);
 Route::get('/get-users', [FunctionController::class, 'getAllUsersForFilters']);
+
+Route::get('/xdebug', function(){
+    return view('xdebug');
+});
+
+Route::get('/phpinfo', function(){
+    return view('info');
+});
