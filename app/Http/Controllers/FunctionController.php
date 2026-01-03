@@ -47,6 +47,8 @@ class FunctionController extends Controller
             'by_weight' => $validated['byweight'],
             'tag_printed' => true,
             'counted' => true,
+            'date_counted' => now(),
+            'time_counted' => now()
         ]);
 
         // Refresh to get updated calculated values from triggers
