@@ -37,7 +37,12 @@ use App\Http\Controllers\FunctionController;
             </thead>
             <tbody class="text-gray-900 px-4 border-b">
             @foreach ($noTagParts as $row)
-                <tr class="bg-green-300 @if($row->possible_dupe == 1)bg-red-600@endif border-b">
+                @if($row->possible_dupe == '1')
+                    <tr class="bg-green-300 bg-red-600 border-b">
+                @else
+                    <tr class="bg-green-300 border-b">
+                @endif
+
                     <td class="border-b px-4 py-4"> {{ $row->tag}} </td>
                     <td class="border-b px-4 py-4"> {{ $row->part}} </td>
                     <td class="border-b px-4 py-4 text-center"> {{ $row->count }} </td>
