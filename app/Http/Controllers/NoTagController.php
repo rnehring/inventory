@@ -213,8 +213,36 @@ class NoTagController extends FunctionController
         }
 
         if($exists->isEmpty()){
-            return false;
+            if( $lot_number && $serial_number ){
+                $exists = DB::table('inventory')
+                    ->where('part', $partDetails['part'])
+                    ->where('bin', $partDetails['bin'])
+                    ->where('lot_number', $partDetails['lot_number'])
+                    ->where('serial_number', $partDetails['serial_number'])
+                    ->get();
+            } else if( $lot_number ){
+                $exists = DB::table('inventory')
+                    ->where('part', $partDetails['part'])
+                    ->where('bin', $partDetails['bin'])
+                    ->where('lot_number', $partDetails['lot_number'])
+                    ->get();
+            } else if( $serial_number ){
+                $exists = DB::table('inventory')
+                    ->where('part', $partDetails['part'])
+                    ->where('bin', $partDetails['bin'])
+                    ->where('serial_number', $partDetails['serial_number'])
+                    ->get();
+            } else {
+                $exists = DB::table('inventory')
+                    ->where('part', $partDetails['part'])
+                    ->where('bin', $partDetails['bin'])
+                    ->get();
+            }
+            if($exists->isEmpty()){
+                return false;
+            }
         }
+
         return true;
     }
 
