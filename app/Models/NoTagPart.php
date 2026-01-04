@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $plus_minus
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property bool $possible_dupe
  *
  * @package App\Models
  */
